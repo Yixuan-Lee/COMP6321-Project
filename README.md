@@ -1,2 +1,3 @@
-# COMP6321-fall-2019
-Machine Learning - Lab exercises and Project code
+# COMP6321 Machine Learning: Project
+
+Project code for COMP6321 Machine Learning course

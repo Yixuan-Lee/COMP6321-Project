@@ -95,3 +95,5 @@ _(add a new section if necessary)_
 5.1 [sklearn.metrics.mean_squared_error](https://scikit-learn.org/0.15/modules/generated/sklearn.metrics.mean_squared_error.html#sklearn.metrics.mean_squared_error)
 
 **5.2 [Model evaluation: quantifying the quality of predictions](https://scikit-learn.org/0.15/modules/model_evaluation.html)**
+
+5.3 [sklearn.model_selection.cross_val_score](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_score.html)

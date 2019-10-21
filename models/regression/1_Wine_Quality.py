@@ -11,6 +11,7 @@ from neural_network_regressor import Neural_network_regressor
 from sklearn.model_selection import train_test_split
 from sklearn.gaussian_process.kernels import DotProduct, WhiteKernel
 
+
 class Wine_quality:
     data = []
     targets = []
@@ -81,5 +82,3 @@ if __name__ == '__main__':
     print('GPR: %.5f' % wq.gaussian_process_regression())
     print(' LR: %.5f' % wq.linear_regression())
     print('NNR: %.5f' % wq.neural_network_regression())
-
-

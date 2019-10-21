@@ -1,7 +1,9 @@
+import os
+import numpy as np
 from models import settings
 from scipy.io import arff
 from k_nearest_neighbours import K_nearest_neighbours
-from support_vector_machines import Support_vector_machines
+from support_vector_classifier import Support_vector_classifier
 from decision_tree_classifier import Decision_tree_classifier
 from random_forest_classifier import Random_forest_classifier
 from ada_boost_classifier import Ada_boost_classifier
@@ -9,8 +11,6 @@ from logistic_regression import Logistic_regression
 from gaussian_naive_bayes import Gaussian_naive_bayes
 from neural_network_classifier import Neural_network_classifier
 from sklearn.model_selection import train_test_split
-import os
-import numpy as np
 
 
 class Diabetic_retinopathy:
@@ -37,10 +37,10 @@ class Diabetic_retinopathy:
         knn.train(self.x_train, self.y_train)
         return knn.get_accuracy(self.x_test, self.y_test)
 
-    def support_vector_machines(self):
-        svm = Support_vector_machines()
-        svm.train(self.x_train, self.y_train)
-        return svm.get_accuracy(self.x_test, self.y_test)
+    def support_vector_classifier(self):
+        svc = Support_vector_classifier()
+        svc.train(self.x_train, self.y_train)
+        return svc.get_accuracy(self.x_test, self.y_test)
 
     def decision_tree_classifier(self):
         dtc = Decision_tree_classifier()
@@ -76,12 +76,10 @@ class Diabetic_retinopathy:
 if __name__ == '__main__':
     dr = Diabetic_retinopathy()
     print('KNN: %.2f' % dr.k_nearest_neighbours())
-    print('SVM: %.2f' % dr.support_vector_machines())
+    print('SVM: %.2f' % dr.support_vector_classifier())
     print('DTC: %.2f' % dr.decision_tree_classifier())
     print('RFC: %.2f' % dr.random_forest_classifier())
     print('ABC: %.2f' % dr.ada_boost_classifier())
     print(' LR: %.2f' % dr.logistic_regression())
     print('GNB: %.2f' % dr.gaussian_naive_bayes())
     print('NNC: %.2f' % dr.neural_network_classifier())
-
-

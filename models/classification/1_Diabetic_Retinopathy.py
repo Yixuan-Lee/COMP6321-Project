@@ -13,12 +13,12 @@ import os
 import numpy as np
 
 
-class diabetic_retinopathy:
+class Diabetic_retinopathy:
     data = []
     targets = []
     x_train = []
-    y_train = []
     x_test = []
+    y_train = []
     y_test = []
 
     def __init__(self):
@@ -74,7 +74,7 @@ class diabetic_retinopathy:
 
 
 if __name__ == '__main__':
-    dr = diabetic_retinopathy()
+    dr = Diabetic_retinopathy()
     print('KNN: %.2f' % dr.k_nearest_neighbours())
     print('SVM: %.2f' % dr.support_vector_machines())
     print('DTC: %.2f' % dr.decision_tree_classifier())

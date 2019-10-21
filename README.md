@@ -15,6 +15,7 @@ Project code for COMP6321 Machine Learning course
 |  2        | data pre-processing    |
 |  3        | training models        |
 |  4        | python syntax          |
+|  5        | model metrics          |
 |  _        | (new title)            |
 
 _(add a new section if necessary)_
@@ -27,6 +28,13 @@ _(add a new section if necessary)_
 **1.2 [Prepare scipy.io.loadarff result for scikit-learn](https://stackoverflow.com/questions/22873434/prepare-scipy-io-loadarff-result-for-scikit-learn)**
 
 1.3 [Loading .arff type files in python](https://discuss.analyticsvidhya.com/t/loading-arff-type-files-in-python/27419)
+
+**1.4 [numpy.loadtxt](https://docs.scipy.org/doc/numpy/reference/generated/numpy.loadtxt.html)**
+
+**1.5 [CSV File Reading and Writing](https://docs.python.org/2/library/csv.html)**
+
+1.6 [Skip the header of a file with Python's CSV reader](https://evanhahn.com/python-skip-header-csv-reader/)
+
 
 
 
@@ -60,7 +68,19 @@ _(add a new section if necessary)_
 
 3.8 [sklearn.neural_network.MLPClassifier](https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html)
 
+3.9 [sklearn.svm.SVR](https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html)
 
+3.10 [sklearn.tree.DecisionTreeRegressor](https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeRegressor.html)
+
+3.11 [sklearn.ensemble.RandomForestRegressor](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html)
+
+3.12 [sklearn.ensemble.AdaBoostRegressor](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostRegressor.html)
+
+3.13 [sklearn.gaussian_process.GaussianProcessRegressor](https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html)
+
+3.14 [sklearn.linear_model.LinearRegression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html)
+
+3.15 [sklearn.neural_network.MLPRegressor](https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html)
 
 
 ## 4. python syntax
@@ -70,5 +90,8 @@ _(add a new section if necessary)_
 4.2 [Python - Get path of root project structure](https://stackoverflow.com/questions/25389095/python-get-path-of-root-project-structure/45944002)
 
 
+## 5. model metrics
 
+5.1 [sklearn.metrics.mean_squared_error](https://scikit-learn.org/0.15/modules/generated/sklearn.metrics.mean_squared_error.html#sklearn.metrics.mean_squared_error)
 
+**5.2 [Model evaluation: quantifying the quality of predictions](https://scikit-learn.org/0.15/modules/model_evaluation.html)**

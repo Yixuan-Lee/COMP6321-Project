@@ -25,6 +25,7 @@ class Wine_quality:
         filename1 = 'winequality-red.csv'
         filename2 = 'winequality-white.csv'
 
+        # read the dataset
         f1 = np.loadtxt(os.path.join(settings.ROOT_DIR, filepath, filename1),
             delimiter=';', dtype=np.float32, skiprows=1)
         f2 = np.loadtxt(os.path.join(settings.ROOT_DIR, filepath, filename2),
@@ -32,6 +33,8 @@ class Wine_quality:
         f = np.vstack((f1, f2))
         self.data = f[:, :-1]
         self.targets = f[:, -1]
+
+        # split into train and test sets
         self.x_train, self.x_test, self.y_train, self.y_test = \
             train_test_split(self.data, self.targets, test_size=0.33,
                 random_state=0)
@@ -76,7 +79,7 @@ class Wine_quality:
 if __name__ == '__main__':
     wq = Wine_quality()
     print('SVR: %.5f' % wq.support_vector_regression())
-    print('DTF: %.5f' % wq.decision_tree_regression())
+    print('DTR: %.5f' % wq.decision_tree_regression())
     print('RFR: %.5f' % wq.random_forest_regression())
     print('ABR: %.5f' % wq.ada_boost_regression())
     print('GPR: %.5f' % wq.gaussian_process_regression())

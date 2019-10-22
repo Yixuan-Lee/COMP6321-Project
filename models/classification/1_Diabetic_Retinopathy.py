@@ -22,12 +22,17 @@ class Diabetic_retinopathy:
     y_test = []
 
     def __init__(self):
-        filepath = 'datasets/classification_datasets/1_Diabetic_Retinopathy' \
-                   '/messidor_features.arff'
-        file, meta = arff.loadarff(os.path.join(settings.ROOT_DIR, filepath))
+        filepath = 'datasets/classification_datasets/1_Diabetic_Retinopathy'
+        filename = 'messidor_features.arff'
+
+        # read the dataset
+        file, meta = arff.loadarff(os.path.join(settings.ROOT_DIR, filepath,
+            filename))
         self.data = np.asarray(file.tolist(), dtype=np.float32)
         self.data = self.data[:, :-1]
         self.targets = self.data[:, -1]
+
+        # split into the train and test sets
         self.x_train, self.x_test, self.y_train, self.y_test = \
             train_test_split(self.data, self.targets, test_size=0.33,
                 random_state=0)
@@ -76,7 +81,7 @@ class Diabetic_retinopathy:
 if __name__ == '__main__':
     dr = Diabetic_retinopathy()
     print('KNN: %.2f' % dr.k_nearest_neighbours())
-    print('SVM: %.2f' % dr.support_vector_classifier())
+    print('SVC: %.2f' % dr.support_vector_classifier())
     print('DTC: %.2f' % dr.decision_tree_classifier())
     print('RFC: %.2f' % dr.random_forest_classifier())
     print('ABC: %.2f' % dr.ada_boost_classifier())

@@ -35,8 +35,9 @@ _(add a new section if necessary)_
 
 1.6 [Skip the header of a file with Python's CSV reader](https://evanhahn.com/python-skip-header-csv-reader/)
 
+1.7 [Reading/parsing Excel (xls) files with Python](https://stackoverflow.com/questions/2942889/reading-parsing-excel-xls-files-with-python)
 
-
+**1.8 [Read xls with Pandas](https://pythonspot.com/read-xls-with-pandas/)**
 
 
 ## 2. data pre-processing:

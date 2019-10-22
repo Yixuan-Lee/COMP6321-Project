@@ -25,7 +25,7 @@ class Wine_quality:
         filename1 = 'winequality-red.csv'
         filename2 = 'winequality-white.csv'
 
-        # read the dataset
+        # read the data file
         f1 = np.loadtxt(os.path.join(settings.ROOT_DIR, filepath, filename1),
             delimiter=';', dtype=np.float32, skiprows=1)
         f2 = np.loadtxt(os.path.join(settings.ROOT_DIR, filepath, filename2),

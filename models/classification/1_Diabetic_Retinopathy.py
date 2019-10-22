@@ -25,7 +25,7 @@ class Diabetic_retinopathy:
         filepath = 'datasets/classification_datasets/1_Diabetic_Retinopathy'
         filename = 'messidor_features.arff'
 
-        # read the dataset
+        # read the data file
         file, meta = arff.loadarff(os.path.join(settings.ROOT_DIR, filepath,
             filename))
         self.data = np.asarray(file.tolist(), dtype=np.float32)

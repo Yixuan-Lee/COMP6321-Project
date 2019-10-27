@@ -14,8 +14,9 @@ Project code for COMP6321 Machine Learning course
 |  1        | read files             |
 |  2        | data pre-processing    |
 |  3        | training models        |
-|  4        | python syntax          |
+|  4        | model selection        |
 |  5        | model metrics          |
+|  6        | python syntax          |
 |  _        | (new title)            |
 
 _(add a new section if necessary)_
@@ -39,6 +40,8 @@ _(add a new section if necessary)_
 
 **1.8 [Read xls with Pandas](https://pythonspot.com/read-xls-with-pandas/)**
 
+1.9 [pandas.read_csv](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html)
+
 
 ## 2. data pre-processing:
 
@@ -48,8 +51,9 @@ _(add a new section if necessary)_
 
 2.3 [Python Pandas Replacing Header with Top Row](https://stackoverflow.com/questions/31328861/python-pandas-replacing-header-with-top-row)
 
+2.4 [sklearn: Imputation of missing values](https://scikit-learn.org/stable/modules/impute.html)
 
-
+2.5 [sklearn: Preprocessing data](https://scikit-learn.org/stable/modules/preprocessing.html)
 
 ## 3. training models 
 
@@ -84,11 +88,10 @@ _(add a new section if necessary)_
 3.15 [sklearn.neural_network.MLPRegressor](https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html)
 
 
-## 4. python syntax
+## 4. model selection
 
-4.1 [Using global variables between files](https://stackoverflow.com/questions/13034496/using-global-variables-between-files)
+4.1 [sklearn.model_selection.GridSearchCV](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html)
 
-4.2 [Python - Get path of root project structure](https://stackoverflow.com/questions/25389095/python-get-path-of-root-project-structure/45944002)
 
 
 ## 5. model metrics
@@ -98,3 +101,12 @@ _(add a new section if necessary)_
 **5.2 [Model evaluation: quantifying the quality of predictions](https://scikit-learn.org/0.15/modules/model_evaluation.html)**
 
 5.3 [sklearn.model_selection.cross_val_score](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_score.html)
+
+
+## 6. python syntax
+
+6.1 [Using global variables between files](https://stackoverflow.com/questions/13034496/using-global-variables-between-files)
+
+6.2 [Python - Get path of root project structure](https://stackoverflow.com/questions/25389095/python-get-path-of-root-project-structure/45944002)
+
+

@@ -109,4 +109,4 @@ _(add a new section if necessary)_
 
 6.2 [Python - Get path of root project structure](https://stackoverflow.com/questions/25389095/python-get-path-of-root-project-structure/45944002)
 
-
+6.3 [iterating over a tuple containing one string actually iterates over characters](https://stackoverflow.com/questions/37884136/iterating-over-a-tuple-containing-one-string-actually-iterates-over-characters)

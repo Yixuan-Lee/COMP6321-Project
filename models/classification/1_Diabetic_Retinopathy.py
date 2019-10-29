@@ -2,8 +2,8 @@ import os
 import numpy as np
 import scipy
 import scipy.stats              # For reciprocal distribution
-from models import settings     # for retrieving root path
-from scipy.io import arff       # for loading .arff file
+from models import settings     # For retrieving root path
+from scipy.io import arff       # For loading .arff file
 from k_nearest_neighbours import K_nearest_neighbours
 from support_vector_classifier import Support_vector_classifier
 from decision_tree_classifier import Decision_tree_classifier
@@ -103,6 +103,7 @@ class Diabetic_retinopathy:
 
         # print all possible parameter values
         svc.print_parameter_candidates()
+        svc.print_best_estimator()
 
         # return the accuracy score
         return svc.accuracy_score(

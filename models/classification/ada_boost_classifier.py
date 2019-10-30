@@ -7,8 +7,8 @@ class Ada_boost_classifier(Cross_validation):
     __abc = None
     __param = {}
 
-    def __init__(self, x_train=None, y_train=None, cv=3,
-            n_estimators=(50,), learning_rate=(1.,),
+    def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10,
+            n_estimators=(50,), learning_rate=(1.,), algorithm=('SAMME.R'),
             grid_search=False, random_search=False):
 
         self.__abc = AdaBoostClassifier(random_state=0)
@@ -16,7 +16,8 @@ class Ada_boost_classifier(Cross_validation):
         try:
             self.__param = {
                 'n_estimators': n_estimators,
-                'learning_rate': learning_rate
+                'learning_rate': learning_rate,
+                'algorithm': algorithm
             }
             if grid_search and random_search:
                 print('only one of GridSearch and RandomSearch can be used.')
@@ -29,7 +30,7 @@ class Ada_boost_classifier(Cross_validation):
                 elif random_search:
                     # apply RandomSearchCV and get the best estimator
                     self.__abc = super().random_search_cv(self.__abc,
-                        self.__param, cv, x_train, y_train)
+                        self.__param, cv, n_iter, x_train, y_train)
                 else:
                     # fit data directly
                     self.__abc.fit(x_train, y_train)

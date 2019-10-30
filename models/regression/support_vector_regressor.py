@@ -7,8 +7,8 @@ class Support_vector_regressor(Cross_validation):
     __svr = None
     __param = {}
 
-    def __init__(self, x_train=None, y_train=None, cv=3,
-            C=(1.0,), kernel=('rbf',), gamma=('auto',), coef0=(0.0,),
+    def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10,
+            C=(1.0,), kernel=('rbf',), gamma=('auto',), coef0=(0.0,), epsilon=(0.1,),
             grid_search=False, random_search=False):
 
         self.__svr = SVR()
@@ -18,7 +18,8 @@ class Support_vector_regressor(Cross_validation):
                 'C': C,
                 'kernel': kernel,
                 'gamma': gamma,
-                'coef0': coef0
+                'coef0': coef0,
+                'epsilon': epsilon
             }
             if grid_search and random_search:
                 print('only one of GridSearch and RandomSearch can be used.')
@@ -31,7 +32,7 @@ class Support_vector_regressor(Cross_validation):
                 elif random_search:
                     # apply RandomSearchCV and get the best estimator
                     self.__svr = super().random_search_cv(self.__svr,
-                        self.__param, cv, x_train, y_train)
+                        self.__param, cv, n_iter, x_train, y_train)
                 else:
                     # fit data directly
                     self.__svr.fit(x_train, y_train)
@@ -49,7 +50,7 @@ class Support_vector_regressor(Cross_validation):
         try:
             return mean_squared_error(
                 y_true=y_test,
-                y_pred=self.__svr.predict(x_test), )
+                y_pred=self.__svr.predict(x_test))
         except:
             print("Support_vector_regressor: x_test or y_test may be wrong")
 

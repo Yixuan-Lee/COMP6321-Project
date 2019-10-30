@@ -7,7 +7,7 @@ class Neural_network_regressor(Cross_validation):
     __nnr = None
     __param = {}
 
-    def __init__(self, x_train=None, y_train=None, cv=3,
+    def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10,
             hidden_layer_sizes=(100,), activation=('relu',), max_iter=(200,),
             grid_search=False, random_search=False):
 
@@ -30,7 +30,7 @@ class Neural_network_regressor(Cross_validation):
                 elif random_search:
                     # apply RandomSearchCV and get the best estimator
                     self.__nnr = super().random_search_cv(self.__nnr,
-                        self.__param, cv, x_train, y_train)
+                        self.__param, cv, n_iter, x_train, y_train)
                 else:
                     # fit data directly
                     self.__nnr.fit(x_train, y_train)

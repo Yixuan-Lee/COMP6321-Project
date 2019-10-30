@@ -8,7 +8,7 @@ class Gaussian_process_regressor(Cross_validation):
     __gpr = None
     __param = {}
 
-    def __init__(self, x_train=None, y_train=None, cv=3,
+    def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10,
             kernel=(1.0*RBF(1.0),), alpha=(1e-10,),
             grid_search=False, random_search=False):
 
@@ -30,7 +30,7 @@ class Gaussian_process_regressor(Cross_validation):
                 elif random_search:
                     # apply RandomSearchCV and get the best estimator
                     self.__gpr = super().random_search_cv(self.__gpr,
-                        self.__param, cv, x_train, y_train)
+                        self.__param, cv, n_iter, x_train, y_train)
                 else:
                     # fit data directly
                     self.__gpr.fit(x_train, y_train)

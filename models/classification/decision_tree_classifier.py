@@ -7,7 +7,7 @@ class Decision_tree_classifier(Cross_validation):
     __dtc = None
     __param = {}
 
-    def __init__(self, x_train=None, y_train=None, cv=3,
+    def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10,
             criterion=('gini',),  max_depth=(None,), min_samples_leaf=(1,),
             grid_search=False, random_search=False):
 
@@ -30,7 +30,7 @@ class Decision_tree_classifier(Cross_validation):
                 elif random_search:
                     # apply RandomSearchCV and get the best estimator
                     self.__dtc = super().random_search_cv(self.__dtc,
-                        self.__param, cv, x_train, y_train)
+                        self.__param, cv, n_iter, x_train, y_train)
                 else:
                     # fit data directly
                     self.__dtc.fit(x_train, y_train)

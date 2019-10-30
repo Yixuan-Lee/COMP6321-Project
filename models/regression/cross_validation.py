@@ -27,7 +27,7 @@ class Cross_validation:
         return gscv
 
     @staticmethod
-    def random_search_cv(model, param_dist, cv, x_train, y_train):
+    def random_search_cv(model, param_dist, cv, n_iter, x_train, y_train):
         """
         apply Random Search Cross Validation
 
@@ -43,6 +43,7 @@ class Cross_validation:
             param_distributions=param_dist,
             cv=cv,
             verbose=1,
+            n_iter=n_iter,
             random_state=0)
         rscv.fit(x_train, y_train)
 

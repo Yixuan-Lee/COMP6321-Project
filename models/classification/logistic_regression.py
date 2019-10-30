@@ -8,7 +8,7 @@ class Logistic_regression(Cross_validation):
     __param = {}
 
     def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10,
-                 C=(1.0,), penalty='l2', max_iter=100,
+                 C=(1.0,), penalty=('l2',), max_iter=(100,),
                  grid_search=False, random_search=False):
 
         self.__lr = LogisticRegression(solver='lbfgs', random_state=0)

@@ -8,7 +8,7 @@ class Ada_boost_classifier(Cross_validation):
     __param = {}
 
     def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10,
-            n_estimators=(50,), learning_rate=(1.,), algorithm=('SAMME.R'),
+            n_estimators=(50,), learning_rate=(1.,), algorithm=('SAMME.R',),
             grid_search=False, random_search=False):
 
         self.__abc = AdaBoostClassifier(random_state=0)

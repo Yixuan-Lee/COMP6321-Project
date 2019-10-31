@@ -66,6 +66,7 @@ class Diabetic_retinopathy:
             x_train=self.x_train,
             y_train=self.y_train,
             cv=3,
+            n_jobs=6,
             n_neighbors=n_neighbors,
             grid_search=True)
 
@@ -88,7 +89,7 @@ class Diabetic_retinopathy:
         """
         # define arguments given to GridSearchCV
         C = np.logspace(start=-1, stop=3, base=10, num=5, dtype=np.float32)  # [0.1, 1, 10, 100, 1000]
-        gamma = np.logspace(start=-1, stop=1, base=10, num=3, dtype=np.float32)  # [0.01, 0.1, 1, 10]
+        gamma = np.logspace(start=-1, stop=1, base=10, num=3, dtype=np.float32)  # [0.1, 1, 10]
         kernel = ['linear', 'rbf', 'sigmoid']
 
         # get the best validated model
@@ -96,6 +97,7 @@ class Diabetic_retinopathy:
             x_train=self.x_train,
             y_train=self.y_train,
             cv=3,
+            n_jobs=6,
             C=C,
             kernel=kernel,
             gamma=gamma,
@@ -128,6 +130,7 @@ class Diabetic_retinopathy:
             x_train=self.x_train,
             y_train=self.y_train,
             cv=3,
+            n_jobs=6,
             criterion=criterion,
             max_depth=max_depth,
             grid_search=True)
@@ -158,6 +161,7 @@ class Diabetic_retinopathy:
             x_train=self.x_train,
             y_train=self.y_train,
             cv=3,
+            n_jobs=6,
             criterion=criterion,
             max_depth=max_depth,
             grid_search=True)
@@ -189,6 +193,7 @@ class Diabetic_retinopathy:
             x_train=self.x_train,
             y_train=self.y_train,
             cv=3,
+            n_jobs=6,
             n_estimators=n_estimators,
             learning_rate=learning_rate,
             grid_search=True)
@@ -217,6 +222,7 @@ class Diabetic_retinopathy:
             x_train=self.x_train,
             y_train=self.y_train,
             cv=3,
+            n_jobs=6,
             C=C,
             grid_search=True)
 
@@ -245,6 +251,7 @@ class Diabetic_retinopathy:
             x_train=self.x_train,
             y_train=self.y_train,
             cv=3,
+            n_jobs=6,
             var_smoothing=var_smoothing,
             grid_search=True)
 
@@ -278,6 +285,7 @@ class Diabetic_retinopathy:
             x_train=self.x_train,
             y_train=self.y_train,
             cv=3,
+            n_jobs=6,
             hidden_layer_sizes=hidden_layer_sizes,
             max_iter=max_iter,
             random_search=True)

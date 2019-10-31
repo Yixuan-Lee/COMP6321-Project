@@ -2,7 +2,7 @@ import os
 import numpy as np
 import scipy
 import scipy.stats              # For reciprocal distribution
-from models import settings     # for retrieving root path
+from models import settings     # For retrieving root path
 from support_vector_regressor import Support_vector_regressor
 from decision_tree_regressor import Decision_tree_regressor
 from random_forest_regressor import Random_forest_regressor
@@ -39,8 +39,8 @@ class Wine_quality:
 
 
         # subsampling data (for speeding up)
-        # self.data = self.data[:600]
-        # self.targets = self.targets[:600]
+        self.data = self.data[:1000]
+        self.targets = self.targets[:1000]
 
 
         # split into train and test sets
@@ -67,7 +67,7 @@ class Wine_quality:
         C = np.logspace(start=-1, stop=3, base=10, num=5,
             dtype=np.float32)  # [0.1, 1, 10, 100, 1000]
         gamma = np.logspace(start=-1, stop=1, base=10, num=3,
-            dtype=np.float32)  # [0.01, 0.1, 1, 10]
+            dtype=np.float32)  # [0.1, 1, 10]
         kernel = ['rbf', 'linear', 'sigmoid']
 
         # get the best validated model
@@ -75,6 +75,7 @@ class Wine_quality:
             x_train=self.x_train,
             y_train=self.y_train,
             cv=3,
+            n_jobs=10,
             C=C,
             kernel=kernel,
             gamma=gamma,
@@ -106,6 +107,7 @@ class Wine_quality:
             x_train=self.x_train,
             y_train=self.y_train,
             cv=3,
+            n_jobs=10,
             max_depth=max_depth,
             min_samples_leaf=min_samples_leaf,
             grid_search=True)
@@ -136,6 +138,7 @@ class Wine_quality:
             x_train=self.x_train,
             y_train=self.y_train,
             cv=3,
+            n_jobs=10,
             n_estimators=n_estimators,
             max_depth=max_depth,
             grid_search=True)
@@ -167,6 +170,7 @@ class Wine_quality:
             x_train=self.x_train,
             y_train=self.y_train,
             cv=5,
+            n_jobs=10,
             n_estimators=n_estimators,
             learning_rate=learning_rate,
             grid_search=True)
@@ -199,6 +203,7 @@ class Wine_quality:
             x_train=self.x_train,
             y_train=self.y_train,
             cv=3,
+            n_jobs=10,
             # kernel=kernel,
             alpha=alpha,
             grid_search=True)
@@ -222,7 +227,8 @@ class Wine_quality:
         lr = Linear_regression(
             x_train=self.x_train,
             y_train=self.y_train,
-            cv=3)
+            cv=3,
+            n_jobs=10)
 
         # estimate on the test set
         return lr.mean_squared_error(
@@ -239,11 +245,11 @@ class Wine_quality:
         :return: test accuracy of the nnr best model
         """
         # define arguments given to RandomSearchCV
-        reciprocal_distrobution_hls = scipy.stats.reciprocal(a=100, b=1000)
+        reciprocal_distribution_hls = scipy.stats.reciprocal(a=100, b=1000)
         reciprocal_distribution_mi = scipy.stats.reciprocal(a=1000, b=10000)
         np.random.seed(0)
         hidden_layer_sizes = \
-            reciprocal_distrobution_hls.rvs(size=5).astype(np.int)
+            reciprocal_distribution_hls.rvs(size=5).astype(np.int)
         activation = ['logistic', 'tanh', 'relu']
         max_iter = reciprocal_distribution_mi.rvs(size=5).astype(np.int)
 
@@ -252,6 +258,7 @@ class Wine_quality:
             x_train=self.x_train,
             y_train=self.y_train,
             cv=3,
+            n_jobs=10,
             hidden_layer_sizes=hidden_layer_sizes,
             activation=activation,
             max_iter=max_iter,
@@ -271,12 +278,12 @@ if __name__ == '__main__':
     wq = Wine_quality()
     print("mean squared error on the actual test set:")
     print('SVR: %.5f' % (wq.support_vector_regression()))
-    print('DTR: %.5f' % wq.decision_tree_regression())
+    print('DTR: %.5f' % (wq.decision_tree_regression()))
     print('RFR: %.5f' % (wq.random_forest_regression()))
     print('ABR: %.5f' % (wq.ada_boost_regression()))
 
     # iterating over kernels will raise a bug
-    print('GPR: %.5f' % wq.gaussian_process_regression())
+    print('GPR: %.5f' % (wq.gaussian_process_regression()))
 
-    print(' LR: %.5f' % wq.linear_regression())
-    print('NNR: %.5f' % wq.neural_network_regression())
+    print(' LR: %.5f' % (wq.linear_regression()))
+    print('NNR: %.5f' % (wq.neural_network_regression()))

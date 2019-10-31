@@ -7,7 +7,7 @@ class Decision_tree_regressor(Cross_validation):
     __dtr = None
     __param = {}
 
-    def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10,
+    def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10, n_jobs=None,
             max_depth=(None,), min_samples_leaf=(1,),
             grid_search=False, random_search=False):
 
@@ -25,11 +25,11 @@ class Decision_tree_regressor(Cross_validation):
                 if grid_search:
                     # apply GridSearchCV and get the best estimator
                     self.__dtr = super().grid_search_cv(self.__dtr,
-                        self.__param, cv, x_train, y_train)
+                        self.__param, cv, n_jobs, x_train, y_train)
                 elif random_search:
                     # apply RandomSearchCV and get the best estimator
                     self.__dtr = super().random_search_cv(self.__dtr,
-                        self.__param, cv, n_iter, x_train, y_train)
+                        self.__param, cv, n_iter, n_jobs, x_train, y_train)
                 else:
                     # fit data directly
                     self.__dtr.fit(x_train, y_train)

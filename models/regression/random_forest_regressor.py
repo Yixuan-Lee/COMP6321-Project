@@ -7,7 +7,7 @@ class Random_forest_regressor(Cross_validation):
     __rfr = None
     __param = {}
 
-    def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10,
+    def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10, n_jobs=None,
             n_estimators=(10,), max_depth=(None,),
             grid_search=False, random_search=False):
 
@@ -25,11 +25,11 @@ class Random_forest_regressor(Cross_validation):
                 if grid_search:
                     # apply GridSearchCV and get the best estimator
                     self.__rfr = super().grid_search_cv(self.__rfr,
-                        self.__param, cv, x_train, y_train)
+                        self.__param, cv, n_jobs, x_train, y_train)
                 elif random_search:
                     # apply RandomSearchCV and get the best estimator
                     self.__rfr = super().random_search_cv(self.__rfr,
-                        self.__param, cv, n_iter, x_train, y_train)
+                        self.__param, cv, n_iter, n_jobs, x_train, y_train)
                 else:
                     # fit data directly
                     self.__rfr.fit(x_train, y_train)

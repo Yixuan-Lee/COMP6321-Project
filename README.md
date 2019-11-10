@@ -42,6 +42,17 @@ _(add a new section if necessary)_
 
 1.9 [pandas.read_csv](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html)
 
+**1.10 [python pandas replacing strings in dataframe with numbers](https://stackoverflow.com/questions/17114904/python-pandas-replacing-strings-in-dataframe-with-numbers)**
+
+1.11 [pandas.DataFrame.replace](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.replace.html)
+
+1.12 [pandas.DataFrame.to_numpy](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_numpy.html)
+
+1.13 [How to Convert String to Integer in Pandas DataFrame](https://datatofish.com/string-to-integer-dataframe/)
+
+1.14 [Letter appeared in data when arff loaded into Python](https://stackoverflow.com/questions/49806439/letter-appeared-in-data-when-arff-loaded-into-python)
+
+
 
 ## 2. data pre-processing:
 
@@ -54,6 +65,8 @@ _(add a new section if necessary)_
 2.4 [sklearn: Imputation of missing values](https://scikit-learn.org/stable/modules/impute.html)
 
 2.5 [sklearn: Preprocessing data](https://scikit-learn.org/stable/modules/preprocessing.html)
+
+
 
 ## 3. training models 
 
@@ -94,6 +107,8 @@ _(add a new section if necessary)_
 
 4.2 [sklearn.model_selection.RandomizedSearchCV](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html)
 
+4.3 [numpy.logspace](https://docs.scipy.org/doc/numpy/reference/generated/numpy.logspace.html)
+
 
 
 ## 5. model metrics
@@ -105,6 +120,7 @@ _(add a new section if necessary)_
 5.3 [sklearn.model_selection.cross_val_score](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_score.html)
 
 
+
 ## 6. python syntax
 
 6.1 [Using global variables between files](https://stackoverflow.com/questions/13034496/using-global-variables-between-files)
@@ -112,3 +128,4 @@ _(add a new section if necessary)_
 6.2 [Python - Get path of root project structure](https://stackoverflow.com/questions/25389095/python-get-path-of-root-project-structure/45944002)
 
 6.3 [iterating over a tuple containing one string actually iterates over characters](https://stackoverflow.com/questions/37884136/iterating-over-a-tuple-containing-one-string-actually-iterates-over-characters)
+

@@ -4,6 +4,7 @@ import pandas as pd
 import scipy
 import scipy.stats              # For reciprocal distribution
 from models import settings     # For retrieving root path
+from scipy.io import arff       # For loading .arff file
 from scipy.stats import norm    # For tuning parameters
 from k_nearest_neighbours import K_nearest_neighbours
 from support_vector_classifier import Support_vector_classifier
@@ -13,11 +14,11 @@ from ada_boost_classifier import Ada_boost_classifier
 from logistic_regression import Logistic_regression
 from gaussian_naive_bayes import Gaussian_naive_bayes
 from neural_network_classifier import Neural_network_classifier
-from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
 
 
-class Default_of_credit_card_clients:
+class Seismic_bumps:
     data = []
     targets = []
     x_train = []
@@ -26,16 +27,41 @@ class Default_of_credit_card_clients:
     y_test = []
 
     def __init__(self):
-        filepath = 'datasets/classification_datasets/' \
-                   '2_Default_of_credit_card_clients/'
-        filename = 'default_of_credit_card_clients.xls'
+        filepath = 'datasets/classification_datasets/10_Seismic_Bumps'
+        filename = 'seismic-bumps.arff'
 
         # read the data file
-        # required package: install xlrd
-        df = pd.read_excel(io=os.path.join(settings.ROOT_DIR, filepath,
+        file, meta = arff.loadarff(os.path.join(settings.ROOT_DIR, filepath,
             filename))
-        self.data = df.loc[1:, df.columns != 'Y']  # (30000, 24)
-        self.targets = df.loc[1:, 'Y'].astype(np.int)  # (30000, )
+        df = pd.DataFrame(file)
+        # remove the prefix 'b' in columns
+        df['seismic'] = df['seismic'].str.decode('utf-8')
+        df['seismoacoustic'] = df['seismoacoustic'].str.decode('utf-8')
+        df['shift'] = df['shift'].str.decode('utf-8')
+        df['ghazard'] = df['ghazard'].str.decode('utf-8')
+        df['class'] = df['class'].str.decode('utf-8')
+        # transform characters to numbers
+        mapping = {
+            'a': 0,
+            'b': 1,
+            'c': 2,
+            'd': 3,
+            'N': 1,
+            'W': 0
+        }
+        df = df.replace({'seismic': mapping,
+                         'seismoacoustic': mapping,
+                         'shift': mapping,
+                         'ghazard': mapping})
+        # transform the column's dtype
+        df['seismic'] = df['seismic'].astype(np.int64)
+        df['seismoacoustic'] = df['seismoacoustic'].astype(np.int64)
+        df['shift'] = df['shift'].astype(np.int64)
+        df['ghazard'] = df['ghazard'].astype(np.int64)
+        df['class'] = df['class'].astype(np.int64)
+        file_data = df.to_numpy()
+        self.data = file_data[:, :-1]   # (2584, 18)
+        self.targets = file_data[:, -1]   # (2584, )
 
         # split into the train and test sets
         self.x_train, self.x_test, self.y_train, self.y_test = \
@@ -51,19 +77,19 @@ class Default_of_credit_card_clients:
     def k_nearest_neighbours(self):
         """
         for knn, i train on the training data using different :
-            1) n_neighbors,
+            1) n_neighbors
             2) weights
         :return: test accuracy of the knn best model
         """
         # define parameters
-#         n_neighbors = np.logspace(start=2, stop=6, base=2, num=5, dtype=np.int)
+#         n_neighbors = np.logspace(start=1, stop=9, base=2, num=9, dtype=np.int)
 #         weights = ('distance', 'uniform')
         # best result over all n_neighbors: 32
         # best result over all weights: 'distance'
 
         # scale down parameters around its best result
         np.random.seed(0)
-        n_neighbors = norm.rvs(loc=32, scale=10, size=3).astype(np.int)
+        n_neighbors = norm.rvs(loc=32, scale=8, size=5).astype(np.int)
         weights = ('distance', 'uniform')
 
         # get the best validated model
@@ -93,26 +119,32 @@ class Default_of_credit_card_clients:
         :return: test accuracy of the svc best model
         """
         # define parameters
-#         C = np.logspace(start=0, stop=3, base=10, num=4, dtype=np.int)
-#         gamma = np.logspace(start=-4, stop=-1, base=10, num=2, dtype=np.float32)
+#         C = np.logspace(start=0, stop=2, base=10, num=3, dtype=np.int)
+#         gamma = np.logspace(start=-4, stop=-2, base=10, num=3, dtype=np.float32)
 #         kernel = ('linear', 'rbf')
-        # best result over all C:      ?
-        # best result over all gamma:  ?
-        # best result over all kernel: ?
-        # SVC cannot finishes this cross validation in 1 hour!
-        # So we decide to use the raw model
+        # best result over all C: 1
+        # best result over all gamma: 1e-04
+        # best result over all kernel: 'linear'
+
+        # scale down parameters around its best result
+        np.random.seed(0)
+        scale = 0.5
+        loc = 1.0
+        C = loc + scipy.stats.truncnorm.rvs(-loc/scale, np.infty, size=2, scale=scale)  # To skip negative values
+        scale = 1e-4
+        loc = 1e-4
+        gamma = loc + scipy.stats.truncnorm.rvs(-loc/scale, np.infty, size=2, scale=scale)  # To skip negative values
+        kernel = ('linear',)
 
         # get the best validated model
         svc = Support_vector_classifier(
             x_train=self.x_train,
             y_train=self.y_train,
-            # cv=5,
-            # n_jobs=3,
-            # C=C,
-            # gamma=gamma,
-            # kernel=kernel,
-            # grid_search=True
-        )
+            cv=3,
+            C=C,
+            gamma=gamma,
+            kernel=kernel,
+            grid_search=True)
 
         # print all possible parameter values and the best parameters
         svc.print_parameter_candidates()
@@ -131,17 +163,15 @@ class Default_of_credit_card_clients:
         :return: test accuracy of the dtc best model
         """
         # define parameters
-#         criterion = ('gini', 'entropy')
-#         max_depth = np.logspace(start=1, stop=6, base=2, num=6, dtype=np.int)
-        # best result over all criterion: 'gini'
-        # best result over all max_depth: 4
+        criterion = ('gini', 'entropy')
+        max_depth = np.logspace(start=1, stop=6, base=2, num=6, dtype=np.int)
+        # best result over all criterion: 'entropy'
+        # best result over all max_depth: 2
 
         # scale down parameters around its best result
         criterion = ('gini', 'entropy')
         scale = 1
-        max_depth = np.arange(start=4-scale, stop=4+scale, step=1, dtype=np.int)
-        # best result over all criterion: 'gini'
-        # best result over all max_depth: 4
+        max_depth = np.arange(start=2-scale, stop=2+scale, step=1, dtype=np.int)
 
         # get the best validated model
         dtc = Decision_tree_classifier(
@@ -165,7 +195,7 @@ class Default_of_credit_card_clients:
         """
         for rfc, i train on the training data using different :
             1) criterion
-            2) max_depth
+            2) n_estimators
             3) max_depth
         :return: test accuracy of the dtc best model
         """
@@ -174,25 +204,28 @@ class Default_of_credit_card_clients:
 #         n_estimators = np.logspace(start=1, stop=6, base=2, num=6, dtype=np.int)
 #         max_depth = np.logspace(start=1, stop=6, base=2, num=6, dtype=np.int)
         # best result over all criterion: 'entropy'
-        # best result over all n_estimators: 32
-        # best result over all max_depth: 8
+        # best result over all n_estimators: 16
+        # best result over all max_depth: 32
 
         # scale down parameters around its best result
-        criterion = ('gini', 'entropy')
-        scale = 5  # scale of n_estimators
-        n_estimators = np.arange(start=32-scale, stop=32+scale, step=3, dtype=np.int)
-        scale = 3  # scale of max_depth
-        max_depth = np.arange(start=8-scale, stop=8+scale, step=2, dtype=np.int)
+#         criterion = ('gini', 'entropy')
+#         scale = 5  # scale of n_estimators
+#         n_estimators = np.arange(start=16-scale, stop=16+scale, step=2, dtype=np.int)
+#         scale = 8  # scale of max_depth
+#         max_depth = np.arange(start=32-scale, stop=32+scale, step=3, dtype=np.int)
+
+        # (Raw model performs better, we decide to use raw model)
 
         # get the best validated model
         rfc = Random_forest_classifier(
             x_train=self.x_train,
             y_train=self.y_train,
-            cv=5,
-            criterion=criterion,
-            n_estimators=n_estimators,
-            max_depth=max_depth,
-            grid_search=True)
+            # cv=5,
+            # criterion=criterion,
+            # n_estimators=n_estimators,
+            # max_depth=max_depth,
+            # grid_search=True
+        )
 
         # print all possible parameter values and the best parameters
         rfc.print_parameter_candidates()
@@ -211,15 +244,15 @@ class Default_of_credit_card_clients:
         :return: test accuracy of the dtc best model
         """
         # define parameters
-#         n_estimators = np.logspace(start=4, stop=8, base=2, num=5, dtype=np.int)
+#         n_estimators = np.logspace(start=1, stop=8, base=2, num=8, dtype=np.int)
 #         learning_rate = np.logspace(start=-4, stop=0, base=10, num=5, dtype=np.float32)
-        # best result over all n_estimators: 16
-        # best result over all learning_rate: 1e-4
+        # best result over all n_estimators: 2
+        # best result over all learning_rate: 1e-04
 
         # scale down parameters around its best result
         np.random.seed(0)
-        n_estimators = norm.rvs(loc=16, scale=5, size=2).astype(np.int)
-        learning_rate = norm.rvs(loc=1e-4, scale=1e-5, size=2).astype(np.float32)
+        n_estimators = np.arange(start=1, stop=3, step=1, dtype=np.int)
+        learning_rate = norm.rvs(loc=1e-04, scale=1e-04, size=5).astype(np.float32)
 
         # get the best validated model
         abc = Ada_boost_classifier(
@@ -247,17 +280,15 @@ class Default_of_credit_card_clients:
         :return: test accuracy of the dtc best model
         """
         # define parameters
-#         C = np.logspace(start=-3, stop=3, base=10, num=7, dtype=np.float32)
-#         max_iter = np.logspace(start=10, stop=13, base=2, num=4, dtype=np.int)
-        # best result over all C: 1.0
-        # best result over all max_iter: 1024
+#         C = np.logspace(start=-6, stop=-3, base=10, num=4, dtype=np.float32)
+#         max_iter = np.logspace(start=5, stop=8, base=2, num=4, dtype=np.int)
+        # best result over all C: 1e-06
+        # best result over all max_iter: 32
 
         # scale down parameters around its best result
         np.random.seed(0)
-        scale = 3
-        loc = 1.0
-        C = loc + scipy.stats.truncnorm.rvs(-loc / scale, np.infty, size=3, scale=scale)  # To skip negative values
-        max_iter = norm.rvs(loc=1024, scale=100, size=3).astype(np.int)
+        C = norm.rvs(loc=1e-06, scale=1e-06, size=5).astype(np.float32)
+        max_iter = norm.rvs(loc=32, scale=12, size=5).astype(np.int)
 
         # get the best validated model
         lr = Logistic_regression(
@@ -281,17 +312,16 @@ class Default_of_credit_card_clients:
         """
         for gnb, i train on the training data using different :
             1) var_smoothing
+
         :return: test accuracy of the gnb best model
         """
         # define parameters
-#         var_smoothing = np.logspace(start=-9, stop=-3, base=10, num=7, dtype=np.float32)
-        # best result over all var_smoothing: 0.001
+#         var_smoothing = np.logspace(start=-3, stop=2, base=10, num=6, dtype=np.float32)
+        # best result over all var_smoothing: 100.0
 
-        # scale down parameters around its best result (1st round)
+        # scale down parameters around its best result
         np.random.seed(0)
-        scale = 0.002
-        loc = 0.001
-        var_smoothing = loc + scipy.stats.truncnorm.rvs(-loc/scale, np.infty, size=5, scale=scale)  # To skip negative values
+        var_smoothing = norm.rvs(loc=100.0, scale=20, size=5).astype(np.float32)
 
         # get the best validated model
         gnb = Gaussian_naive_bayes(
@@ -315,37 +345,30 @@ class Default_of_credit_card_clients:
         for nnc, i train on the training data using different :
             1) hidden_layer_sizes
             2) max_iter
-
         :return: test accuracy of the nnr best model
         """
         # define parameters
 #         np.random.seed(0)
 #         reciprocal_distrobution_hls = scipy.stats.reciprocal(a=100, b=1000)
 #         reciprocal_distribution_mi = scipy.stats.reciprocal(a=1000, b=10000)
-#         hidden_layer_sizes = reciprocal_distrobution_hls.rvs(size=5).astype(np.int)
-#         max_iter = reciprocal_distribution_mi.rvs(size=5).astype(np.int)
-        # best result over all hidden_layer_sizes: 265
-        # best result over all max_iter: 7794
+#         hidden_layer_sizes = reciprocal_distrobution_hls.rvs(size=10).astype(np.int)
+#         max_iter = reciprocal_distribution_mi.rvs(size=10).astype(np.int)
+        # best result over all hidden_layer_sizes: 442
+        # best result over all max_iter: 1222
 
         # scale down parameters around its best result
-#         np.random.seed(0)
-#         hidden_layer_sizes = norm.rvs(loc=265, scale=50, size=3).astype(np.int)
-#         max_iter = norm.rvs(loc=7794, scale=100, size=2).astype(np.int)
-        # This cross-validation finished in 15 minutes
-
-        # Due to the reason that the tuned parameters's accuracy is much lower
-        # than the raw parameters, we would choose to use the raw parameters
-
+        np.random.seed(0)
+        hidden_layer_sizes = norm.rvs(loc=442, scale=10, size=2).astype(np.int)
+        max_iter = norm.rvs(loc=1222, scale=50, size=2).astype(np.int)
 
         # get the best random validated model
         nnc = Neural_network_classifier(
             x_train=self.x_train,
             y_train=self.y_train,
-            # cv=3,
-            # hidden_layer_sizes=hidden_layer_sizes,
-            # max_iter=max_iter,
-            # random_search=True
-        )
+            cv=3,
+            hidden_layer_sizes=hidden_layer_sizes,
+            max_iter=max_iter,
+            random_search=True)
 
         # print all possible parameter values and best parameters
         nnc.print_parameter_candidates()
@@ -358,13 +381,13 @@ class Default_of_credit_card_clients:
 
 
 if __name__ == '__main__':
-    doccc = Default_of_credit_card_clients()
+    seb = Seismic_bumps()
     print("accuracy on the actual test set:")
-    print('KNN: %.2f %%' % (doccc.k_nearest_neighbours() * 100))
-    print('SVC: %.2f %%' % (doccc.support_vector_classifier() * 100))
-    print('DTC: %.2f %%' % (doccc.decision_tree_classifier() * 100))
-    print('RFC: %.2f %%' % (doccc.random_forest_classifier() * 100))
-    print('ABC: %.2f %%' % (doccc.ada_boost_classifier() * 100))
-    print(' LR: %.2f %%' % (doccc.logistic_regression() * 100))
-    print('GNB: %.2f %%' % (doccc.gaussian_naive_bayes() * 100))
-    print('NNC: %.2f %%' % (doccc.neural_network_classifier() * 100))
+    print('KNN: %.2f %%' % (seb.k_nearest_neighbours() * 100))
+    print('SVC: %.2f %%' % (seb.support_vector_classifier() * 100))
+    print('DTC: %.2f %%' % (seb.decision_tree_classifier() * 100))
+    print('RFC: %.2f %%' % (seb.random_forest_classifier() * 100))
+    print('ABC: %.2f %%' % (seb.ada_boost_classifier() * 100))
+    print(' LR: %.2f %%' % (seb.logistic_regression() * 100))
+    print('GNB: %.2f %%' % (seb.gaussian_naive_bayes() * 100))
+    print('NNC: %.2f %%' % (seb.neural_network_classifier() * 100))

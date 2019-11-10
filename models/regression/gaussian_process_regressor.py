@@ -16,7 +16,7 @@ class Gaussian_process_regressor(Cross_validation):
 
         try:
             self.__param = {
-                # 'kernel': kernel,
+                'kernel': kernel,
                 'alpha': alpha
             }
             if grid_search and random_search:

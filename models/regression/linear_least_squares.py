@@ -1,35 +1,42 @@
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Ridge
 from cross_validation import Cross_validation
 from sklearn.metrics import mean_squared_error
 
 
-class Linear_regression(Cross_validation):
-    __lr = None
+class Linear_least_squares(Cross_validation):
+    __lls = None
     __param = {}
 
     def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10, n_jobs=None,
-        grid_search=False, random_search=False):
+            alpha=(1.0,), max_iter=(None,), solver=('auto',),
+            grid_search=False, random_search=False):
 
-        self.__lr = LinearRegression()
+        self.__lls = Ridge(random_state=0)
 
         try:
+            self.__param = {
+                'alpha': alpha,
+                'max_iter': max_iter,
+                'solver': solver
+            }
+
             if grid_search and random_search:
                 print('only one of GridSearch and RandomSearch can be used.')
                 raise Exception
             else:
                 if grid_search:
                     # apply GridSearchCV and get the best estimator
-                    self.__lr = super().grid_search_cv(self.__lr,
+                    self.__lls = super().grid_search_cv(self.__lls,
                         self.__param, cv, n_jobs, x_train, y_train)
                 elif random_search:
                     # apply RandomSearchCV and get the best estimator
-                    self.__lr = super().random_search_cv(self.__lr,
+                    self.__lls = super().random_search_cv(self.__lls,
                         self.__param, cv, n_iter, n_jobs, x_train, y_train)
                 else:
                     # fit data directly
-                    self.__lr.fit(x_train, y_train)
+                    self.__lls.fit(x_train, y_train)
         except:
-            print("Linear_regression: x_train or y_train may be wrong")
+            print("Linear_least_squares: x_train or y_train may be wrong")
 
     def mean_squared_error(self, x_test=None, y_test=None):
         """
@@ -42,9 +49,9 @@ class Linear_regression(Cross_validation):
         try:
             return mean_squared_error(
                 y_true=y_test,
-                y_pred=self.__lr.predict(x_test))
+                y_pred=self.__lls.predict(x_test))
         except:
-            print("Linear_regression: x_test or y_test may be wrong")
+            print("Linear_least_squares: x_test or y_test may be wrong")
 
     def print_parameter_candidates(self):
         """
@@ -57,7 +64,7 @@ class Linear_regression(Cross_validation):
         print the best hyper-parameters
         """
         try:
-            print('Best estimator : ', self.__lr.best_estimator_)
+            print('Best estimator : ', self.__lls.best_estimator_)
         except:
-            print("Linear_regression: __lr didn't use GridSearchCV "
+            print("Linear_least_squares: __lls didn't use GridSearchCV "
                   "or RandomSearchCV.")

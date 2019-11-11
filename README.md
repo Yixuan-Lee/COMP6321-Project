@@ -132,3 +132,4 @@ _(add a new section if necessary)_
 
 6.3 [iterating over a tuple containing one string actually iterates over characters](https://stackoverflow.com/questions/37884136/iterating-over-a-tuple-containing-one-string-actually-iterates-over-characters)
 
+6.4 [timeout_decorator](https://github.com/pnpnpn/timeout-decorator)

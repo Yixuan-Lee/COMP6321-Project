@@ -106,8 +106,8 @@ class Wine_quality:
         :return: test accuracy of the dtr best model
         """
         # define parameters
-        max_depth = np.logspace(start=1, stop=6, base=2, num=6, dtype=np.int)
-        min_samples_leaf = np.logspace(start=0, stop=4, base=2, num=5, dtype=np.int)
+#         max_depth = np.logspace(start=1, stop=6, base=2, num=6, dtype=np.int)
+#         min_samples_leaf = np.logspace(start=0, stop=4, base=2, num=5, dtype=np.int)
         # best result over max_depth: 4
         # best result over min_samples_leaf: 4
 
@@ -216,8 +216,8 @@ class Wine_quality:
         :return: test accuracy of the gpr best model
         """
         # define parameters
-        kernel = (1.0*RBF(1.0), 1.0*RBF(0.5), WhiteKernel())
-        alpha = np.logspace(start=-2, stop=2, base=2, num=5, dtype=np.float32)
+#         kernel = (1.0*RBF(1.0), 1.0*RBF(0.5), WhiteKernel())
+#         alpha = np.logspace(start=-2, stop=2, base=2, num=5, dtype=np.float32)
         # best result over kernel: 1**2 * RBF(length_scale=0.5)
         # best result over alpha: 1.0
 
@@ -252,9 +252,9 @@ class Wine_quality:
         :return: test accuracy of the lr best model
         """
         # define parameters
-        alpha = np.logspace(start=-1, stop=3, base=10, num=5, dtype=np.float32)
-        max_iter = np.logspace(start=2, stop=4, base=10, num=3, dtype=np.int)
-        solver = ('auto', 'svd', 'cholesky', 'lsqr', 'saga')
+#         alpha = np.logspace(start=-1, stop=3, base=10, num=5, dtype=np.float32)
+#         max_iter = np.logspace(start=2, stop=4, base=10, num=3, dtype=np.int)
+#         solver = ('auto', 'svd', 'cholesky', 'lsqr', 'saga')
         # best result over alpha: 10
         # best result over max_iter: 100
         # best result over solver: 'saga'

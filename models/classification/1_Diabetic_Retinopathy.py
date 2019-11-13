@@ -237,8 +237,8 @@ class Diabetic_retinopathy:
         :return: test accuracy of the dtc best model
         """
         # define parameters
-        n_estimators = np.logspace(start=1, stop=8, base=2, num=8, dtype=np.int)
-        learning_rate = np.logspace(start=-4, stop=0, base=10, num=5, dtype=np.float32)
+#         n_estimators = np.logspace(start=1, stop=8, base=2, num=8, dtype=np.int)
+#         learning_rate = np.logspace(start=-4, stop=0, base=10, num=5, dtype=np.float32)
         # best result over all n_estimators: 64
         # best result over all learning_rate: 1.0
 
@@ -309,7 +309,7 @@ class Diabetic_retinopathy:
         :return: test accuracy of the gnb best model
         """
         # define parameters
-        var_smoothing = np.logspace(start=-9, stop=-3, base=10, num=7, dtype=np.float32)
+#         var_smoothing = np.logspace(start=-9, stop=-3, base=10, num=7, dtype=np.float32)
         # best result over all var_smoothing: 1e-08
 
         # scale down parameters around its best result

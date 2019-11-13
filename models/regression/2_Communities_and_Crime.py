@@ -130,8 +130,8 @@ class Communities_and_crime:
         :return: test accuracy of the dtr best model
         """
         # define parameters
-        max_depth = np.logspace(start=1, stop=6, base=2, num=6, dtype=np.int)
-        min_samples_leaf = np.logspace(start=4, stop=7, base=2, num=4, dtype=np.int)
+#         max_depth = np.logspace(start=1, stop=6, base=2, num=6, dtype=np.int)
+#         min_samples_leaf = np.logspace(start=4, stop=7, base=2, num=4, dtype=np.int)
         # best result over max_depth: 8
         # best result over min_samples_leaf: 32
 
@@ -166,8 +166,8 @@ class Communities_and_crime:
         :return: test accuracy of the rfr best model
         """
         # define arguments given to GridSearchCV
-        n_estimators = np.logspace(start=6, stop=8, base=2, num=3, dtype=np.int)
-        max_depth = np.logspace(start=1, stop=6, base=2, num=6, dtype=np.int)
+#         n_estimators = np.logspace(start=6, stop=8, base=2, num=3, dtype=np.int)
+#         max_depth = np.logspace(start=1, stop=6, base=2, num=6, dtype=np.int)
         # best result over n_estimators: 256
         # best result over max_depth: 32
 
@@ -203,8 +203,8 @@ class Communities_and_crime:
         :return: test accuracy of the abr best model
         """
         # define parameters
-        n_estimators = np.logspace(start=3, stop=6, base=2, num=4, dtype=np.int)
-        learning_rate = np.logspace(start=-5, stop=-3, base=2, num=3, dtype=np.float32)
+#         n_estimators = np.logspace(start=3, stop=6, base=2, num=4, dtype=np.int)
+#         learning_rate = np.logspace(start=-5, stop=-3, base=2, num=3, dtype=np.float32)
         # best result over n_estimators: 64
         # best result over learning_rate:  0.0625
 
@@ -276,9 +276,9 @@ class Communities_and_crime:
         :return: test accuracy of the lr best model
         """
         # define parameters
-        alpha = np.logspace(start=-1, stop=3, base=10, num=5, dtype=np.float32)
-        max_iter = np.logspace(start=3, stop=4, base=10, num=2, dtype=np.int)
-        solver = ('auto', 'svd', 'saga')
+#         alpha = np.logspace(start=-1, stop=3, base=10, num=5, dtype=np.float32)
+#         max_iter = np.logspace(start=3, stop=4, base=10, num=2, dtype=np.int)
+#         solver = ('auto', 'svd', 'saga')
         # best result over alpha: 100.0
         # best result over max_iter: 1000
         # best result over solver: 'svd'
@@ -318,11 +318,11 @@ class Communities_and_crime:
         :return: test accuracy of the nnr best model
         """
         # define parameters
-        np.random.seed(0)
-        reciprocal_distribution_hls = scipy.stats.reciprocal(a=100, b=1000)
-        reciprocal_distribution_mi = scipy.stats.reciprocal(a=1000, b=10000)
-        hidden_layer_sizes = reciprocal_distribution_hls.rvs(size=5).astype(np.int)
-        max_iter = reciprocal_distribution_mi.rvs(size=5).astype(np.int)
+#         np.random.seed(0)
+#         reciprocal_distribution_hls = scipy.stats.reciprocal(a=100, b=1000)
+#         reciprocal_distribution_mi = scipy.stats.reciprocal(a=1000, b=10000)
+#         hidden_layer_sizes = reciprocal_distribution_hls.rvs(size=5).astype(np.int)
+#         max_iter = reciprocal_distribution_mi.rvs(size=5).astype(np.int)
         # best result over hidden_layer_sizes: 519
         # best result over max_iter: 4424
 

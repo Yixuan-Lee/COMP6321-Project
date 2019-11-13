@@ -1,6 +1,6 @@
 from sklearn.ensemble import AdaBoostClassifier
 from cross_validation import Cross_validation
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, recall_score, precision_score
 
 
 class Ada_boost_classifier(Cross_validation):
@@ -47,6 +47,36 @@ class Ada_boost_classifier(Cross_validation):
         """
         try:
             return accuracy_score(
+                y_true=y_test,
+                y_pred=self.__abc.predict(x_test))
+        except:
+            print("Ada_boost_classifier: x_test or y_test may be wrong")
+
+    def recall(self, x_test=None, y_test=None):
+        """
+        get classification recall score
+
+        :param x_test: test data
+        :param y_test: test targets
+        :return: the recall score
+        """
+        try:
+            return recall_score(
+                y_true=y_test,
+                y_pred=self.__abc.predict(x_test))
+        except:
+            print("Ada_boost_classifier: x_test or y_test may be wrong")
+
+    def precision(self, x_test=None, y_test=None):
+        """
+        get classification precision score
+
+        :param x_test: test data
+        :param y_test: test targets
+        :return: the precision score
+        """
+        try:
+            return precision_score(
                 y_true=y_test,
                 y_pred=self.__abc.predict(x_test))
         except:

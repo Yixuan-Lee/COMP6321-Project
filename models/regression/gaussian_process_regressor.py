@@ -1,7 +1,7 @@
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF
 from cross_validation import Cross_validation
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, r2_score
 
 
 class Gaussian_process_regressor(Cross_validation):
@@ -47,6 +47,21 @@ class Gaussian_process_regressor(Cross_validation):
         """
         try:
             return mean_squared_error(
+                y_true=y_test,
+                y_pred=self.__gpr.predict(x_test))
+        except:
+            print("Gaussian_process_regressor: x_test or y_test may be wrong")
+
+    def r2_score(self, x_test=None, y_test=None):
+        """
+        get regression r2 score
+
+        :param x_test: test data
+        :param y_test: test targets
+        :return: the r2 score
+        """
+        try:
+            return r2_score(
                 y_true=y_test,
                 y_pred=self.__gpr.predict(x_test))
         except:

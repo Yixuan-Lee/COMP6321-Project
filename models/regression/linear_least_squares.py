@@ -1,6 +1,6 @@
 from sklearn.linear_model import Ridge
 from cross_validation import Cross_validation
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, r2_score
 
 
 class Linear_least_squares(Cross_validation):
@@ -48,6 +48,21 @@ class Linear_least_squares(Cross_validation):
         """
         try:
             return mean_squared_error(
+                y_true=y_test,
+                y_pred=self.__lls.predict(x_test))
+        except:
+            print("Linear_least_squares: x_test or y_test may be wrong")
+
+    def r2_score(self, x_test=None, y_test=None):
+        """
+        get regression r2 score
+
+        :param x_test: test data
+        :param y_test: test targets
+        :return: the r2 score
+        """
+        try:
+            return r2_score(
                 y_true=y_test,
                 y_pred=self.__lls.predict(x_test))
         except:

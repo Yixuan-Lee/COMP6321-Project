@@ -1,6 +1,6 @@
 from sklearn.neural_network import MLPRegressor
 from cross_validation import Cross_validation
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, r2_score
 
 
 class Neural_network_regressor(Cross_validation):
@@ -48,6 +48,21 @@ class Neural_network_regressor(Cross_validation):
         """
         try:
             return mean_squared_error(
+                y_true=y_test,
+                y_pred=self.__nnr.predict(x_test))
+        except:
+            print("Neural_network_regressor: x_test or y_test may be wrong")
+
+    def r2_score(self, x_test=None, y_test=None):
+        """
+        get regression r2 score
+
+        :param x_test: test data
+        :param y_test: test targets
+        :return: the r2 score
+        """
+        try:
+            return r2_score(
                 y_true=y_test,
                 y_pred=self.__nnr.predict(x_test))
         except:

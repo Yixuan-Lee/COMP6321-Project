@@ -8,7 +8,7 @@ from decision_tree_regressor import Decision_tree_regressor
 from random_forest_regressor import Random_forest_regressor
 from ada_boost_regressor import Ada_boost_regressor
 from gaussian_process_regressor import Gaussian_process_regressor
-from linear_regression import Linear_regression
+from linear_least_squares import Linear_least_squares
 from neural_network_regressor import Neural_network_regressor
 from sklearn.model_selection import train_test_split
 
@@ -119,9 +119,15 @@ class QSAR_aquatic_toxicity:
         pass
 
     def linear_regression(self):
-        lr = Linear_regression(
+        lr = Linear_least_squares(
             x_train=self.x_train,
-            y_train=self.y_train)
+            y_train=self.y_train,
+            alpha=scipy.stats.reciprocal(1,1000),
+            cv=3,
+            n_iter=99,
+            random_search=True)
+        lr.print_parameter_candidates()
+        lr.print_best_estimator()
 
         return lr.mean_squared_error(
             x_test=self.x_test,

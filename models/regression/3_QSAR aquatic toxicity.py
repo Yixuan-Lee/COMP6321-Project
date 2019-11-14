@@ -99,7 +99,6 @@ class QSAR_aquatic_toxicity:
 
     def ada_boost_regression(self):
         n_estimators = range(1, 100)
-
         abr = Ada_boost_regressor(
             x_train=self.x_train,
             y_train=self.y_train,
@@ -134,7 +133,28 @@ class QSAR_aquatic_toxicity:
             y_test=self.y_test)
 
     def neural_network_regression(self):
-        pass
+        hidden_layer_sizes = []
+        for i in range(3, 40):
+            hidden_layer_sizes.append((i,))
+        hidden_layer_sizes = np.asarray(hidden_layer_sizes)
+        batch_size = range(5, 200)
+        mlp=Neural_network_regressor(
+            x_train=self.x_train,
+            y_train=self.y_train,
+            activation='tanh',
+            hidden_layer_sizes=hidden_layer_sizes,
+            batch_size=batch_size,
+            cv=3,
+            n_iter=100,
+            n_jobs=10,
+            random_search=True
+        )
+        mlp.print_parameter_candidates()
+        mlp.print_best_estimator()
+
+        return mlp.mean_squared_error(
+            x_test=self.x_test,
+            y_test=self.y_test)
 
 
 if __name__ == '__main__':

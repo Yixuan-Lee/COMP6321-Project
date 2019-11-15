@@ -62,6 +62,7 @@ class Australian_credit_approval:
         SVM conclusion : SVM svm performance is not good
         :return: best model's accuracy score
         """
+        np.random.seed(0)
         kernel = ('linear', 'rbf', 'sigmoid')
         C = scipy.stats.reciprocal(1, 1000)
         gamma = scipy.stats.reciprocal(0.01, 20)
@@ -152,6 +153,7 @@ class Australian_credit_approval:
         handle no penalty
         :return:
         """
+        np.random.seed(0)
         C = scipy.stats.reciprocal(1, 1000)
 
         lr = Logistic_regression(

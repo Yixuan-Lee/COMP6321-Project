@@ -65,6 +65,7 @@ class Breast_cancer_wisconsin:
         (but can't use in cross validation)
         :return: best model's accuracy score
         """
+        np.random.seed(0)
         kernel = ('linear', 'rbf', 'sigmoid')
         C = scipy.stats.reciprocal(1, 1000)
         gamma = scipy.stats.reciprocal(0.01, 20)
@@ -148,6 +149,7 @@ class Breast_cancer_wisconsin:
         handle no penalty
         :return:
         """
+        np.random.seed(0)
         C = scipy.stats.reciprocal(1, 1000)
 
         lr = Logistic_regression(

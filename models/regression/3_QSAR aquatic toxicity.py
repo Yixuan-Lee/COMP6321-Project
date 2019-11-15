@@ -35,6 +35,7 @@ class QSAR_aquatic_toxicity:
                 random_state=0)
 
     def support_vector_regression(self):
+        np.random.seed(0)
         kernel = ('sigmoid', 'rbf')
         C = scipy.stats.reciprocal(1, 100)
         gamma = scipy.stats.reciprocal(0.01, 20)

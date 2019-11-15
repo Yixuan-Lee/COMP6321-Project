@@ -104,6 +104,7 @@ class SGEMM :
         pass
 
     def linear_regression(self):
+        np.random.seed(0)
         res = []
         for i in range(0, 4):
             lr = Linear_least_squares(

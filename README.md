@@ -3,6 +3,12 @@
 Project code for COMP6321 Machine Learning course
 
 
+# Function return format
+
+**Classification:** [Accuracy, Recall, Precision]
+
+**Regression:** [R2 score, mean_sqaured_error]
+
 # References
 
 **Note 1:** bold the text if the link is very helpful

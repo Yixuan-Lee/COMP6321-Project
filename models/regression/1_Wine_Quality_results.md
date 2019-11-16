@@ -66,11 +66,11 @@ about __ minutes
 
 |       Parameters        |       Raw     |     Tuned     |
 | ----------------------- | ------------- | ------------- |
-| alpha                   | 1.0           | 13.528105     |
+| alpha                   | 1.0           | 64.800316     |
 | max_iter                | None          | 144           |
-| solver                  | 'auto'        | 'saga'        |
+| solver                  | 'auto'        | 'svd'         |
 |                         |               |               |
-| **mean_sqaured_error**  | 0.44277       | 0.44089       |
+| **mean_sqaured_error**  | 0.55017       | 0.55021       |
 
 
 ### 2.7 Neural Network Regressor

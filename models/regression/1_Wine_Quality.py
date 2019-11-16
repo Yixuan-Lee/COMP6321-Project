@@ -252,24 +252,16 @@ class Wine_quality:
         :return: test accuracy of the lr best model
         """
         # define parameters
-#         alpha = np.logspace(start=-1, stop=3, base=10, num=5, dtype=np.float32)
+#         alpha = np.logspace(start=3, stop=9, base=2, num=7, dtype=np.float32)
 #         max_iter = np.logspace(start=2, stop=4, base=10, num=3, dtype=np.int)
 #         solver = ('auto', 'svd', 'cholesky', 'lsqr', 'saga')
-        # best result over alpha: 10
+        # best result over alpha: 64
         # best result over max_iter: 100
-        # best result over solver: 'saga'
-
-        # scale down parameters around its best result
-        alpha = norm.rvs(loc=10, scale=2, size=3).astype(np.float32)
-        max_iter = norm.rvs(loc=100, scale=20, size=3).astype(np.int)
-
-        # best result over alpha: 10
-        # best result over max_iter: 100
-        # best result over solver: 'saga'
+        # best result over solver: 'svd'
 
         # scale down parameters around its best result
         np.random.seed(0)
-        alpha = norm.rvs(loc=10, scale=2, size=3).astype(np.float32)
+        alpha = norm.rvs(loc=64, scale=2, size=3).astype(np.float32)
         max_iter = norm.rvs(loc=100, scale=20, size=3).astype(np.int)
         solver = ('auto', 'svd', 'cholesky', 'lsqr', 'saga')
 

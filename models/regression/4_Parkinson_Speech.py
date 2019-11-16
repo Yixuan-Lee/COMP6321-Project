@@ -34,6 +34,7 @@ class Parkinson_speech:
 
     def support_vector_regression(self):
         kernel = ('sigmoid', 'rbf')
+        np.random.seed(0)
         C = scipy.stats.reciprocal(1, 100)
         gamma = scipy.stats.reciprocal(0.01, 20)
         coef0 = scipy.stats.uniform(0, 5)
@@ -120,6 +121,7 @@ class Parkinson_speech:
         pass
 
     def linear_regression(self):
+        np.random.seed(0)
         lr = Linear_least_squares(
             x_train=self.x_train,
             y_train=self.y_train,

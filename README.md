@@ -3,6 +3,12 @@
 Project code for COMP6321 Machine Learning course
 
 
+# Function return format
+
+**Classification:** [Accuracy, Recall, Precision]
+
+**Regression:** [R2 score, mean_sqaured_error]
+
 # References
 
 **Note 1:** bold the text if the link is very helpful
@@ -17,6 +23,7 @@ Project code for COMP6321 Machine Learning course
 |  4        | model selection        |
 |  5        | model metrics          |
 |  6        | python syntax          |
+|  7        | plotting               |
 |  _        | (new title)            |
 
 _(add a new section if necessary)_
@@ -133,3 +140,8 @@ _(add a new section if necessary)_
 6.3 [iterating over a tuple containing one string actually iterates over characters](https://stackoverflow.com/questions/37884136/iterating-over-a-tuple-containing-one-string-actually-iterates-over-characters)
 
 6.4 [timeout_decorator](https://github.com/pnpnpn/timeout-decorator)
+
+
+## 7. plotting
+
+7.1 [sklearn.tree.plot_tree](https://scikit-learn.org/stable/modules/generated/sklearn.tree.plot_tree.html)

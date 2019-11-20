@@ -4,6 +4,9 @@ from models import settings     # For retrieving root path
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import plot_tree
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import accuracy_score, recall_score
 
 
 class CIFAR:
@@ -28,17 +31,13 @@ class CIFAR:
             else:
                 train_data = np.vstack((train_data, data))
                 train_labels = np.hstack((train_labels, labels))
-        self.x_train = train_data
-        self.y_train = train_labels
-        print(self.x_train.shape)   # (50000, 3072)
-        print(self.y_train.shape)   # (50000,)
+        self.x_train = train_data       # (50000, 3072)
+        self.y_train = train_labels     # (50000,)
         # read test_batch
         test_batch = 'test_batch'
         dict_test = self.unpickle(filepath, test_batch)
-        self.x_test = dict_test[b'data']
-        self.y_test = np.asarray(dict_test[b'labels'])
-        print(self.x_test.shape)   # (10000, 3072)
-        print(self.y_test.shape)   # (10000,)
+        self.x_test = dict_test[b'data']                # (10000, 3072)
+        self.y_test = np.asarray(dict_test[b'labels'])  # (10000,)
 
     def unpickle(self, filepath, filename):
         with open(os.path.join(settings.ROOT_DIR, filepath, filename), 'rb') as fo:
@@ -47,17 +46,45 @@ class CIFAR:
 
     ##################### Model training #####################
     def decision_tree_classifier(self):
-        dtc = DecisionTreeClassifier(max_depth=12, random_state=0)
-        dtc.fit(self.x_train, self.y_train)
+        # normalize the training and testing pixels
+        train_data = self.x_train / 255.0
+        test_data = self.x_test / 255.0
 
-        # depth / accuracy:
-        # 3 / 23%
-        # 4 / 25%
-        # 6 / 28.12%
-        # 9 / 30.41%
-        # 12 / 30.45%
-        print("Decision Tree classifier accuracy: %.4f %%"
-              % (dtc.score(X=self.x_test, y=self.y_test) * 100))
+        # train a decision tree classifier and cross validate
+        dtc = DecisionTreeClassifier(random_state=0)
+        max_depth = np.logspace(start=1, stop=1, base=2, num=1, dtype=np.int)
+        params = {
+            'max_depth': max_depth,
+            'criterion': ('gini', 'entropy')
+        }
+        gscv = GridSearchCV(
+            estimator=dtc,
+            cv=3,
+            n_jobs=2,
+            param_grid=params)
+        gscv.fit(train_data, self.y_train)
+
+        # print the results
+        print("Decision Tree classifier: ")
+        print("accuracy: %.4f %%" % (accuracy_score(
+            y_true=self.y_test,
+            y_pred=gscv.predict(test_data)) * 100))
+        print("(average='micro') recall: %.4f" % (recall_score(
+            y_true=self.y_test,
+            y_pred=gscv.predict(test_data),
+            average='micro')))
+        print("(average='weighted') recall: %.4f" % (recall_score(
+            y_true=self.y_test,
+            y_pred=gscv.predict(test_data),
+            average='weighted')))
+
+        # plot the decision tree
+        plt.figure(figsize=(15, 15))
+        plot_tree(
+            decision_tree=gscv.best_estimator_,
+            max_depth=4)    # only plot the top 4 layers
+        plt.title('decision tree classifier (depth = ' + str(max_depth) + ')')
+        plt.show()
 
 
 if __name__ == '__main__':

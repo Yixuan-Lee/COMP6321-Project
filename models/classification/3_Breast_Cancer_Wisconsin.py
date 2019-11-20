@@ -195,13 +195,13 @@ class Breast_cancer_wisconsin:
 if __name__ == '__main__':
     bcw = Breast_cancer_wisconsin()
     print("accuracy on the actual test set:")
-    #print('KNN: %.2f %%' % (bcw.k_nearest_neighbours() * 100))
-    #print('SVC: %.2f %%' % (bcw.support_vector_classifier() * 100))
-    #print('DTC: %.2f %%' % (bcw.decision_tree_classifier() * 100))
-    #print('RFC: %.2f %%' % (bcw.random_forest_classifier() * 100))
-   # print('ABC: %.2f %%' % (bcw.ada_boost_classifier() * 100))
-    #print(' LR: %.2f %%' % (bcw.logistic_regression() * 100))
-    #print('GNB: %.2f %%' % (bcw.gaussian_naive_bayes() * 100))
+    print('KNN: %.2f %%' % (bcw.k_nearest_neighbours() * 100))
+    print('SVC: %.2f %%' % (bcw.support_vector_classifier() * 100))
+    print('DTC: %.2f %%' % (bcw.decision_tree_classifier() * 100))
+    print('RFC: %.2f %%' % (bcw.random_forest_classifier() * 100))
+    print('ABC: %.2f %%' % (bcw.ada_boost_classifier() * 100))
+    print(' LR: %.2f %%' % (bcw.logistic_regression() * 100))
+    print('GNB: %.2f %%' % (bcw.gaussian_naive_bayes() * 100))
     print('NNC: %.2f %%' % (bcw.neural_network_classifier() * 100))
 
 

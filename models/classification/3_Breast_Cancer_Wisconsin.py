@@ -170,19 +170,38 @@ class Breast_cancer_wisconsin:
         pass
 
     def neural_network_classifier(self):
-        pass
+        hidden_layer_sizes = []
+        for i in range(3, 40):
+            hidden_layer_sizes.append((i,))
+        hidden_layer_sizes = np.asarray(hidden_layer_sizes)
+        mlp = Neural_network_classifier(
+            x_train=self.x_train,
+            y_train=self.y_train,
+            activation='tanh',
+            hidden_layer_sizes=hidden_layer_sizes,
+            cv=3,
+            n_iter=100,
+            n_jobs=10,
+            random_search=True,
+        )
+
+        mlp.print_best_estimator()
+
+        return mlp.accuracy_score(
+            x_test=self.x_test,
+            y_test=self.y_test)
 
 
 if __name__ == '__main__':
     bcw = Breast_cancer_wisconsin()
     print("accuracy on the actual test set:")
-    print('KNN: %.2f %%' % (bcw.k_nearest_neighbours() * 100))
-    print('SVC: %.2f %%' % (bcw.support_vector_classifier() * 100))
-    print('DTC: %.2f %%' % (bcw.decision_tree_classifier() * 100))
-    print('RFC: %.2f %%' % (bcw.random_forest_classifier() * 100))
-    print('ABC: %.2f %%' % (bcw.ada_boost_classifier() * 100))
-    print(' LR: %.2f %%' % (bcw.logistic_regression() * 100))
-    print('GNB: %.2f %%' % (bcw.gaussian_naive_bayes() * 100))
+    #print('KNN: %.2f %%' % (bcw.k_nearest_neighbours() * 100))
+    #print('SVC: %.2f %%' % (bcw.support_vector_classifier() * 100))
+    #print('DTC: %.2f %%' % (bcw.decision_tree_classifier() * 100))
+    #print('RFC: %.2f %%' % (bcw.random_forest_classifier() * 100))
+   # print('ABC: %.2f %%' % (bcw.ada_boost_classifier() * 100))
+    #print(' LR: %.2f %%' % (bcw.logistic_regression() * 100))
+    #print('GNB: %.2f %%' % (bcw.gaussian_naive_bayes() * 100))
     print('NNC: %.2f %%' % (bcw.neural_network_classifier() * 100))
 
 

@@ -31,9 +31,6 @@ class Australian_credit_approval:
         self.data = np.asarray(f[:, :14])
         self.targets = f[:, 14:].reshape(-1)
 
-        print(self.data)
-        print(self.targets)
-
         self.x_train, self.x_test, self.y_train, self.y_test = \
             train_test_split(self.data, self.targets, test_size=0.33,
                 random_state=0)
@@ -174,7 +171,27 @@ class Australian_credit_approval:
         pass
 
     def neural_network_classifier(self):
-        pass
+        hidden_layer_sizes = []
+        for i in range(3, 40):
+            for j in range(3, 40):
+                hidden_layer_sizes.append((i, j))
+        hidden_layer_sizes = np.asarray(hidden_layer_sizes)
+        mlp = Neural_network_classifier(
+            x_train=self.x_train,
+            y_train=self.y_train,
+            activation='tanh',
+            hidden_layer_sizes=hidden_layer_sizes,
+            cv=3,
+            n_iter=100,
+            n_jobs=10,
+            random_search=True,
+        )
+
+        mlp.print_best_estimator()
+
+        return mlp.accuracy_score(
+            x_test=self.x_test,
+            y_test=self.y_test)
 
 
 if __name__ == '__main__':

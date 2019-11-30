@@ -52,7 +52,9 @@ class Diabetic_retinopathy:
         for knn, i train on the training data using different :
             1) n_neighbors
             2) weights
-        :return: test accuracy of the knn best model
+
+        :return: ((accuracy_train, recall_train, precision_train),
+                  (accuracy_test,  recall_test,  precision_test))
         """
         # define parameters
 #         n_neighbors = np.logspace(start=1, stop=9, base=2, num=9, dtype=np.int)
@@ -81,13 +83,12 @@ class Diabetic_retinopathy:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        knn.print_parameter_candidates()
-        knn.print_best_estimator()
+        # knn.print_parameter_candidates()
+        # knn.print_best_estimator()
 
         # return the accuracy score
-        return knn.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (knn.evaluate(data=self.x_train, targets=self.y_train),
+                knn.evaluate(data=self.x_test, targets=self.y_test))
 
     def support_vector_classifier(self):
         """
@@ -95,7 +96,9 @@ class Diabetic_retinopathy:
             1) C
             2) gamma
             3) kernel
-        :return: test accuracy of the svc best model
+
+        :return: ((accuracy_train, recall_train, precision_train),
+                  (accuracy_test,  recall_test,  precision_test))
         """
         # define parameters
 #         C = np.logspace(start=0, stop=3, base=10, num=4, dtype=np.int)
@@ -138,20 +141,21 @@ class Diabetic_retinopathy:
             random_search=True)
 
         # print all possible parameter values and the best parameters
-        svc.print_parameter_candidates()
-        svc.print_best_estimator()
+        # svc.print_parameter_candidates()
+        # svc.print_best_estimator()
 
         # return the accuracy score
-        return svc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (svc.evaluate(data=self.x_train, targets=self.y_train),
+                svc.evaluate(data=self.x_test, targets=self.y_test))
 
     def decision_tree_classifier(self):
         """
         for dtc, i train on the training data using different :
             1) criterion
             2) max_depth
-        :return: test accuracy of the dtc best model
+
+        :return: ((accuracy_train, recall_train, precision_train),
+                  (accuracy_test,  recall_test,  precision_test))
         """
         # define parameters
 #         criterion = ('gini', 'entropy')
@@ -179,13 +183,12 @@ class Diabetic_retinopathy:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        dtc.print_parameter_candidates()
-        dtc.print_best_estimator()
+        # dtc.print_parameter_candidates()
+        # dtc.print_best_estimator()
 
         # return the accuracy score
-        return dtc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (dtc.evaluate(data=self.x_train, targets=self.y_train),
+                dtc.evaluate(data=self.x_test, targets=self.y_test))
 
     def random_forest_classifier(self):
         """
@@ -193,7 +196,9 @@ class Diabetic_retinopathy:
             1) criterion
             2) n_estimators
             3) max_depth
-        :return: test accuracy of the dtc best model
+
+        :return: ((accuracy_train, recall_train, precision_train),
+                  (accuracy_test,  recall_test,  precision_test))
         """
         # define parameters
 #         criterion = ('gini', 'entropy')
@@ -221,20 +226,21 @@ class Diabetic_retinopathy:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        rfc.print_parameter_candidates()
-        rfc.print_best_estimator()
+        # rfc.print_parameter_candidates()
+        # rfc.print_best_estimator()
 
         # return the accuracy score
-        return rfc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (rfc.evaluate(data=self.x_train, targets=self.y_train),
+                rfc.evaluate(data=self.x_test, targets=self.y_test))
 
     def ada_boost_classifier(self):
         """
         for abc, i train on the training data using different :
             1) n_estimators
             2) learning_rate
-        :return: test accuracy of the dtc best model
+
+        :return: ((accuracy_train, recall_train, precision_train),
+                  (accuracy_test,  recall_test,  precision_test))
         """
         # define parameters
 #         n_estimators = np.logspace(start=1, stop=8, base=2, num=8, dtype=np.int)
@@ -257,20 +263,21 @@ class Diabetic_retinopathy:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        abc.print_parameter_candidates()
-        abc.print_best_estimator()
+        # abc.print_parameter_candidates()
+        # abc.print_best_estimator()
 
         # return the accuracy score
-        return abc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (abc.evaluate(data=self.x_train, targets=self.y_train),
+                abc.evaluate(data=self.x_test, targets=self.y_test))
 
     def logistic_regression(self):
         """
         for lr, i train on the training data using different :
             1) C
             2) max_iter
-        :return: test accuracy of the dtc best model
+
+        :return: ((accuracy_train, recall_train, precision_train),
+                  (accuracy_test,  recall_test,  precision_test))
         """
         # define parameters
 #         C = np.logspace(start=-3, stop=3, base=10, num=7, dtype=np.float32)
@@ -293,20 +300,20 @@ class Diabetic_retinopathy:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        lr.print_parameter_candidates()
-        lr.print_best_estimator()
+        # lr.print_parameter_candidates()
+        # lr.print_best_estimator()
 
         # return the accuracy score
-        return lr.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (lr.evaluate(data=self.x_train, targets=self.y_train),
+                lr.evaluate(data=self.x_test, targets=self.y_test))
 
     def gaussian_naive_bayes(self):
         """
         for gnb, i train on the training data using different :
             1) var_smoothing
 
-        :return: test accuracy of the gnb best model
+        :return: ((accuracy_train, recall_train, precision_train),
+                  (accuracy_test,  recall_test,  precision_test))
         """
         # define parameters
 #         var_smoothing = np.logspace(start=-9, stop=-3, base=10, num=7, dtype=np.float32)
@@ -325,20 +332,21 @@ class Diabetic_retinopathy:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        gnb.print_parameter_candidates()
-        gnb.print_best_estimator()
+        # gnb.print_parameter_candidates()
+        # gnb.print_best_estimator()
 
         # return the accuracy score
-        return gnb.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (gnb.evaluate(data=self.x_train, targets=self.y_train),
+                gnb.evaluate(data=self.x_test, targets=self.y_test))
 
     def neural_network_classifier(self):
         """
         for nnc, i train on the training data using different :
             1) hidden_layer_sizes
             2) max_iter
-        :return: test accuracy of the nnr best model
+
+        :return: ((accuracy_train, recall_train, precision_train),
+                  (accuracy_test,  recall_test,  precision_test))
         """
         # define parameters
 #         np.random.seed(0)
@@ -364,23 +372,43 @@ class Diabetic_retinopathy:
             random_search=True)
 
         # print all possible parameter values and best parameters
-        nnc.print_parameter_candidates()
-        nnc.print_best_estimator()
+        # nnc.print_parameter_candidates()
+        # nnc.print_best_estimator()
 
         # return the accuracy score
-        return nnc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (nnc.evaluate(data=self.x_train, targets=self.y_train),
+                nnc.evaluate(data=self.x_test, targets=self.y_test))
 
 
 if __name__ == '__main__':
     dr = Diabetic_retinopathy()
-    print("accuracy on the actual test set:")
-    print('KNN: %.2f %%' % (dr.k_nearest_neighbours() * 100))
-    print('SVC: %.2f %%' % (dr.support_vector_classifier() * 100))
-    print('DTC: %.2f %%' % (dr.decision_tree_classifier() * 100))
-    print('RFC: %.2f %%' % (dr.random_forest_classifier() * 100))
-    print('ABC: %.2f %%' % (dr.ada_boost_classifier() * 100))
-    print(' LR: %.2f %%' % (dr.logistic_regression() * 100))
-    print('GNB: %.2f %%' % (dr.gaussian_naive_bayes() * 100))
-    print('NNC: %.2f %%' % (dr.neural_network_classifier() * 100))
+
+    # retrieve the results
+    knn_results = dr.k_nearest_neighbours()
+    svc_results = dr.support_vector_classifier()
+    dtc_results = dr.decision_tree_classifier()
+    rfr_results = dr.random_forest_classifier()
+    abc_results = dr.ada_boost_classifier()
+    lr_results = dr.logistic_regression()
+    gnb_results = dr.gaussian_naive_bayes()
+    nnc_results = dr.neural_network_classifier()
+
+    print("(accuracy, recall, prediction) on training set:")
+    print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[0]))
+    print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[0]))
+    print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[0]))
+    print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[0]))
+    print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[0]))
+    print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[0]))
+    print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[0]))
+    print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[0]))
+
+    print("(accuracy, recall, prediction) on testing set:")
+    print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[1]))
+    print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[1]))
+    print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[1]))
+    print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[1]))
+    print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[1]))
+    print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[1]))
+    print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[1]))
+    print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[1]))

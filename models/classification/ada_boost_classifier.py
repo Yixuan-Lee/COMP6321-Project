@@ -67,6 +67,18 @@ class Ada_boost_classifier(Cross_validation):
         except:
             print("Ada_boost_classifier: x_test or y_test may be wrong")
 
+    def evaluate(self, data=None, targets=None):
+        """
+        evaluate the model
+
+        :param data: training or testing data
+        :param targets: targets
+        :return: return (accuracy_score, recall, precision)
+        """
+        return (self.accuracy_score(data, targets),
+                self.recall(data, targets),
+                self.precision(data, targets))
+
     def precision(self, x_test=None, y_test=None):
         """
         get classification precision score

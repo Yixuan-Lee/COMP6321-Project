@@ -91,6 +91,18 @@ class K_nearest_neighbours(Cross_validation):
         except:
             print("K_nearest_neighbours: x_test or y_test may be wrong")
 
+    def evaluate(self, data=None, targets=None):
+        """
+        evaluate the model
+
+        :param data: training or testing data
+        :param targets: targets
+        :return: return (accuracy_score, recall, precision)
+        """
+        return (self.accuracy_score(data, targets),
+                self.recall(data, targets),
+                self.precision(data, targets))
+
     def print_parameter_candidates(self):
         """
         print all possible parameter combinations

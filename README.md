@@ -2,6 +2,14 @@
 
 Project code for COMP6321 Machine Learning course
 
+# Improvement
+
+1. 添加Training set 的 score (Classification : accuracy / recall / precision; Regression : R2 score 和 mean_squared_error）
+2. novelty 可以对一个**运行时间很长**并且**unbalanced dataset**做deep dive，具体方法是先把数据集分成training data和testing data,然后把training data分成两部分一小部分做training另一部分做validation。
+3. Plotting 对 score / dataset / model / (training/testing result) 分别保证一个或者两个变量不变生成另外两个的对比图像。
+
+
+
 
 # Function return format
 

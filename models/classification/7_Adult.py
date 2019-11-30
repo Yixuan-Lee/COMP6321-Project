@@ -73,8 +73,6 @@ class Adult:
         self.y_test = self.targets
 
     def k_nearest_neighbours(self):
-        # Best K = 27
-        # Test Error: 0.802764
         n_neighbors = range(1, 100)
         knn = K_nearest_neighbours(
             x_train=self.x_train,

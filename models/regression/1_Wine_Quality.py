@@ -39,8 +39,8 @@ class Wine_quality:
         self.targets = file_data[:, -1]  # (6497, )
 
         # subsampling data (for speeding up)
-#         self.data = self.data[:1000]
-#         self.targets = self.targets[:1000]
+        self.data = self.data[:1000]
+        self.targets = self.targets[:1000]
 
         # split into train and test sets
         self.x_train, self.x_test, self.y_train, self.y_test = \
@@ -59,7 +59,9 @@ class Wine_quality:
             1) C
             2) gamma
             3) kernel
-        :return: test accuracy of the svr best model
+
+        :return: ((Mean_square_error_train, R2_score_train),
+                  (Mean_square_error_test,  R2_score_test))
         """
         # define parameters
 #         C = np.logspace(start=-1, stop=3, base=10, num=5, dtype=np.float32)
@@ -70,7 +72,7 @@ class Wine_quality:
         # best result over kernel: 'rbf'
 
         # scale down parameters around its best result
-        np.random.seed(0)  # Make sure result is consistent
+        np.random.seed(0)
         loc = 1.0
         scale = 0.1
         C = loc + scipy.stats.truncnorm.rvs(-loc/scale, np.infty, size=3, scale=scale)  # To skip negative values
@@ -90,13 +92,11 @@ class Wine_quality:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        svr.print_parameter_candidates()
-        svr.print_best_estimator()
+        # svr.print_parameter_candidates()
+        # svr.print_best_estimator()
 
-        # return the mean squared error
-        return svr.mean_sqaured_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (svr.evaluate(data=self.x_train, targets=self.y_train),
+                svr.evaluate(data=self.x_test, targets=self.y_test))
 
     def decision_tree_regression(self):
         """
@@ -125,13 +125,11 @@ class Wine_quality:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        dtr.print_parameter_candidates()
-        dtr.print_best_estimator()
+        # dtr.print_parameter_candidates()
+        # dtr.print_best_estimator()
 
-        # return the mean squared error
-        return dtr.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (dtr.evaluate(data=self.x_train, targets=self.y_train),
+                dtr.evaluate(data=self.x_test, targets=self.y_test))
 
     def random_forest_regression(self):
         """
@@ -161,13 +159,11 @@ class Wine_quality:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        rfr.print_parameter_candidates()
-        rfr.print_best_estimator()
+        # rfr.print_parameter_candidates()
+        # rfr.print_best_estimator()
 
-        # return the mean squared error
-        return rfr.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (rfr.evaluate(data=self.x_train, targets=self.y_train),
+                rfr.evaluate(data=self.x_test, targets=self.y_test))
 
     def ada_boost_regression(self):
         """
@@ -200,13 +196,11 @@ class Wine_quality:
         )
 
         # print all possible parameter values and the best parameters
-        abr.print_parameter_candidates()
-        abr.print_best_estimator()
+        # abr.print_parameter_candidates()
+        # abr.print_best_estimator()
 
-        # return the mean squared error
-        return abr.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (abr.evaluate(data=self.x_train, targets=self.y_train),
+                abr.evaluate(data=self.x_test, targets=self.y_test))
 
     def gaussian_process_regression(self):
         """
@@ -235,13 +229,11 @@ class Wine_quality:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        gpr.print_parameter_candidates()
-        gpr.print_best_estimator()
+        # gpr.print_parameter_candidates()
+        # gpr.print_best_estimator()
 
-        # return the mean squared error
-        return gpr.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (gpr.evaluate(data=self.x_train, targets=self.y_train),
+                gpr.evaluate(data=self.x_test, targets=self.y_test))
 
     def linear_least_squares(self):
         """
@@ -277,13 +269,11 @@ class Wine_quality:
         )
 
         # print all possible parameter values and the best parameters
-        lls.print_parameter_candidates()
-        lls.print_best_estimator()
+        # lls.print_parameter_candidates()
+        # lls.print_best_estimator()
 
-        # return the mean squared error
-        return lls.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (lls.evaluate(data=self.x_train, targets=self.y_train),
+                lls.evaluate(data=self.x_test, targets=self.y_test))
 
     def neural_network_regression(self):
         """
@@ -316,22 +306,39 @@ class Wine_quality:
             random_search=True)
 
         # print all possible parameter values and the best parameters
-        nnr.print_parameter_candidates()
-        nnr.print_best_estimator()
+        # nnr.print_parameter_candidates()
+        # nnr.print_best_estimator()
 
-        # return the mean squared error
-        return nnr.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (nnr.evaluate(data=self.x_train, targets=self.y_train),
+                nnr.evaluate(data=self.x_test, targets=self.y_test))
 
 
 if __name__ == '__main__':
     wq = Wine_quality()
-    print("mean squared error on the actual test set:")
-    print('SVR: %.5f' % (wq.support_vector_regression()))
-    print('DTR: %.5f' % (wq.decision_tree_regression()))
-    print('RFR: %.5f' % (wq.random_forest_regression()))
-    print('ABR: %.5f' % (wq.ada_boost_regression()))
-    print('GPR: %.5f' % (wq.gaussian_process_regression()))
-    print('LLS: %.5f' % (wq.linear_least_squares()))
-    print('NNR: %.5f' % (wq.neural_network_regression()))
+
+    # retrieve the results
+    svr_results = wq.support_vector_regression()
+    dtr_results = wq.decision_tree_regression()
+    rfr_results = wq.random_forest_regression()
+    abr_results = wq.ada_boost_regression()
+    gpr_results = wq.gaussian_process_regression()
+    lls_results = wq.linear_least_squares()
+    nnr_results = wq.neural_network_regression()
+
+    print("(mean_square_error, r2_score) on training set:")
+    print('SVR: (%.3f, %.3f)' % (svr_results[0]))
+    print('DTR: (%.3f, %.3f)' % (dtr_results[0]))
+    print('RFR: (%.3f, %.3f)' % (rfr_results[0]))
+    print('ABR: (%.3f, %.3f)' % (abr_results[0]))
+    print('GPR: (%.3f, %.3f)' % (gpr_results[0]))
+    print('LLS: (%.3f, %.3f)' % (lls_results[0]))
+    print('NNR: (%.3f, %.3f)' % (nnr_results[0]))
+
+    print("(mean_square_error, r2_score) on test set:")
+    print('SVR: (%.3f, %.3f)' % (svr_results[1]))
+    print('DTR: (%.3f, %.3f)' % (dtr_results[1]))
+    print('RFR: (%.3f, %.3f)' % (rfr_results[1]))
+    print('ABR: (%.3f, %.3f)' % (abr_results[1]))
+    print('GPR: (%.3f, %.3f)' % (gpr_results[1]))
+    print('LLS: (%.3f, %.3f)' % (lls_results[1]))
+    print('NNR: (%.3f, %.3f)' % (nnr_results[1]))

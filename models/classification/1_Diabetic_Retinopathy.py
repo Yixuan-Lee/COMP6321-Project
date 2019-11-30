@@ -86,7 +86,6 @@ class Diabetic_retinopathy:
         # knn.print_parameter_candidates()
         # knn.print_best_estimator()
 
-        # return the accuracy score
         return (knn.evaluate(data=self.x_train, targets=self.y_train),
                 knn.evaluate(data=self.x_test, targets=self.y_test))
 
@@ -144,7 +143,6 @@ class Diabetic_retinopathy:
         # svc.print_parameter_candidates()
         # svc.print_best_estimator()
 
-        # return the accuracy score
         return (svc.evaluate(data=self.x_train, targets=self.y_train),
                 svc.evaluate(data=self.x_test, targets=self.y_test))
 
@@ -186,7 +184,6 @@ class Diabetic_retinopathy:
         # dtc.print_parameter_candidates()
         # dtc.print_best_estimator()
 
-        # return the accuracy score
         return (dtc.evaluate(data=self.x_train, targets=self.y_train),
                 dtc.evaluate(data=self.x_test, targets=self.y_test))
 
@@ -229,7 +226,6 @@ class Diabetic_retinopathy:
         # rfc.print_parameter_candidates()
         # rfc.print_best_estimator()
 
-        # return the accuracy score
         return (rfc.evaluate(data=self.x_train, targets=self.y_train),
                 rfc.evaluate(data=self.x_test, targets=self.y_test))
 
@@ -266,7 +262,6 @@ class Diabetic_retinopathy:
         # abc.print_parameter_candidates()
         # abc.print_best_estimator()
 
-        # return the accuracy score
         return (abc.evaluate(data=self.x_train, targets=self.y_train),
                 abc.evaluate(data=self.x_test, targets=self.y_test))
 
@@ -303,7 +298,6 @@ class Diabetic_retinopathy:
         # lr.print_parameter_candidates()
         # lr.print_best_estimator()
 
-        # return the accuracy score
         return (lr.evaluate(data=self.x_train, targets=self.y_train),
                 lr.evaluate(data=self.x_test, targets=self.y_test))
 

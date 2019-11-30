@@ -66,6 +66,18 @@ class Decision_tree_regressor(Cross_validation):
         except:
             print("Decision_tree_regressor: x_test or y_test may be wrong")
 
+    def evaluate(self, data=None, targets=None):
+        """
+        evaluate the model
+
+        :param data: training or testing data
+        :param targets: targets
+
+        :return: return (mean_square_error, r2_score)
+        """
+        return (self.mean_squared_error(data, targets),
+                self.r2_score(data,targets))
+
     def print_parameter_candidates(self):
         """
         print all possible parameter combinations

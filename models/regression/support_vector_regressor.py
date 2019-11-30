@@ -39,7 +39,7 @@ class Support_vector_regressor(Cross_validation):
         except:
             print("Support_vector_regressor: x_train or y_train may be wrong")
 
-    def mean_sqaured_error(self, x_test=None, y_test=None):
+    def mean_squared_error(self, x_test=None, y_test=None):
         """
         get regression mean squared error
 
@@ -68,6 +68,18 @@ class Support_vector_regressor(Cross_validation):
                 y_pred=self.__svr.predict(x_test))
         except:
             print("Support_vector_regressor: x_test or y_test may be wrong")
+
+    def evaluate(self, data=None, targets=None):
+        """
+        evaluate the model
+
+        :param data: training or testing data
+        :param targets: targets
+
+        :return: return (mean_square_error, r2_score)
+        """
+        return (self.mean_squared_error(data, targets),
+                self.r2_score(data, targets))
 
     def print_parameter_candidates(self):
         """

@@ -13,9 +13,13 @@ Project code for COMP6321 Machine Learning course
 
 # Function return format
 
-**Classification:** [Accuracy, Recall, Precision]
+**Classification:** return a list containing 2 elements
 
-**Regression:** [R2 score, mean_sqaured_error]
+( (Accuracy_train, Recall_train, Precision_train), (Accuracy_test, Recall_test, Precision_test) )
+
+**Regression:** return a list containint 2 elements
+
+( (Mean_squared_error_train, R2_score_train), (Mean_squared_error_test, R2_score_test) )
 
 # References
 

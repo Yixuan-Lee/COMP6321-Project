@@ -8,7 +8,7 @@ class Ada_boost_regressor(Cross_validation):
     __param = {}
 
     def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10, n_jobs=None,
-            n_estimators=(50,), learning_rate=(1.),
+            n_estimators=(50,), learning_rate=(1.,),
             grid_search=False, random_search=False):
 
         self.__abr = AdaBoostRegressor(random_state=0)

@@ -118,7 +118,23 @@ class Parkinson_speech:
             y_test=self.y_test)
 
     def gaussian_process_regression(self):
-        pass
+        gpr = Gaussian_process_regressor(
+            x_train=self.x_train,
+            y_train=self.y_train,
+            cv=3,
+            n_iter=50,
+            alpha=scipy.stats.reciprocal(1e-11, 1e-8),
+            n_jobs=10,
+            random_search=True)
+
+        # print all possible parameter values and the best parameters
+        gpr.print_parameter_candidates()
+        gpr.print_best_estimator()
+
+        # return the mean squared error
+        return gpr.mean_squared_error(
+            x_test=self.x_test,
+            y_test=self.y_test)
 
     def linear_regression(self):
         np.random.seed(0)

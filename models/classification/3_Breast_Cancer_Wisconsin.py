@@ -167,7 +167,24 @@ class Breast_cancer_wisconsin:
             y_test=self.y_test)
 
     def gaussian_naive_bayes(self):
-        pass
+        priors=[(1,),(20,),(50,),(100,)]
+
+        gnb = Gaussian_naive_bayes(
+            x_train=self.x_train,
+            y_train=self.y_train,
+            cv=3,
+            n_iter=30,
+            var_smoothing=np.logspace(start=-9, stop=-6, base=10, num=4, dtype=np.float32),
+            grid_search=True)
+
+        # print all possible parameter values and the best parameters
+        gnb.print_parameter_candidates()
+        gnb.print_best_estimator()
+
+        # return the accuracy score
+        return gnb.accuracy_score(
+            x_test=self.x_test,
+            y_test=self.y_test)
 
     def neural_network_classifier(self):
         hidden_layer_sizes = []
@@ -177,11 +194,10 @@ class Breast_cancer_wisconsin:
         mlp = Neural_network_classifier(
             x_train=self.x_train,
             y_train=self.y_train,
-            activation='tanh',
+            activation=('tanh',),
             hidden_layer_sizes=hidden_layer_sizes,
             cv=3,
             n_iter=100,
-            n_jobs=10,
             random_search=True,
         )
 

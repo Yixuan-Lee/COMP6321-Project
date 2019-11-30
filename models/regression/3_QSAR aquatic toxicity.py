@@ -99,7 +99,7 @@ class QSAR_aquatic_toxicity:
             y_test=self.y_test)
 
     def ada_boost_regression(self):
-        n_estimators = range(1, 100)
+        n_estimators = range(1,100)
         abr = Ada_boost_regressor(
             x_train=self.x_train,
             y_train=self.y_train,
@@ -116,7 +116,23 @@ class QSAR_aquatic_toxicity:
             y_test=self.y_test)
 
     def gaussian_process_regression(self):
-        pass
+        gpr = Gaussian_process_regressor(
+            x_train=self.x_train,
+            y_train=self.y_train,
+            cv=3,
+            n_iter=50,
+            alpha=scipy.stats.reciprocal(1e-11, 1e-8),
+            n_jobs=10,
+            random_search=True)
+
+        # print all possible parameter values and the best parameters
+        gpr.print_parameter_candidates()
+        gpr.print_best_estimator()
+
+        # return the mean squared error
+        return gpr.mean_squared_error(
+            x_test=self.x_test,
+            y_test=self.y_test)
 
     def linear_regression(self):
         lr = Linear_least_squares(
@@ -161,11 +177,11 @@ class QSAR_aquatic_toxicity:
 if __name__ == '__main__':
     qsar = QSAR_aquatic_toxicity()
     print("mean squared error on the actual test set:")
-    print('SVR: %.5f' % (qsar.support_vector_regression()))
-    print('DTR: %.5f' % (qsar.decision_tree_regression()))
-    print('RFR: %.5f' % (qsar.random_forest_regression()))
+    #print('SVR: %.5f' % (qsar.support_vector_regression()))
+    #print('DTR: %.5f' % (qsar.decision_tree_regression()))
+    #print('RFR: %.5f' % (qsar.random_forest_regression()))
     print('ABR: %.5f' % (qsar.ada_boost_regression()))
-    print('GPR: %.5f' % (qsar.gaussian_process_regression()))
-    print(' LR: %.5f' % (qsar.linear_regression()))
-    print('NNR: %.5f' % (qsar.neural_network_regression()))
+    #print('GPR: %.5f' % (qsar.gaussian_process_regression()))
+    #print(' LR: %.5f' % (qsar.linear_regression()))
+    #print('NNR: %.5f' % (qsar.neural_network_regression()))
 

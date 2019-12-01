@@ -7,7 +7,7 @@ class Support_vector_regressor(Cross_validation):
     __svr = None
     __param = {}
 
-    def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10, n_jobs=None,
+    def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10, n_jobs=None,scoring = None,
             C=(1.0,), kernel=('rbf',), gamma=('auto',), coef0=(0.0,), epsilon=(0.1,),
             grid_search=False, random_search=False):
 
@@ -28,11 +28,11 @@ class Support_vector_regressor(Cross_validation):
                 if grid_search:
                     # apply GridSearchCV and get the best estimator
                     self.__svr = super().grid_search_cv(self.__svr,
-                        self.__param, cv, n_jobs, x_train, y_train)
+                        self.__param, cv, n_jobs, x_train, y_train,scoring = scoring)
                 elif random_search:
                     # apply RandomSearchCV and get the best estimator
                     self.__svr = super().random_search_cv(self.__svr,
-                        self.__param, cv, n_iter, n_jobs, x_train, y_train)
+                        self.__param, cv, n_iter, n_jobs, x_train, y_train,scoring = scoring)
                 else:
                     # fit data directly
                     self.__svr.fit(x_train, y_train)
@@ -50,7 +50,7 @@ class Support_vector_regressor(Cross_validation):
         try:
             return mean_squared_error(
                 y_true=y_test,
-                y_pred=self.__svr.predict(x_test))
+                y_pred=self.__svr.best_estimator_.predict(x_test))
         except:
             print("Support_vector_regressor: x_test or y_test may be wrong")
 
@@ -65,7 +65,7 @@ class Support_vector_regressor(Cross_validation):
         try:
             return r2_score(
                 y_true=y_test,
-                y_pred=self.__svr.predict(x_test))
+                y_pred=self.__svr.best_estimator_.predict(x_test))
         except:
             print("Support_vector_regressor: x_test or y_test may be wrong")
 
@@ -79,7 +79,17 @@ class Support_vector_regressor(Cross_validation):
         :return: return (mean_square_error, r2_score)
         """
         return (self.mean_squared_error(data, targets),
-                self.r2_score(data, targets))
+                self.r2_score(data,targets))
+
+    def predict(self, data=None):
+        """
+        evaluate the model by using unique evaluation function
+
+        :param data: training or testing data
+        :return: prediction
+        """
+
+        return self.__svr.best_estimator_.predict(data)
 
     def print_parameter_candidates(self):
         """

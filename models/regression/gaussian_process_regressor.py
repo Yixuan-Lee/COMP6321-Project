@@ -79,6 +79,16 @@ class Gaussian_process_regressor(Cross_validation):
         return (self.mean_squared_error(data, targets),
                 self.r2_score(data, targets))
 
+    def predict(self, data=None):
+        """
+        evaluate the model by using unique evaluation function
+
+        :param data: training or testing data
+        :return: prediction
+        """
+
+        return self.__svr.best_estimator_.predict(data)
+
     def print_parameter_candidates(self):
         """
         print all possible parameter combinations

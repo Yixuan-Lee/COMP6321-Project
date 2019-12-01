@@ -89,7 +89,7 @@ class Linear_least_squares(Cross_validation):
         :return: prediction
         """
 
-        return self.__svr.best_estimator_.predict(data)
+        return self.__lls.best_estimator_.predict(data)
 
     def print_parameter_candidates(self):
         """

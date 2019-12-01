@@ -88,7 +88,7 @@ class Gaussian_process_regressor(Cross_validation):
         :return: prediction
         """
 
-        return self.__svr.best_estimator_.predict(data)
+        return self.__gpr.best_estimator_.predict(data)
 
     def print_parameter_candidates(self):
         """

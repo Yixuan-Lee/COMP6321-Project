@@ -87,7 +87,7 @@ class Random_forest_regressor(Cross_validation):
         :return: prediction
         """
 
-        return self.__svr.best_estimator_.predict(data)
+        return self.__rfr.best_estimator_.predict(data)
 
     def print_parameter_candidates(self):
         """

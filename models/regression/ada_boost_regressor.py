@@ -87,7 +87,7 @@ class Ada_boost_regressor(Cross_validation):
         :return: prediction
         """
 
-        return self.__svr.best_estimator_.predict(data)
+        return self.__abr.best_estimator_.predict(data)
 
     def print_parameter_candidates(self):
         """

@@ -15,6 +15,8 @@ from neural_network_regressor import Neural_network_regressor
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 class Wine_quality:
     data = []
@@ -38,9 +40,13 @@ class Wine_quality:
         self.data = file_data[:, :-1]  # (6497, 11)
         self.targets = file_data[:, -1]  # (6497, )
 
-        # subsampling data (for speeding up)
-        self.data = self.data[:1000]
-        self.targets = self.targets[:1000]
+        # randomly sub-sample the dataset
+        np.random.seed(0)
+        idx = np.arange(self.targets.shape[0])
+        np.random.shuffle(idx)
+        idx = idx[:1000]
+        self.targets = self.targets[idx]
+        self.data = self.data[idx]
 
         # split into train and test sets
         self.x_train, self.x_test, self.y_train, self.y_test = \

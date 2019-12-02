@@ -16,6 +16,8 @@ from neural_network_classifier import Neural_network_classifier
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 class Diabetic_retinopathy:
     data = []

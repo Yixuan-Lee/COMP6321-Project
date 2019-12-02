@@ -16,6 +16,8 @@ from neural_network_classifier import Neural_network_classifier
 from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
 
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 class Default_of_credit_card_clients:
     data = []
@@ -36,6 +38,17 @@ class Default_of_credit_card_clients:
             filename))
         self.data = df.loc[1:, df.columns != 'Y']  # (30000, 24)
         self.targets = df.loc[1:, 'Y'].astype(np.int)  # (30000, )
+        # transform DataFrames to numpy.array
+        self.data = self.data.to_numpy()
+        self.targets = self.targets.to_numpy()
+
+        # randomly sub-sample the dataset
+        np.random.seed(0)
+        idx = np.arange(self.targets.shape[0])
+        np.random.shuffle(idx)
+        idx = idx[:1000]
+        self.targets = self.targets[idx]
+        self.data = self.data[idx]
 
         # split into the train and test sets
         self.x_train, self.x_test, self.y_train, self.y_test = \
@@ -76,13 +89,12 @@ class Default_of_credit_card_clients:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        knn.print_parameter_candidates()
-        knn.print_best_estimator()
+        # knn.print_parameter_candidates()
+        # knn.print_best_estimator()
 
         # return the accuracy score
-        return knn.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (knn.evaluate(data=self.x_train, targets=self.y_train),
+                knn.evaluate(data=self.x_test, targets=self.y_test))
 
     def support_vector_classifier(self):
         """
@@ -115,13 +127,12 @@ class Default_of_credit_card_clients:
         )
 
         # print all possible parameter values and the best parameters
-        svc.print_parameter_candidates()
-        svc.print_best_estimator()
+        # svc.print_parameter_candidates()
+        # svc.print_best_estimator()
 
         # return the accuracy score
-        return svc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (svc.evaluate(data=self.x_train, targets=self.y_train),
+                svc.evaluate(data=self.x_test, targets=self.y_test))
 
     def decision_tree_classifier(self):
         """
@@ -153,13 +164,12 @@ class Default_of_credit_card_clients:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        dtc.print_parameter_candidates()
-        dtc.print_best_estimator()
+        # dtc.print_parameter_candidates()
+        # dtc.print_best_estimator()
 
         # return the accuracy score
-        return dtc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (dtc.evaluate(data=self.x_train, targets=self.y_train),
+                dtc.evaluate(data=self.x_test, targets=self.y_test))
 
     def random_forest_classifier(self):
         """
@@ -195,13 +205,12 @@ class Default_of_credit_card_clients:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        rfc.print_parameter_candidates()
-        rfc.print_best_estimator()
+        # rfc.print_parameter_candidates()
+        # rfc.print_best_estimator()
 
         # return the accuracy score
-        return rfc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (rfc.evaluate(data=self.x_train, targets=self.y_train),
+                rfc.evaluate(data=self.x_test, targets=self.y_test))
 
     def ada_boost_classifier(self):
         """
@@ -231,13 +240,12 @@ class Default_of_credit_card_clients:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        abc.print_parameter_candidates()
-        abc.print_best_estimator()
+        # abc.print_parameter_candidates()
+        # abc.print_best_estimator()
 
         # return the accuracy score
-        return abc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (abc.evaluate(data=self.x_train, targets=self.y_train),
+                abc.evaluate(data=self.x_test, targets=self.y_test))
 
     def logistic_regression(self):
         """
@@ -269,13 +277,12 @@ class Default_of_credit_card_clients:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        lr.print_parameter_candidates()
-        lr.print_best_estimator()
+        # lr.print_parameter_candidates()
+        # lr.print_best_estimator()
 
         # return the accuracy score
-        return lr.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (lr.evaluate(data=self.x_train, targets=self.y_train),
+                lr.evaluate(data=self.x_test, targets=self.y_test))
 
     def gaussian_naive_bayes(self):
         """
@@ -302,13 +309,12 @@ class Default_of_credit_card_clients:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        gnb.print_parameter_candidates()
-        gnb.print_best_estimator()
+        # gnb.print_parameter_candidates()
+        # gnb.print_best_estimator()
 
         # return the accuracy score
-        return gnb.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (gnb.evaluate(data=self.x_train, targets=self.y_train),
+                gnb.evaluate(data=self.x_test, targets=self.y_test))
 
     def neural_network_classifier(self):
         """
@@ -348,23 +354,43 @@ class Default_of_credit_card_clients:
         )
 
         # print all possible parameter values and best parameters
-        nnc.print_parameter_candidates()
-        nnc.print_best_estimator()
+        # nnc.print_parameter_candidates()
+        # nnc.print_best_estimator()
 
         # return the accuracy score
-        return nnc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (nnc.evaluate(data=self.x_train, targets=self.y_train),
+                nnc.evaluate(data=self.x_test, targets=self.y_test))
 
 
 if __name__ == '__main__':
     doccc = Default_of_credit_card_clients()
-    print("accuracy on the actual test set:")
-    print('KNN: %.2f %%' % (doccc.k_nearest_neighbours() * 100))
-    print('SVC: %.2f %%' % (doccc.support_vector_classifier() * 100))
-    print('DTC: %.2f %%' % (doccc.decision_tree_classifier() * 100))
-    print('RFC: %.2f %%' % (doccc.random_forest_classifier() * 100))
-    print('ABC: %.2f %%' % (doccc.ada_boost_classifier() * 100))
-    print(' LR: %.2f %%' % (doccc.logistic_regression() * 100))
-    print('GNB: %.2f %%' % (doccc.gaussian_naive_bayes() * 100))
-    print('NNC: %.2f %%' % (doccc.neural_network_classifier() * 100))
+
+    # retrieve the results
+    knn_results = doccc.k_nearest_neighbours()
+    svc_results = doccc.support_vector_classifier()
+    dtc_results = doccc.decision_tree_classifier()
+    rfr_results = doccc.random_forest_classifier()
+    abc_results = doccc.ada_boost_classifier()
+    lr_results = doccc.logistic_regression()
+    gnb_results = doccc.gaussian_naive_bayes()
+    nnc_results = doccc.neural_network_classifier()
+
+    print("(accuracy, recall, prediction) on training set:")
+    print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[0]))
+    print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[0]))
+    print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[0]))
+    print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[0]))
+    print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[0]))
+    print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[0]))
+    print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[0]))
+    print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[0]))
+
+    print("(accuracy, recall, prediction) on testing set:")
+    print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[1]))
+    print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[1]))
+    print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[1]))
+    print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[1]))
+    print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[1]))
+    print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[1]))
+    print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[1]))
+    print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[1]))

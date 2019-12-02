@@ -16,6 +16,8 @@ from sklearn import preprocessing
 from sklearn.impute import SimpleImputer    # For handling missing values
 from sklearn.model_selection import train_test_split
 
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 class Communities_and_crime:
     data = []
@@ -38,10 +40,9 @@ class Communities_and_crime:
             dtype=np.float32)   # (1994, 128)
         self.data = f.loc[:, f.columns != total_cols - 1]   # (1994, 122)
         self.targets = f.loc[:, total_cols - 1]  # (1994,)
-
-        # subsampling data (for speeding up)
-        # self.data = self.data[:300]
-        # self.targets = self.targets[:300]
+        # transform DataFrames to numpy.array
+        self.data = self.data.to_numpy()
+        self.targets = self.targets.to_numpy()
 
         # pre-processing strategy 1: ignore the missing-value rows
 #         self.data = self.missing_rows_with_missing_values_ignore(self.data)
@@ -55,6 +56,14 @@ class Communities_and_crime:
         self.x_train, self.x_test, self.y_train, self.y_test = \
             train_test_split(self.data, self.targets, test_size=0.33,
                 random_state=0)
+
+        # randomly sub-sample the dataset
+        np.random.seed(0)
+        idx = np.arange(self.targets.shape[0])
+        np.random.shuffle(idx)
+        idx = idx[:300]
+        self.targets = self.targets[idx]
+        self.data = self.data[idx]
 
         # normalize the training set and testing set
         self.scaler = preprocessing.StandardScaler().fit(self.x_train)
@@ -114,13 +123,12 @@ class Communities_and_crime:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        svr.print_parameter_candidates()
-        svr.print_best_estimator()
+        # svr.print_parameter_candidates()
+        # svr.print_best_estimator()
 
         # return the mean squared error
-        return svr.mean_sqaured_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (svr.evaluate(data=self.x_train, targets=self.y_train),
+                svr.evaluate(data=self.x_test, targets=self.y_test))
 
     def decision_tree_regression(self):
         """
@@ -150,13 +158,12 @@ class Communities_and_crime:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        dtr.print_parameter_candidates()
-        dtr.print_best_estimator()
+        # dtr.print_parameter_candidates()
+        # dtr.print_best_estimator()
 
         # return the mean squared error
-        return dtr.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (dtr.evaluate(data=self.x_train, targets=self.y_train),
+                dtr.evaluate(data=self.x_test, targets=self.y_test))
 
     def random_forest_regression(self):
         """
@@ -186,13 +193,12 @@ class Communities_and_crime:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        rfr.print_parameter_candidates()
-        rfr.print_best_estimator()
+        # rfr.print_parameter_candidates()
+        # rfr.print_best_estimator()
 
         # return the mean squared error
-        return rfr.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (rfr.evaluate(data=self.x_train, targets=self.y_train),
+                rfr.evaluate(data=self.x_test, targets=self.y_test))
 
     def ada_boost_regression(self):
         """
@@ -223,13 +229,12 @@ class Communities_and_crime:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        abr.print_parameter_candidates()
-        abr.print_best_estimator()
+        # abr.print_parameter_candidates()
+        # abr.print_best_estimator()
 
         # return the mean squared error
-        return abr.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (abr.evaluate(data=self.x_train, targets=self.y_train),
+                abr.evaluate(data=self.x_test, targets=self.y_test))
 
     def gaussian_process_regression(self):
         """
@@ -259,13 +264,12 @@ class Communities_and_crime:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        gpr.print_parameter_candidates()
-        gpr.print_best_estimator()
+        # gpr.print_parameter_candidates()
+        # gpr.print_best_estimator()
 
         # return the mean squared error
-        return gpr.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (gpr.evaluate(data=self.x_train, targets=self.y_train),
+                gpr.evaluate(data=self.x_test, targets=self.y_test))
 
     def linear_least_squares(self):
         """
@@ -301,13 +305,12 @@ class Communities_and_crime:
         )
 
         # print all possible parameter values and the best parameters
-        lls.print_parameter_candidates()
-        lls.print_best_estimator()
+        # lls.print_parameter_candidates()
+        # lls.print_best_estimator()
 
         # return the mean squared error
-        return lls.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (lls.evaluate(data=self.x_train, targets=self.y_train),
+                lls.evaluate(data=self.x_test, targets=self.y_test))
 
     def neural_network_regression(self):
         """
@@ -341,22 +344,40 @@ class Communities_and_crime:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        nnr.print_parameter_candidates()
-        nnr.print_best_estimator()
+        # nnr.print_parameter_candidates()
+        # nnr.print_best_estimator()
 
         # return the mean squared error
-        return nnr.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (nnr.evaluate(data=self.x_train, targets=self.y_train),
+                nnr.evaluate(data=self.x_test, targets=self.y_test))
 
 
 if __name__ == '__main__':
     cac = Communities_and_crime()
-    print("mean squared error on the actual test set:")
-    print('SVR: %.5f' % cac.support_vector_regression())
-    print('DTR: %.5f' % cac.decision_tree_regression())
-    print('RFR: %.5f' % cac.random_forest_regression())
-    print('ABR: %.5f' % cac.ada_boost_regression())
-    print('GPR: %.5f' % cac.gaussian_process_regression())
-    print('LLS: %.5f' % cac.linear_least_squares())
-    print('NNR: %.5f' % cac.neural_network_regression())
+
+    # retrieve the results
+    svr_results = cac.support_vector_regression()
+    dtr_results = cac.decision_tree_regression()
+    rfr_results = cac.random_forest_regression()
+    abr_results = cac.ada_boost_regression()
+    gpr_results = cac.gaussian_process_regression()
+    lls_results = cac.linear_least_squares()
+    nnr_results = cac.neural_network_regression()
+
+    print("(mean_square_error, r2_score) on training set:")
+    print('SVR: (%.3f, %.3f)' % (svr_results[0]))
+    print('DTR: (%.3f, %.3f)' % (dtr_results[0]))
+    print('RFR: (%.3f, %.3f)' % (rfr_results[0]))
+    print('ABR: (%.3f, %.3f)' % (abr_results[0]))
+    print('GPR: (%.3f, %.3f)' % (gpr_results[0]))
+    print('LLS: (%.3f, %.3f)' % (lls_results[0]))
+    print('NNR: (%.3f, %.3f)' % (nnr_results[0]))
+
+    print("(mean_square_error, r2_score) on test set:")
+    print('SVR: (%.3f, %.3f)' % (svr_results[1]))
+    print('DTR: (%.3f, %.3f)' % (dtr_results[1]))
+    print('RFR: (%.3f, %.3f)' % (rfr_results[1]))
+    print('ABR: (%.3f, %.3f)' % (abr_results[1]))
+    print('GPR: (%.3f, %.3f)' % (gpr_results[1]))
+    print('LLS: (%.3f, %.3f)' % (lls_results[1]))
+    print('NNR: (%.3f, %.3f)' % (nnr_results[1]))

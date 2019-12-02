@@ -9,7 +9,7 @@ class Gaussian_process_regressor(Cross_validation):
     __param = {}
 
     def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10, n_jobs=None, scoring=None,
-                 kernel=(1.0 * RBF(1.0),), alpha=(1e-10,),
+                 kernel=(1.0 * RBF(1.0),), alpha=(1e-10,), normalize_y = (True,),
                  grid_search=False, random_search=False):
 
         self.__gpr = GaussianProcessRegressor(random_state=0)
@@ -17,7 +17,8 @@ class Gaussian_process_regressor(Cross_validation):
         try:
             self.__param = {
                 'kernel': kernel,
-                'alpha': alpha
+                'alpha': alpha,
+                'normalize_y' : normalize_y
             }
             if grid_search and random_search:
                 print('only one of GridSearch and RandomSearch can be used.')

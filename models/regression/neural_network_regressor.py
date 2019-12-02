@@ -9,7 +9,7 @@ class Neural_network_regressor(Cross_validation):
 
     def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10, n_jobs=None, scoring=None,
                  hidden_layer_sizes=(100,), activation=('relu',), max_iter=(200,), batch_size=('auto',),
-                 grid_search=False, random_search=False):
+                 early_stopping = (False,), grid_search=False, random_search=False):
 
         self.__nnr = MLPRegressor(random_state=0)
 
@@ -18,7 +18,8 @@ class Neural_network_regressor(Cross_validation):
                 'hidden_layer_sizes': hidden_layer_sizes,
                 'activation': activation,
                 'max_iter': max_iter,
-                'batch_size': batch_size
+                'batch_size': batch_size,
+                'early_stopping' : early_stopping
             }
             if grid_search and random_search:
                 print('only one of GridSearch and RandomSearch can be used.')

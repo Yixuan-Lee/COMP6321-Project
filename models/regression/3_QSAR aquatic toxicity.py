@@ -158,7 +158,7 @@ class QSAR_aquatic_toxicity:
         mlp=Neural_network_regressor(
             x_train=self.x_train,
             y_train=self.y_train,
-            activation='tanh',
+            activation=('tanh',),
             hidden_layer_sizes=hidden_layer_sizes,
             batch_size=batch_size,
             cv=3,
@@ -177,11 +177,11 @@ class QSAR_aquatic_toxicity:
 if __name__ == '__main__':
     qsar = QSAR_aquatic_toxicity()
     print("mean squared error on the actual test set:")
-    #print('SVR: %.5f' % (qsar.support_vector_regression()))
-    #print('DTR: %.5f' % (qsar.decision_tree_regression()))
-    #print('RFR: %.5f' % (qsar.random_forest_regression()))
+    print('SVR: %.5f' % (qsar.support_vector_regression()))
+    print('DTR: %.5f' % (qsar.decision_tree_regression()))
+    print('RFR: %.5f' % (qsar.random_forest_regression()))
     print('ABR: %.5f' % (qsar.ada_boost_regression()))
-    #print('GPR: %.5f' % (qsar.gaussian_process_regression()))
-    #print(' LR: %.5f' % (qsar.linear_regression()))
-    #print('NNR: %.5f' % (qsar.neural_network_regression()))
+    print('GPR: %.5f' % (qsar.gaussian_process_regression()))
+    print(' LR: %.5f' % (qsar.linear_regression()))
+    print('NNR: %.5f' % (qsar.neural_network_regression()))
 

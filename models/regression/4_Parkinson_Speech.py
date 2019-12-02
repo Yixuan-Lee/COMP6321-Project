@@ -161,7 +161,7 @@ class Parkinson_speech:
         mlp = Neural_network_regressor(
             x_train=self.x_train,
             y_train=self.y_train,
-            activation='tanh',
+            activation=('tanh',),
             hidden_layer_sizes=hidden_layer_sizes,
             batch_size=batch_size,
             cv=3,

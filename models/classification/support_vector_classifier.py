@@ -9,7 +9,7 @@ class Support_vector_classifier(Cross_validation):
 
     def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10, n_jobs=None,
             C=(1.0,), kernel=('rbf',), gamma=('auto',), coef0=(0.0,),
-            grid_search=False, random_search=False):
+            grid_search=False, random_search=False,class_weight=(None,)):
 
         self.__svc = SVC(random_state=0)
 
@@ -18,7 +18,8 @@ class Support_vector_classifier(Cross_validation):
                 'C': C,
                 'kernel': kernel,
                 'gamma': gamma,
-                'coef0': coef0
+                'coef0': coef0,
+                'class_weight':class_weight
             }
             if grid_search and random_search:
                 print('only one of GridSearch and RandomSearch can be used.')

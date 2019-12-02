@@ -9,7 +9,7 @@ class Logistic_regression(Cross_validation):
 
     def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10, n_jobs=None,
                  C=(1.0,), penalty=('l2',), max_iter=(100,),
-                 grid_search=False, random_search=False):
+                 grid_search=False, random_search=False,class_weight=(None,)):
 
         self.__lr = LogisticRegression(solver='lbfgs', random_state=0)
 
@@ -17,7 +17,8 @@ class Logistic_regression(Cross_validation):
             self.__param = {
                 'C': C,
                 'max_iter': max_iter,
-                'penalty': penalty
+                'penalty': penalty,
+                'class_weight':class_weight
             }
             if grid_search and random_search:
                 print('only one of GridSearch and RandomSearch can be used.')

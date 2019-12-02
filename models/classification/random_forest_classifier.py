@@ -9,7 +9,7 @@ class Random_forest_classifier(Cross_validation):
 
     def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10, n_jobs=None,
             n_estimators=(100,), criterion=('gini',), max_depth=(None,),
-            grid_search=False, random_search=False):
+            grid_search=False, random_search=False,class_weight=(None,)):
 
         self.__rfc = RandomForestClassifier(random_state=0)
 
@@ -17,7 +17,8 @@ class Random_forest_classifier(Cross_validation):
             self.__param = {
                 'n_estimators': n_estimators,
                 'criterion': criterion,
-                'max_depth': max_depth
+                'max_depth': max_depth,
+                'class_weight' : class_weight
             }
             if grid_search and random_search:
                 print('only one of GridSearch and RandomSearch can be used.')

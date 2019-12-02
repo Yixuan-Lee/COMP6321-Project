@@ -7,9 +7,9 @@ class Linear_least_squares(Cross_validation):
     __lls = None
     __param = {}
 
-    def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10, n_jobs=None, scoring=None,
-                 alpha=(1.0,), max_iter=(None,), solver=('auto',),
-                 grid_search=False, random_search=False):
+    def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10, n_jobs=None,
+            alpha=(1.0,), max_iter=(None,), solver=('auto',),
+            grid_search=False, random_search=False):
 
         self.__lls = Ridge(random_state=0)
 
@@ -27,12 +27,11 @@ class Linear_least_squares(Cross_validation):
                 if grid_search:
                     # apply GridSearchCV and get the best estimator
                     self.__lls = super().grid_search_cv(self.__lls,
-                                                        self.__param, cv, n_jobs, x_train, y_train, scoring=scoring)
+                        self.__param, cv, n_jobs, x_train, y_train)
                 elif random_search:
                     # apply RandomSearchCV and get the best estimator
                     self.__lls = super().random_search_cv(self.__lls,
-                                                          self.__param, cv, n_iter, n_jobs, x_train, y_train,
-                                                          scoring=scoring)
+                        self.__param, cv, n_iter, n_jobs, x_train, y_train)
                 else:
                     # fit data directly
                     self.__lls.fit(x_train, y_train)
@@ -80,16 +79,6 @@ class Linear_least_squares(Cross_validation):
         """
         return (self.mean_squared_error(data, targets),
                 self.r2_score(data, targets))
-
-    def predict(self, data=None):
-        """
-        evaluate the model by using unique evaluation function
-
-        :param data: training or testing data
-        :return: prediction
-        """
-
-        return self.__lls.best_estimator_.predict(data)
 
     def print_parameter_candidates(self):
         """

@@ -46,7 +46,7 @@ class Cross_validation:
             estimator=model,
             param_distributions=param_dist,
             cv=cv,
-            verbose=1,
+            verbose=0,
             n_iter=n_iter,
             n_jobs=n_jobs,
             random_state=0)

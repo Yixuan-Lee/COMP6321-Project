@@ -17,11 +17,12 @@ from models.regression.support_vector_regressor import Support_vector_regressor
 
 
 class Merck_Molecular:
-
+    data_option = ""
     x_train = []
     x_test = []
     y_train = []
     y_test = []
+    scoring = None
 
     def __init__(self, option=1):
 
@@ -35,8 +36,10 @@ class Merck_Molecular:
 
         if option == 1:
             MERCK_FILE = 'Merck_Data1.npz'
+            self.data_option = "ACT2"
         else:
             MERCK_FILE = 'Merck_Data2.npz'
+            self.data_option = "ACT4"
         MERCK_FILE = np.load(os.path.join(settings.ROOT_DIR, filepath, MERCK_FILE))
         X = MERCK_FILE.get("X")
         y = MERCK_FILE.get("y")
@@ -58,20 +61,21 @@ class Merck_Molecular:
         self.x_train = scaler.transform(self.x_train)
         # normalize the test set with the train-set mean and std
         self.x_test = scaler.transform(self.x_test)
-
+        self.scoring = sklearn.metrics.make_scorer(self.score_func)
 
     def support_vector_regression(self):
-        C = np.logspace(-3,3,num=7)
-        gamma = np.logspace(-3,3,num=7)
+        C = np.logspace(-3, 3, num=7)
+        gamma = np.logspace(-3, 3, num=7)
         svr = Support_vector_regressor(
             x_train=self.x_train,
             y_train=self.y_train,
             cv=3,
             # n_iter=30,
             n_jobs=-1,
-            C= C,
+            C=C,
             kernel=['sigmoid', 'rbf', 'linear'],
-            gamma= gamma,
+            gamma=gamma,
+            scoring=self.scoring,
             grid_search=True)
         # ACT2
         # Parameter
@@ -102,11 +106,11 @@ class Merck_Molecular:
         #     y_train=self.y_train,
         #     cv=3,)
 
-        svr.print_parameter_candidates()
+        # svr.print_parameter_candidates()
         svr.print_best_estimator()
 
-        return (svr.evaluate(self.x_train, self.y_train),
-                svr.evaluate(self.x_test, self.y_test))
+        return (self.score_func(self.y_train, svr.predict(self.x_train)),
+                self.score_func(self.y_test, svr.predict(self.x_test)))
 
     def decision_tree_regression(self):
         dtr = Decision_tree_regressor(
@@ -116,31 +120,29 @@ class Merck_Molecular:
             # n_iter=50,
             max_depth=range(1, 20),
             min_samples_leaf=range(1, 20),
-            n_jobs=10,
+            n_jobs=-1,
+            scoring=self.scoring,
             grid_search=True)
         # dtr = Decision_tree_regressor(self.x_train,self.y_train)
 
-        dtr.print_parameter_candidates()
+        # dtr.print_parameter_candidates()
         dtr.print_best_estimator()
 
-        return dtr.r2_score(
-            x_test=self.x_test,
-            y_test=self.y_test), \
-               dtr.mean_squared_error(
-                   x_test=self.x_test,
-                   y_test=self.y_test)
+        return (self.score_func(self.y_train, dtr.predict(self.x_train)),
+                self.score_func(self.y_test, dtr.predict(self.x_test)))
 
     def random_forest_regression(self):
-        # n_estimators = np.logspace(1,4,4,dtype=np.int)
-        # max_depth = np.logspace(2,6,5,base=2,dtype=np.int)
-        # rfr = Random_forest_regressor(
-        #     x_train=self.x_train,
-        #     y_train=self.y_train,
-        #     cv=3,
-        #     n_jobs=10,
-        #     n_estimators=n_estimators,
-        #     max_depth=max_depth,
-        #     grid_search=True)
+        n_estimators = np.logspace(3, 6, 4, base=2, dtype=np.int)
+        max_depth = np.logspace(3, 6, 4, base=2, dtype=np.int)
+        rfr = Random_forest_regressor(
+            x_train=self.x_train,
+            y_train=self.y_train,
+            cv=3,
+            n_jobs=-1,
+            n_estimators=n_estimators,
+            max_depth=max_depth,
+            scoring=self.scoring,
+            grid_search=True)
         # Parameter
         # range: {'n_estimators': array([10, 100, 1000, 10000]), 'max_depth': array([4, 8, 16, 32, 64])}
         # Best
@@ -152,42 +154,39 @@ class Merck_Molecular:
         #                                  n_jobs=None, oob_score=False, random_state=0, verbose=0,
         #                                  warm_start=False)
         # RFR: 0.99931, 21.46442
-        np.random.seed(0)
-        n_estimators = scipy.stats.norm(1000, 100).rvs(10).astype(np.int)
-        max_depth = scipy.stats.norm(32, 10).rvs(10).astype(np.int)
-        rfr = Random_forest_regressor(
-            x_train=self.x_train,
-            y_train=self.y_train,
-            cv=3,
-            n_jobs=10,
-            n_iter=10,
-            n_estimators=n_estimators,
-            max_depth=max_depth,
-            random_search=True)
+        #         np.random.seed(0)
+        #         n_estimators = scipy.stats.norm(1000, 100).rvs(10).astype(np.int)
+        #         max_depth = scipy.stats.norm(32, 10).rvs(10).astype(np.int)
+        #         rfr = Random_forest_regressor(
+        #             x_train=self.x_train,
+        #             y_train=self.y_train,
+        #             cv=3,
+        #             n_jobs=10,
+        #             n_iter=10,
+        #             n_estimators=n_estimators,
+        #             max_depth=max_depth,
+        #             random_search=True)
 
         # rfr = Random_forest_regressor(self.x_train,self.y_train)
 
-        rfr.print_parameter_candidates()
+        # rfr.print_parameter_candidates()
         rfr.print_best_estimator()
 
-        return rfr.r2_score(
-            x_test=self.x_test,
-            y_test=self.y_test), \
-               rfr.mean_squared_error(
-                   x_test=self.x_test,
-                   y_test=self.y_test)
+        return (self.score_func(self.y_train, rfr.predict(self.x_train)),
+                self.score_func(self.y_test, rfr.predict(self.x_test)))
 
     def ada_boost_regression(self):
-        # n_estimators = np.logspace(start=1, stop=4, base=10, num=4, dtype=np.int)
-        # lr = np.logspace(-3, 3, num=7)
-        # abr = Ada_boost_regressor(
-        #     x_train=self.x_train,
-        #     y_train=self.y_train,
-        #     cv=3,
-        #     n_estimators=n_estimators,
-        #     learning_rate=lr,
-        #     n_jobs=10,
-        #     grid_search=True)
+        n_estimators = np.logspace(3, 6, 4, base=2, dtype=np.int)
+        lr = np.logspace(-3, -1, num=3)
+        abr = Ada_boost_regressor(
+            x_train=self.x_train,
+            y_train=self.y_train,
+            cv=3,
+            n_estimators=n_estimators,
+            learning_rate=lr,
+            n_jobs=-1,
+            scoring=self.scoring,
+            grid_search=True)
 
         # Parameter
         # range: {'n_estimators': array([10, 100, 1000, 10000]),
@@ -197,43 +196,40 @@ class Merck_Molecular:
         #                              n_estimators=10000, random_state=0)
         # ABR: 0.97866, 662.26056
 
-        np.random.seed(0)
-        n_estimators = scipy.stats.norm(10000, 1000).rvs(10).astype(np.int)
-        lr = scipy.stats.norm(0.01, 0.01).rvs(100)
-        lr = lr[lr > 0]
-        abr = Ada_boost_regressor(
+        #         np.random.seed(0)
+        #         n_estimators = scipy.stats.norm(10000, 1000).rvs(10).astype(np.int)
+        #         lr = scipy.stats.norm(0.01, 0.01).rvs(100)
+        #         lr = lr[lr > 0]
+        #         abr = Ada_boost_regressor(
+        #             x_train=self.x_train,
+        #             y_train=self.y_train,
+        #             cv=3,
+        #             n_iter=10,
+        #             n_estimators=n_estimators,
+        #             learning_rate=lr,
+        #             n_jobs=10,
+        #             random_search=True)
+        # abr = Ada_boost_regressor(self.x_train,self.y_train)
+
+        # abr.print_parameter_candidates()
+        abr.print_best_estimator()
+
+        return (self.score_func(self.y_train, abr.predict(self.x_train)),
+                self.score_func(self.y_test, abr.predict(self.x_test)))
+
+    def gaussian_process_regression(self):
+        alpha = np.logspace(start=-3, stop=0, num=4, dtype=np.float32)
+        kernel = (1.0 * RBF(1.0), 1.0 * RBF(0.5), WhiteKernel())
+        gpr = Gaussian_process_regressor(
             x_train=self.x_train,
             y_train=self.y_train,
             cv=3,
-            n_iter=10,
-            n_estimators=n_estimators,
-            learning_rate=lr,
-            n_jobs=10,
-            random_search=True)
-        # abr = Ada_boost_regressor(self.x_train,self.y_train)
-
-        abr.print_parameter_candidates()
-        abr.print_best_estimator()
-
-        return abr.r2_score(
-            x_test=self.x_test,
-            y_test=self.y_test), \
-               abr.mean_squared_error(
-                   x_test=self.x_test,
-                   y_test=self.y_test)
-
-    def gaussian_process_regression(self):
-        # alpha = np.logspace(start=-2, stop=2, num=5, dtype=np.float32)
-        # kernel = (1.0 * RBF(1.0), 1.0 * RBF(0.5), WhiteKernel())
-        # gpr = Gaussian_process_regressor(
-        #     x_train=self.x_train,
-        #     y_train=self.y_train,
-        #     cv=3,
-        #     n_iter=10,
-        #     kernel=kernel,
-        #     alpha=alpha,
-        #     n_jobs=10,
-        #     grid_search=True)
+            #             n_iter=10,
+            kernel=kernel,
+            alpha=alpha,
+            n_jobs=-1,
+            scoring=self.scoring,
+            grid_search=True)
 
         # Parameter
         # range: {'kernel': (1 ** 2 * RBF(length_scale=1), 1 ** 2 * RBF(length_scale=0.5), WhiteKernel(noise_level=1)),
@@ -245,31 +241,27 @@ class Merck_Molecular:
         #                                     optimizer='fmin_l_bfgs_b', random_state=0)
         # GPR: 1.00000, 0.00191
 
-        np.random.seed(0)
-        alpha = scipy.stats.norm(0.01, 0.01).rvs(100)
-        alpha = alpha[alpha > 0].round(5).astype(np.float32)
+        #         np.random.seed(0)
+        #         alpha = scipy.stats.norm(0.01, 0.01).rvs(100)
+        #         alpha = alpha[alpha > 0].round(5).astype(np.float32)
 
-        gpr = Gaussian_process_regressor(
-            x_train=self.x_train,
-            y_train=self.y_train,
-            cv=3,
-            n_iter=5,
-            kernel=(1.0 * RBF(0.5),),
-            alpha=alpha,
-            n_jobs=5,
-            random_search=True)
+        #         gpr = Gaussian_process_regressor(
+        #             x_train=self.x_train,
+        #             y_train=self.y_train,
+        #             cv=3,
+        #             n_iter=5,
+        #             kernel=(1.0 * RBF(0.5),),
+        #             alpha=alpha,
+        #             n_jobs=5,
+        #             random_search=True)
 
         # print all possible parameter values and the best parameters
-        gpr.print_parameter_candidates()
+        # gpr.print_parameter_candidates()
         gpr.print_best_estimator()
 
         # return the mean squared error
-        return gpr.r2_score(
-            x_test=self.x_test,
-            y_test=self.y_test), \
-               gpr.mean_squared_error(
-                   x_test=self.x_test,
-                   y_test=self.y_test)
+        return (self.score_func(self.y_train, gpr.predict(self.x_train)),
+                self.score_func(self.y_test, gpr.predict(self.x_test)))
 
     def linear_regression(self):
         alpha = np.logspace(start=-1, stop=3, base=10, num=5, dtype=np.float32)
@@ -278,10 +270,11 @@ class Merck_Molecular:
         lr = Linear_least_squares(
             x_train=self.x_train,
             y_train=self.y_train,
-            n_jobs=10,
+            n_jobs=-1,
             alpha=alpha,
             max_iter=max_iter,
             solver=solver,
+            scoring=self.scoring,
             grid_search=True)
 
         # Parameter
@@ -291,31 +284,27 @@ class Merck_Molecular:
         # estimator: Ridge(alpha=0.1, copy_X=True, fit_intercept=True, max_iter=100, normalize=False,
         #                  random_state=0, solver='auto', tol=0.001)
         # LR: 1.00000, 0.00237
-        np.random.seed(0)
-        alpha = scipy.stats.norm(0.1, 0.1).rvs(100).astype(np.float32)
-        alpha = alpha[alpha > 0].round(5)
-        max_iter = scipy.stats.norm(100, 10).rvs(100).astype(np.int)
-        max_iter = max_iter[max_iter > 0]
+        #         np.random.seed(0)
+        #         alpha = scipy.stats.norm(0.1, 0.1).rvs(100).astype(np.float32)
+        #         alpha = alpha[alpha > 0].round(5)
+        #         max_iter = scipy.stats.norm(100, 10).rvs(100).astype(np.int)
+        #         max_iter = max_iter[max_iter > 0]
 
-        lr = Linear_least_squares(
-            x_train=self.x_train,
-            y_train=self.y_train,
-            n_jobs=10,
-            n_iter=10,
-            alpha=alpha,
-            max_iter=max_iter,
-            solver=["auto"],
-            random_search=True)
+        #         lr = Linear_least_squares(
+        #             x_train=self.x_train,
+        #             y_train=self.y_train,
+        #             n_jobs=10,
+        #             n_iter=10,
+        #             alpha=alpha,
+        #             max_iter=max_iter,
+        #             solver=["auto"],
+        #             random_search=True)
 
-        lr.print_parameter_candidates()
+        # lr.print_parameter_candidates()
         lr.print_best_estimator()
 
-        return lr.r2_score(
-            x_test=self.x_test,
-            y_test=self.y_test), \
-               lr.mean_squared_error(
-                   x_test=self.x_test,
-                   y_test=self.y_test)
+        return (self.score_func(self.y_train, lr.predict(self.x_train)),
+                self.score_func(self.y_test, lr.predict(self.x_test)))
 
     def neural_network_regression(self):
         np.random.seed(0)
@@ -329,7 +318,8 @@ class Merck_Molecular:
             n_iter=30,
             hidden_layer_sizes=hidden_layer_sizes,
             max_iter=max_iter,
-            n_jobs=10,
+            n_jobs=-1,
+            scoring=self.scoring,
             grid_search=True)
 
         # Parameter
@@ -345,38 +335,40 @@ class Merck_Molecular:
         #                         validation_fraction=0.1, verbose=False, warm_start=False)
         # NNR: 0.99873, 40.06854
 
-        hidden_layer_sizes = scipy.stats.norm(32, 10).rvs(100).astype(np.int)
-        hidden_layer_sizes = hidden_layer_sizes[hidden_layer_sizes > 0]
-        max_iter = scipy.stats.norm(10000, 1000).rvs(100).astype(np.int)
-        max_iter = max_iter[max_iter > 0]
+        #         hidden_layer_sizes = scipy.stats.norm(32, 10).rvs(100).astype(np.int)
+        #         hidden_layer_sizes = hidden_layer_sizes[hidden_layer_sizes > 0]
+        #         max_iter = scipy.stats.norm(10000, 1000).rvs(100).astype(np.int)
+        #         max_iter = max_iter[max_iter > 0]
 
-        nnr = Neural_network_regressor(
-            x_train=self.x_train,
-            y_train=self.y_train,
-            cv=3,
-            n_iter=10,
-            hidden_layer_sizes=hidden_layer_sizes,
-            max_iter=max_iter,
-            n_jobs=10,
-            random_search=True)
+        #         nnr = Neural_network_regressor(
+        #             x_train=self.x_train,
+        #             y_train=self.y_train,
+        #             cv=3,
+        #             n_iter=10,
+        #             hidden_layer_sizes=hidden_layer_sizes,
+        #             max_iter=max_iter,
+        #             n_jobs=10,
+        #             random_search=True)
 
         # print all possible parameter values and the best parameters
-        nnr.print_parameter_candidates()
+        # nnr.print_parameter_candidates()
         nnr.print_best_estimator()
 
         # return the mean squared error
-        return nnr.r2_score(
-            x_test=self.x_test,
-            y_test=self.y_test), \
-               nnr.mean_squared_error(
-                   x_test=self.x_test,
-                   y_test=self.y_test)
+        return (self.score_func(self.y_train, nnr.predict(self.x_train)),
+                self.score_func(self.y_test, nnr.predict(self.x_test)))
 
     def printself(self):
         print(self.x_train.shape)
         print(self.y_train.shape)
         print(self.x_test.shape)
         print(self.y_test.shape)
+
+    @staticmethod
+    def score_func(y, y_pred, **kwargs):
+        rs = scipy.stats.pearsonr(y, y_pred)[0]
+        rs = rs ** 2
+        return rs
 
 
 if __name__ == '__main__':
@@ -388,7 +380,6 @@ if __name__ == '__main__':
     # retrieve the results
     svr_results_ACT2 = mm.support_vector_regression()
 
-
     # svr_results_ACT4 = mm2.support_vector_regression()
 
     # dtr_results = mm.decision_tree_regression()
@@ -398,10 +389,10 @@ if __name__ == '__main__':
     # lls_results = mm.linear_least_squares()
     # nnr_results = mm.neural_network_regression()
     print("-----ACT2 RESULT-----")
-    print("(mean_square_error, r2_score) on training set:")
-    print('SVR: (%.3f, %.3f)' % (svr_results_ACT2[0]))
-    print("(mean_square_error, r2_score) on test set:")
-    print('SVR: (%.3f, %.3f)' % (svr_results_ACT2[1]))
+    print("(correlation coefficient R2) on training set:")
+    print('SVR: (%.3f)' % (svr_results_ACT2[0]))
+    print("(correlation coefficient R2) on test set:")
+    print('SVR: (%.3f)' % (svr_results_ACT2[1]))
 
     # print("-----ACT4 RESULT-----")
     # print("(mean_square_error, r2_score) on training set:")

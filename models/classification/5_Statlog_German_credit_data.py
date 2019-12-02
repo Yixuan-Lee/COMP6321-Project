@@ -37,6 +37,11 @@ class Statlog_German_Credit:
         self.targets = self.data[:, -1]
         self.data = self.data[:, :-1]
 
+        sss = sklearn.model_selection.StratifiedShuffleSplit(n_splits=1, test_size=0.1, random_state=0)
+        sss.get_n_splits(self.data, self.targets)
+
+
+
         # separate into train and test sets
         self.x_train, self.x_test, self.y_train, self.y_test = \
             train_test_split(self.data, self.targets, test_size=0.33,
@@ -63,9 +68,9 @@ class Statlog_German_Credit:
                                    n_jobs=10)
         knn.print_parameter_candidates()
         knn.print_best_estimator()
-        return knn.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return knn.accuracy_score(x_test=self.x_test,y_test=self.y_test),\
+               knn.recall(x_test=self.x_test,y_test=self.y_test),\
+               knn.precision(x_test=self.x_test,y_test=self.y_test)
 
     def support_vector_classifier(self):
         kernel_distribution = ['linear', 'rbf', 'sigmoid']
@@ -86,6 +91,7 @@ class Statlog_German_Credit:
         #                verbose=False)
         # try C from 1 to 1000 with reciprocal distribution
         # try gamma from 0.01 to 10 with reciprocal distribution
+        np.random.seed(0)
         C = scipy.stats.norm(10,10).rvs(100)
         C = C[C > 0]
         gamma = scipy.stats.norm(0.001,0.001).rvs(100)
@@ -101,9 +107,9 @@ class Statlog_German_Credit:
                                         n_jobs=10)
         svm.print_parameter_candidates()
         svm.print_best_estimator()
-        return svm.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return svm.accuracy_score(x_test=self.x_test,y_test=self.y_test),\
+               svm.recall(x_test=self.x_test,y_test=self.y_test),\
+               svm.precision(x_test=self.x_test,y_test=self.y_test)
 
     def decision_tree_classifier(self):
         # try max_depth form 1 to 50
@@ -117,7 +123,9 @@ class Statlog_German_Credit:
                                        n_jobs=10)
         dtc.print_parameter_candidates()
         dtc.print_best_estimator()
-        return dtc.accuracy_score(self.x_test, self.y_test)
+        return dtc.accuracy_score(x_test=self.x_test,y_test=self.y_test),\
+               dtc.recall(x_test=self.x_test,y_test=self.y_test),\
+               dtc.precision(x_test=self.x_test,y_test=self.y_test)
 
     def random_forest_classifier(self):
         # try max_depth from 1 to 50
@@ -153,6 +161,7 @@ class Statlog_German_Credit:
         # estimator: AdaBoostClassifier(algorithm='SAMME.R', base_estimator=None, learning_rate=1.0,
         #                               n_estimators=23, random_state=0)
         # ABC: 74.85 %
+        np.random.seed(0)
         lr = scipy.stats.norm(1,.5).rvs(100)
         lr = lr[lr>0]
         abc = Ada_boost_classifier(x_train=self.x_train,
@@ -165,7 +174,9 @@ class Statlog_German_Credit:
                                    random_search = True)
         abc.print_parameter_candidates()
         abc.print_best_estimator()
-        return abc.accuracy_score(self.x_test, self.y_test)
+        return abc.accuracy_score(x_test=self.x_test,y_test=self.y_test),\
+               abc.recall(x_test=self.x_test,y_test=self.y_test),\
+               abc.precision(x_test=self.x_test,y_test=self.y_test)
 
     def logistic_regression(self):
         # C = np.logspace(-3,3,num=7)
@@ -189,6 +200,7 @@ class Statlog_German_Credit:
         #                               random_state=0, solver='lbfgs', tol=0.0001, verbose=0,
         #                               warm_start=False)
         # LR: 76.36 %
+        np.random.seed(0)
         C = scipy.stats.norm(.1,.1).rvs(200)
         C = C[C>0]
         lr = Logistic_regression(x_train=self.x_train,
@@ -203,7 +215,9 @@ class Statlog_German_Credit:
                                  )
         lr.print_parameter_candidates()
         lr.print_best_estimator()
-        return lr.accuracy_score(self.x_test, self.y_test)
+        return lr.accuracy_score(x_test=self.x_test,y_test=self.y_test),\
+               lr.recall(x_test=self.x_test,y_test=self.y_test),\
+               lr.precision(x_test=self.x_test,y_test=self.y_test)
 
     def gaussian_naive_bayes(self):
         gnb = Gaussian_naive_bayes(
@@ -219,9 +233,9 @@ class Statlog_German_Credit:
         gnb.print_best_estimator()
 
         # return the accuracy score
-        return gnb.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return gnb.accuracy_score(x_test=self.x_test,y_test=self.y_test),\
+               gnb.recall(x_test=self.x_test,y_test=self.y_test),\
+               gnb.precision(x_test=self.x_test,y_test=self.y_test)
 
     def neural_network_classifier(self):
         activation = ['logistic', 'tanh', 'relu']
@@ -254,22 +268,20 @@ class Statlog_German_Credit:
         nnc.print_best_estimator()
 
         # return the accuracy score
-        return nnc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return nnc.accuracy_score(x_test=self.x_test,y_test=self.y_test),\
+               nnc.recall(x_test=self.x_test,y_test=self.y_test),\
+               nnc.precision(x_test=self.x_test,y_test=self.y_test)
 
 
 if __name__ == '__main__':
-    warnings.filterwarnings("ignore", category=ConvergenceWarning)  # Ignore sklearn deprecation warnings
-    warnings.filterwarnings("ignore", category=FutureWarning)  # Ignore sklearn deprecation warnings
     sgcd = Statlog_German_Credit()
-    np.random.seed(0)
+
     # sgcd.print_self()
-    print('KNN: %.2f%%' % (sgcd.k_nearest_neighbours()*100))
-    print('SVC: %.2f%%' % (sgcd.support_vector_classifier()*100))
-    print('DTC: %.2f%%' % (sgcd.decision_tree_classifier()*100))
-    print('RFC: %.2f%%' % (sgcd.random_forest_classifier()*100))
-    print('ABC: %.2f%%' % (sgcd.ada_boost_classifier()*100))
-    print(' LR: %.2f%%' % (sgcd.logistic_regression()*100))
-    print('GNB: %.2f%%' % (sgcd.gaussian_naive_bayes()*100))
-    print('NNC: %.2f%%' % (sgcd.neural_network_classifier()*100))
+    # print('KNN: %.2f%%' % (sgcd.k_nearest_neighbours()*100))
+    # print('SVC: %.2f%%' % (sgcd.support_vector_classifier()*100))
+    # print('DTC: %.2f%%' % (sgcd.decision_tree_classifier()*100))
+    # print('RFC: %.2f%%' % (sgcd.random_forest_classifier()*100))
+    # print('ABC: %.2f%%' % (sgcd.ada_boost_classifier()*100))
+    # print(' LR: %.2f%%' % (sgcd.logistic_regression()*100))
+    # print('GNB: %.2f%%' % (sgcd.gaussian_naive_bayes()*100))
+    # print('NNC: %.2f%%' % (sgcd.neural_network_classifier()*100))

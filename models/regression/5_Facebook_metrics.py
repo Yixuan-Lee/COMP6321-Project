@@ -217,10 +217,10 @@ if __name__ == '__main__':
     outputfile = open('5_result.txt',"w")
     str_list = []
     str_list.append("mean squared error on the actual test set:"+os.linesep)
-    # for i in range(12):
-    #     str_list.append('Output feature [%d] of SVR: %.5f' % (
-    #         i, fm.support_vector_regression(y_train=fm.y_train, y_test=fm.y_test[:, i])))
-    #     str_list.append(os.linesep)
+    for i in range(12):
+        str_list.append('Output feature [%d] of SVR: %.5f' % (
+            i, fm.support_vector_regression(y_train=fm.y_train, y_test=fm.y_test[:, i])))
+        str_list.append(os.linesep)
     #     str_list.append('Output feature [%d] of DTR: %.5f' % (
     #         i, fm.decision_tree_regression(y_train=fm.y_train, y_test=fm.y_test[:, i])))
     #     str_list.append(os.linesep)
@@ -236,7 +236,7 @@ if __name__ == '__main__':
     #     str_list.append('Output feature [%d] of  LR: %.5f' % (
     #         i, fm.linear_regression(y_train=fm.y_train, y_test=fm.y_test[:, i])))
     #     str_list.append(os.linesep)
-    str_list.append('NNR: %.5f' % (fm.neural_network_regression(y_train=fm.y_train, y_test=fm.y_test)))
-    str_list.append(os.linesep)
+    # str_list.append('NNR: %.5f' % (fm.neural_network_regression(y_train=fm.y_train, y_test=fm.y_test)))
+    # str_list.append(os.linesep)
     outputfile.write("".join(str_list))
     outputfile.close()

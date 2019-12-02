@@ -217,7 +217,7 @@ class Adult:
             x_train=self.x_train,
             y_train=self.y_train,
             cv=3,
-            n_jobs=6,
+            n_jobs=-1,
             hidden_layer_sizes=hidden_layer_sizes,
             max_iter=max_iter,
             random_search=True)
@@ -232,11 +232,32 @@ class Adult:
 
 if __name__ == '__main__':
     dr = Adult()
-    print('KNN: %f' % dr.k_nearest_neighbours())
-    # print('SVC: %f' % dr.support_vector_classifier())
-    print('DTC: %f' % dr.decision_tree_classifier())
-    print('RFC: %f' % dr.random_forest_classifier())
-    print('ABC: %f' % dr.ada_boost_classifier())
-    print(' LR: %f' % dr.logistic_regression())
-    print('GNB: %f' % dr.gaussian_naive_bayes())
-    print('NNC: %f' % dr.neural_network_classifier())
+    # retrieve the results
+    knn_results = dr.k_nearest_neighbours()
+    svc_results = dr.support_vector_classifier()
+    dtc_results = dr.decision_tree_classifier()
+    rfr_results = dr.random_forest_classifier()
+    abc_results = dr.ada_boost_classifier()
+    lr_results = dr.logistic_regression()
+    gnb_results = dr.gaussian_naive_bayes()
+    nnc_results = dr.neural_network_classifier()
+
+    print("(accuracy, recall, prediction) on training set:")
+    print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[0]))
+    print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[0]))
+    print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[0]))
+    print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[0]))
+    print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[0]))
+    print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[0]))
+    print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[0]))
+    print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[0]))
+
+    print("(accuracy, recall, prediction) on testing set:")
+    print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[1]))
+    print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[1]))
+    print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[1]))
+    print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[1]))
+    print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[1]))
+    print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[1]))
+    print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[1]))
+    print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[1]))

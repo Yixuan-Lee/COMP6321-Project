@@ -9,7 +9,7 @@ class Decision_tree_classifier(Cross_validation):
 
     def __init__(self, x_train=None, y_train=None, cv=3, n_iter=10, n_jobs=None,
             criterion=('gini',),  max_depth=(None,), min_samples_leaf=(1,),
-            grid_search=False, random_search=False,class_weight=('auto',)):
+            grid_search=False, random_search=False,class_weight=(None,)):
 
         self.__dtc = DecisionTreeClassifier(random_state=0)
 

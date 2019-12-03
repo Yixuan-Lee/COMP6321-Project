@@ -4,13 +4,10 @@ import numpy as np
 import scipy
 import scipy.stats
 import sklearn
-from sklearn.exceptions import ConvergenceWarning
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split, RandomizedSearchCV
 
 from models import settings
-
-import warnings
 
 from models.regression.ada_boost_regressor import Ada_boost_regressor
 from models.regression.decision_tree_regressor import Decision_tree_regressor
@@ -20,8 +17,8 @@ from models.regression.neural_network_regressor import Neural_network_regressor
 from models.regression.random_forest_regressor import Random_forest_regressor
 from models.regression.support_vector_regressor import Support_vector_regressor
 
-warnings.filterwarnings("ignore", category=ConvergenceWarning)  # Ignore sklearn convergence warnings
-warnings.filterwarnings("ignore", category=FutureWarning)  # Ignore sklearn deprecation warnings
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
 class Facebook_metrics:

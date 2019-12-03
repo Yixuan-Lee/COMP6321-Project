@@ -2,7 +2,6 @@ import os
 import numpy as np
 import scipy.stats
 import sklearn
-from sklearn.exceptions import ConvergenceWarning
 from sklearn.model_selection import train_test_split, RandomizedSearchCV
 
 from models import settings
@@ -14,8 +13,9 @@ from models.classification.logistic_regression import Logistic_regression
 from models.classification.neural_network_classifier import Neural_network_classifier
 from models.classification.random_forest_classifier import Random_forest_classifier
 from models.classification.support_vector_classifier import Support_vector_classifier
-import warnings
 
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
 
@@ -62,8 +62,8 @@ class Steel_Plates_Faults:
                                    n_neighbors=np.arange(1, 100, 1),
                                    grid_search=True,
                                    n_jobs=10)
-        knn.print_parameter_candidates()
-        knn.print_best_estimator()
+        # knn.print_parameter_candidates()
+        # knn.print_best_estimator()
         return (knn.evaluate(data=self.x_train, targets=self.y_train),
                 knn.evaluate(data=self.x_test, targets=self.y_test))
 
@@ -101,8 +101,8 @@ class Steel_Plates_Faults:
                                         gamma= gamma,
                                         random_search= True,
                                         n_jobs=10)
-        svm.print_parameter_candidates()
-        svm.print_best_estimator()
+        # svm.print_parameter_candidates()
+        # svm.print_best_estimator()
         return (svm.evaluate(data=self.x_train, targets=self.y_train),
                 svm.evaluate(data=self.x_test, targets=self.y_test))
 
@@ -115,8 +115,8 @@ class Steel_Plates_Faults:
                                        # max_depth=np.linspace(1, 50, 50, dtype=np.int, endpoint=True),
                                        # min_samples_leaf=np.linspace(1, 10, 10, dtype=np.int, endpoint=True),
                                        grid_search=True)
-        dtc.print_parameter_candidates()
-        dtc.print_best_estimator()
+        # dtc.print_parameter_candidates()
+        # dtc.print_best_estimator()
         return (dtc.evaluate(data=self.x_train, targets=self.y_train),
                 dtc.evaluate(data=self.x_test, targets=self.y_test))
 
@@ -131,8 +131,8 @@ class Steel_Plates_Faults:
                                        n_estimators=np.linspace(1, 50, 50, dtype=np.int, endpoint=True),
                                        grid_search=True,
                                        n_jobs=20)
-        rfc.print_parameter_candidates()
-        rfc.print_best_estimator()
+        # rfc.print_parameter_candidates()
+        # rfc.print_best_estimator()
         return (rfc.evaluate(data=self.x_train, targets=self.y_train),
                 rfc.evaluate(data=self.x_test, targets=self.y_test))
 
@@ -164,8 +164,8 @@ class Steel_Plates_Faults:
                                    # n_estimators=np.linspace(1, 50, 50, dtype=np.int, endpoint=True),
                                    # learning_rate=lr,
                                    random_search=True)
-        abc.print_parameter_candidates()
-        abc.print_best_estimator()
+        # abc.print_parameter_candidates()
+        # abc.print_best_estimator()
         return (abc.evaluate(data=self.x_train, targets=self.y_train),
                 abc.evaluate(data=self.x_test, targets=self.y_test))
 
@@ -204,8 +204,8 @@ class Steel_Plates_Faults:
                                  random_search=True,
                                  n_jobs=10
                                  )
-        lr.print_parameter_candidates()
-        lr.print_best_estimator()
+        # lr.print_parameter_candidates()
+        # lr.print_best_estimator()
         return (lr.evaluate(data=self.x_train, targets=self.y_train),
                 lr.evaluate(data=self.x_test, targets=self.y_test))
 
@@ -219,8 +219,8 @@ class Steel_Plates_Faults:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        gnb.print_parameter_candidates()
-        gnb.print_best_estimator()
+        # gnb.print_parameter_candidates()
+        # gnb.print_best_estimator()
 
         # return the accuracy score
 
@@ -239,8 +239,8 @@ class Steel_Plates_Faults:
             random_search=True)
 
         # print all possible parameter values and best parameters
-        nnc.print_parameter_candidates()
-        nnc.print_best_estimator()
+        # nnc.print_parameter_candidates()
+        # nnc.print_best_estimator()
 
         # return the accuracy score
 
@@ -250,16 +250,33 @@ class Steel_Plates_Faults:
 
 
 if __name__ == '__main__':
-    warnings.filterwarnings("ignore", category=ConvergenceWarning)  # Ignore sklearn deprecation warnings
-    warnings.filterwarnings("ignore", category=FutureWarning)  # Ignore sklearn deprecation warnings
     spf = Steel_Plates_Faults()
-    np.random.seed(0)
-    # spf.print_self()
-    print('KNN: %.2f%%' % (spf.k_nearest_neighbours()*100))
-    print('SVC: %.2f%%' % (spf.support_vector_classifier()*100))
-    print('DTC: %.2f%%' % (spf.decision_tree_classifier()*100))
-    print('RFC: %.2f%%' % (spf.random_forest_classifier()*100))
-    print('ABC: %.2f%%' % (spf.ada_boost_classifier()*100))
-    print(' LR: %.2f%%' % (spf.logistic_regression()*100))
-    print('GNB: %.2f%%' % (spf.gaussian_naive_bayes()*100))
-    print('NNC: %.2f%%' % (spf.neural_network_classifier()*100))
+    # retrieve the results
+    knn_results = spf.k_nearest_neighbours()
+    svc_results = spf.support_vector_classifier()
+    dtc_results = spf.decision_tree_classifier()
+    rfr_results = spf.random_forest_classifier()
+    abc_results = spf.ada_boost_classifier()
+    lr_results = spf.logistic_regression()
+    gnb_results = spf.gaussian_naive_bayes()
+    nnc_results = spf.neural_network_classifier()
+
+    print("(accuracy, recall, prediction) on training set:")
+    print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[0]))
+    print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[0]))
+    print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[0]))
+    print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[0]))
+    print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[0]))
+    print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[0]))
+    print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[0]))
+    print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[0]))
+
+    print("(accuracy, recall, prediction) on testing set:")
+    print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[1]))
+    print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[1]))
+    print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[1]))
+    print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[1]))
+    print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[1]))
+    print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[1]))
+    print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[1]))
+    print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[1]))

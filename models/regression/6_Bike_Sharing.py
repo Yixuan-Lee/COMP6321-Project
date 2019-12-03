@@ -15,6 +15,9 @@ from models.regression.neural_network_regressor import Neural_network_regressor
 from models.regression.random_forest_regressor import Random_forest_regressor
 from models.regression.support_vector_regressor import Support_vector_regressor
 
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
 
 class Bike_Sharing:
     data = []
@@ -97,15 +100,11 @@ class Bike_Sharing:
         #     y_train=self.y_train,
         #     cv=3,)
 
-        svr.print_parameter_candidates()
-        svr.print_best_estimator()
+        # svr.print_parameter_candidates()
+        # svr.print_best_estimator()
 
-        return svr.r2_score(
-            x_test=self.x_test,
-            y_test=self.y_test), \
-               svr.mean_sqaured_error(
-                   x_test=self.x_test,
-                   y_test=self.y_test)
+        return (svr.evaluate(data=self.x_train, targets=self.y_train),
+                svr.evaluate(data=self.x_test, targets=self.y_test))
 
     def decision_tree_regression(self):
         dtr = Decision_tree_regressor(
@@ -119,15 +118,11 @@ class Bike_Sharing:
             grid_search=True)
         # dtr = Decision_tree_regressor(self.x_train,self.y_train)
 
-        dtr.print_parameter_candidates()
-        dtr.print_best_estimator()
+        # dtr.print_parameter_candidates()
+        # dtr.print_best_estimator()
 
-        return dtr.r2_score(
-            x_test=self.x_test,
-            y_test=self.y_test), \
-               dtr.mean_squared_error(
-                   x_test=self.x_test,
-                   y_test=self.y_test)
+        return (dtr.evaluate(data=self.x_train, targets=self.y_train),
+                dtr.evaluate(data=self.x_test, targets=self.y_test))
 
     def random_forest_regression(self):
 
@@ -167,15 +162,11 @@ class Bike_Sharing:
 
         # rfr = Random_forest_regressor(self.x_train,self.y_train)
 
-        rfr.print_parameter_candidates()
-        rfr.print_best_estimator()
+        # rfr.print_parameter_candidates()
+        # rfr.print_best_estimator()
 
-        return rfr.r2_score(
-            x_test=self.x_test,
-            y_test=self.y_test), \
-               rfr.mean_squared_error(
-                   x_test=self.x_test,
-                   y_test=self.y_test)
+        return (rfr.evaluate(data=self.x_train, targets=self.y_train),
+                rfr.evaluate(data=self.x_test, targets=self.y_test))
 
     def ada_boost_regression(self):
 
@@ -214,15 +205,11 @@ class Bike_Sharing:
         # abr = Ada_boost_regressor(self.x_train,self.y_train)
 
 
-        abr.print_parameter_candidates()
-        abr.print_best_estimator()
+        # abr.print_parameter_candidates()
+        # abr.print_best_estimator()
 
-        return abr.r2_score(
-            x_test=self.x_test,
-            y_test=self.y_test), \
-               abr.mean_squared_error(
-                   x_test=self.x_test,
-                   y_test=self.y_test)
+        return (abr.evaluate(data=self.x_train, targets=self.y_train),
+                abr.evaluate(data=self.x_test, targets=self.y_test))
 
     def gaussian_process_regression(self):
         # alpha = np.logspace(start=-2, stop=2, num=5, dtype=np.float32)
@@ -262,18 +249,14 @@ class Bike_Sharing:
             random_search= True)
 
         # print all possible parameter values and the best parameters
-        gpr.print_parameter_candidates()
-        gpr.print_best_estimator()
+        # gpr.print_parameter_candidates()
+        # gpr.print_best_estimator()
 
 
 
         # return the mean squared error
-        return gpr.r2_score(
-            x_test=self.x_test,
-            y_test=self.y_test), \
-               gpr.mean_squared_error(
-                   x_test=self.x_test,
-                   y_test=self.y_test)
+        return (gpr.evaluate(data=self.x_train, targets=self.y_train),
+                gpr.evaluate(data=self.x_test, targets=self.y_test))
 
     def linear_regression(self):
         alpha = np.logspace(start=-1, stop=3, base=10, num=5, dtype=np.float32)
@@ -311,15 +294,11 @@ class Bike_Sharing:
             solver= ["auto"],
             random_search= True)
 
-        lr.print_parameter_candidates()
-        lr.print_best_estimator()
+        # lr.print_parameter_candidates()
+        # lr.print_best_estimator()
 
-        return lr.r2_score(
-            x_test=self.x_test,
-            y_test=self.y_test), \
-               lr.mean_squared_error(
-                   x_test=self.x_test,
-                   y_test=self.y_test)
+        return (lr.evaluate(data=self.x_train, targets=self.y_train),
+                lr.evaluate(data=self.x_test, targets=self.y_test))
 
     def neural_network_regression(self):
         np.random.seed(0)
@@ -367,16 +346,12 @@ class Bike_Sharing:
 
 
         # print all possible parameter values and the best parameters
-        nnr.print_parameter_candidates()
-        nnr.print_best_estimator()
+        # nnr.print_parameter_candidates()
+        # nnr.print_best_estimator()
 
         # return the mean squared error
-        return nnr.r2_score(
-            x_test=self.x_test,
-            y_test=self.y_test), \
-               nnr.mean_squared_error(
-                   x_test=self.x_test,
-                   y_test=self.y_test)
+        return (nnr.evaluate(data=self.x_train, targets=self.y_train),
+                nnr.evaluate(data=self.x_test, targets=self.y_test))
 
     def printself(self):
         print(self.data)
@@ -385,12 +360,30 @@ class Bike_Sharing:
 
 if __name__ == '__main__':
     bs = Bike_Sharing()
-    # bs.printself()
-    # print("mean squared error on the actual test set:")
-    # print('SVR: %.5f , %.5f ' % bs.support_vector_regression())
-    # print('DTR: %.5f , %.5f ' % bs.decision_tree_regression())
-    # print('RFR: %.5f , %.5f ' % bs.random_forest_regression())
-    # print('ABR: %.5f , %.5f ' % bs.ada_boost_regression())
-    # print('GPR: %.5f , %.5f ' % bs.gaussian_process_regression())
-    # print(' LR: %.5f , %.5f ' % bs.linear_regression())
-    print('NNR: %.5f , %.5f ' % bs.neural_network_regression())
+    
+    # retrieve the results
+    svr_results = bs.support_vector_regression()
+    dtr_results = bs.decision_tree_regression()
+    rfr_results = bs.random_forest_regression()
+    abr_results = bs.ada_boost_regression()
+    gpr_results = bs.gaussian_process_regression()
+    lls_results = bs.linear_least_squares()
+    nnr_results = bs.neural_network_regression()
+
+    print("(mean_square_error, r2_score) on training set:")
+    print('SVR: (%.3f, %.3f)' % (svr_results[0]))
+    print('DTR: (%.3f, %.3f)' % (dtr_results[0]))
+    print('RFR: (%.3f, %.3f)' % (rfr_results[0]))
+    print('ABR: (%.3f, %.3f)' % (abr_results[0]))
+    print('GPR: (%.3f, %.3f)' % (gpr_results[0]))
+    print('LLS: (%.3f, %.3f)' % (lls_results[0]))
+    print('NNR: (%.3f, %.3f)' % (nnr_results[0]))
+
+    print("(mean_square_error, r2_score) on test set:")
+    print('SVR: (%.3f, %.3f)' % (svr_results[1]))
+    print('DTR: (%.3f, %.3f)' % (dtr_results[1]))
+    print('RFR: (%.3f, %.3f)' % (rfr_results[1]))
+    print('ABR: (%.3f, %.3f)' % (abr_results[1]))
+    print('GPR: (%.3f, %.3f)' % (gpr_results[1]))
+    print('LLS: (%.3f, %.3f)' % (lls_results[1]))
+    print('NNR: (%.3f, %.3f)' % (nnr_results[1]))

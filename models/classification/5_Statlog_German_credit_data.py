@@ -15,6 +15,8 @@ from models.classification.neural_network_classifier import Neural_network_class
 from models.classification.random_forest_classifier import Random_forest_classifier
 from models.classification.support_vector_classifier import Support_vector_classifier
 
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 class Statlog_German_Credit:
     data = []
@@ -63,8 +65,8 @@ class Statlog_German_Credit:
                                    n_neighbors=np.arange(1, 100, 1),
                                    grid_search= True,
                                    n_jobs=10)
-        knn.print_parameter_candidates()
-        knn.print_best_estimator()
+        # knn.print_parameter_candidates()
+        # knn.print_best_estimator()
 
         # return the accuracy score
         return (knn.evaluate(data=self.x_train, targets=self.y_train),
@@ -103,8 +105,8 @@ class Statlog_German_Credit:
                                         gamma= gamma,
                                         random_search= True,
                                         n_jobs=10)
-        svm.print_parameter_candidates()
-        svm.print_best_estimator()
+        # svm.print_parameter_candidates()
+        # svm.print_best_estimator()
 
         # return the accuracy score
         return (svm.evaluate(data=self.x_train, targets=self.y_train),
@@ -120,8 +122,8 @@ class Statlog_German_Credit:
                                        min_samples_leaf= np.linspace(1,10,10,dtype=np.int,endpoint=True),
                                        grid_search=True,
                                        n_jobs=10)
-        dtc.print_parameter_candidates()
-        dtc.print_best_estimator()
+        # dtc.print_parameter_candidates()
+        # dtc.print_best_estimator()
 
         # return the accuracy score
         return (dtc.evaluate(data=self.x_train, targets=self.y_train),
@@ -138,8 +140,8 @@ class Statlog_German_Credit:
                                        # n_estimators=np.linspace(1, 50, 50, dtype=np.int, endpoint=True),
                                        grid_search= True,
                                        n_jobs=10)
-        rfc.print_parameter_candidates()
-        rfc.print_best_estimator()
+        # rfc.print_parameter_candidates()
+        # rfc.print_best_estimator()
 
         # return the accuracy score
         return (rfc.evaluate(data=self.x_train, targets=self.y_train),
@@ -175,8 +177,8 @@ class Statlog_German_Credit:
                                    learning_rate=lr,
                                    n_jobs= 10,
                                    random_search = True)
-        abc.print_parameter_candidates()
-        abc.print_best_estimator()
+        # abc.print_parameter_candidates()
+        # abc.print_best_estimator()
 
         # return the accuracy score
         return (abc.evaluate(data=self.x_train, targets=self.y_train),
@@ -217,8 +219,8 @@ class Statlog_German_Credit:
                                  random_search= True,
                                  n_jobs=10
                                  )
-        lr.print_parameter_candidates()
-        lr.print_best_estimator()
+        # lr.print_parameter_candidates()
+        # lr.print_best_estimator()
 
         # return the accuracy score
         return (lr.evaluate(data=self.x_train, targets=self.y_train),
@@ -234,8 +236,8 @@ class Statlog_German_Credit:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        gnb.print_parameter_candidates()
-        gnb.print_best_estimator()
+        # gnb.print_parameter_candidates()
+        # gnb.print_best_estimator()
 
         # return the accuracy score
 
@@ -270,8 +272,8 @@ class Statlog_German_Credit:
 
 
         # print all possible parameter values and best parameters
-        nnc.print_parameter_candidates()
-        nnc.print_best_estimator()
+        # nnc.print_parameter_candidates()
+        # nnc.print_best_estimator()
 
         # return the accuracy score
 
@@ -283,12 +285,32 @@ class Statlog_German_Credit:
 if __name__ == '__main__':
     sgcd = Statlog_German_Credit()
 
-    # sgcd.print_self()
-    # print('KNN: %.2f%%' % (sgcd.k_nearest_neighbours()*100))
-    # print('SVC: %.2f%%' % (sgcd.support_vector_classifier()*100))
-    # print('DTC: %.2f%%' % (sgcd.decision_tree_classifier()*100))
-    # print('RFC: %.2f%%' % (sgcd.random_forest_classifier()*100))
-    # print('ABC: %.2f%%' % (sgcd.ada_boost_classifier()*100))
-    # print(' LR: %.2f%%' % (sgcd.logistic_regression()*100))
-    # print('GNB: %.2f%%' % (sgcd.gaussian_naive_bayes()*100))
-    # print('NNC: %.2f%%' % (sgcd.neural_network_classifier()*100))
+    # retrieve the results
+    knn_results = sgcd.k_nearest_neighbours()
+    svc_results = sgcd.support_vector_classifier()
+    dtc_results = sgcd.decision_tree_classifier()
+    rfr_results = sgcd.random_forest_classifier()
+    abc_results = sgcd.ada_boost_classifier()
+    lr_results = sgcd.logistic_regression()
+    gnb_results = sgcd.gaussian_naive_bayes()
+    nnc_results = sgcd.neural_network_classifier()
+
+    print("(accuracy, recall, prediction) on training set:")
+    print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[0]))
+    print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[0]))
+    print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[0]))
+    print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[0]))
+    print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[0]))
+    print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[0]))
+    print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[0]))
+    print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[0]))
+
+    print("(accuracy, recall, prediction) on testing set:")
+    print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[1]))
+    print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[1]))
+    print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[1]))
+    print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[1]))
+    print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[1]))
+    print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[1]))
+    print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[1]))
+    print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[1]))

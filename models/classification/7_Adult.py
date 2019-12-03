@@ -80,11 +80,13 @@ class Adult:
             cv=3,
             n_neighbors=n_neighbors,
             random_search=True)
-        knn.print_parameter_candidates()
-        knn.print_best_estimator()
-        return knn.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+
+        # knn.print_parameter_candidates()
+        # knn.print_best_estimator()
+
+        return (knn.evaluate(data=self.x_train, targets=self.y_train),
+                knn.evaluate(data=self.x_test, targets=self.y_test))
+
 
     def support_vector_classifier(self):
         C = np.logspace(start=-1, stop=-1, base=10, num=5, dtype=np.float32)  # [0.1, 1, 10, 100, 1000]
@@ -100,12 +102,12 @@ class Adult:
             kernel=kernel,
             gamma=gamma,
             grid_search=True)
-        svc.print_parameter_candidates()
-        svc.print_best_estimator()
 
-        return svc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        # svc.print_parameter_candidates()
+        # svc.print_best_estimator()
+
+        return (svc.evaluate(data=self.x_train, targets=self.y_train),
+                svc.evaluate(data=self.x_test, targets=self.y_test))
             
     def decision_tree_classifier(self):
         criterion = ['gini', 'entropy']
@@ -120,12 +122,11 @@ class Adult:
             max_depth=max_depth,
             grid_search=True)
 
-        dtc.print_parameter_candidates()
-        dtc.print_best_estimator()
+        # dtc.print_parameter_candidates()
+        # dtc.print_best_estimator()
 
-        return dtc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (dtc.evaluate(data=self.x_train, targets=self.y_train),
+                dtc.evaluate(data=self.x_test, targets=self.y_test))
 
     def random_forest_classifier(self):
         criterion = ['gini', 'entropy']
@@ -139,12 +140,12 @@ class Adult:
             criterion=criterion,
             max_depth=max_depth,
             grid_search=True)
-        rfc.print_parameter_candidates()
-        rfc.print_best_estimator()
 
-        return rfc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        # rfc.print_parameter_candidates()
+        # rfc.print_best_estimator()
+
+        return (rfc.evaluate(data=self.x_train, targets=self.y_train),
+                rfc.evaluate(data=self.x_test, targets=self.y_test))
 
     def ada_boost_classifier(self):
         n_estimators = range(1, 100, 5)
@@ -160,12 +161,11 @@ class Adult:
             learning_rate=learning_rate,
             grid_search=True)
 
-        abc.print_parameter_candidates()
-        abc.print_best_estimator()
+        # abc.print_parameter_candidates()
+        # abc.print_best_estimator()
 
-        return abc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (abc.evaluate(data=self.x_train, targets=self.y_train),
+                abc.evaluate(data=self.x_test, targets=self.y_test))
 
     def logistic_regression(self):
         C = np.logspace(start=-4, stop=4, base=10, num=9, dtype=np.float32)
@@ -178,13 +178,12 @@ class Adult:
             C=C,
             grid_search=True)
 
-        lr.print_parameter_candidates()
-        lr.print_best_estimator()
+        # lr.print_parameter_candidates()
+        # lr.print_best_estimator()
 
         # return the accuracy score
-        return lr.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (lr.evaluate(data=self.x_train, targets=self.y_train),
+                lr.evaluate(data=self.x_test, targets=self.y_test))
 
     def gaussian_naive_bayes(self):
         var_smoothing = np.logspace(start=-9, stop=-6, base=10, num=4,
@@ -198,13 +197,12 @@ class Adult:
             var_smoothing=var_smoothing,
             grid_search=True)
 
-        gnb.print_parameter_candidates()
-        gnb.print_best_estimator()
+        # gnb.print_parameter_candidates()
+        # gnb.print_best_estimator()
 
         # return the accuracy score
-        return gnb.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (gnb.evaluate(data=self.x_train, targets=self.y_train),
+                gnb.evaluate(data=self.x_test, targets=self.y_test))
 
     def neural_network_classifier(self):
         reciprocal_distrobution_hls = scipy.stats.reciprocal(a=100, b=1000)
@@ -222,25 +220,24 @@ class Adult:
             max_iter=max_iter,
             random_search=True)
 
-        nnc.print_parameter_candidates()
-        nnc.print_best_estimator()
+        # nnc.print_parameter_candidates()
+        # nnc.print_best_estimator()
 
-        return nnc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (nnc.evaluate(data=self.x_train, targets=self.y_train),
+                nnc.evaluate(data=self.x_test, targets=self.y_test))
 
 
 if __name__ == '__main__':
-    dr = Adult()
+    ad = Adult()
     # retrieve the results
-    knn_results = dr.k_nearest_neighbours()
-    svc_results = dr.support_vector_classifier()
-    dtc_results = dr.decision_tree_classifier()
-    rfr_results = dr.random_forest_classifier()
-    abc_results = dr.ada_boost_classifier()
-    lr_results = dr.logistic_regression()
-    gnb_results = dr.gaussian_naive_bayes()
-    nnc_results = dr.neural_network_classifier()
+    knn_results = ad.k_nearest_neighbours()
+    svc_results = ad.support_vector_classifier()
+    dtc_results = ad.decision_tree_classifier()
+    rfr_results = ad.random_forest_classifier()
+    abc_results = ad.ada_boost_classifier()
+    lr_results = ad.logistic_regression()
+    gnb_results = ad.gaussian_naive_bayes()
+    nnc_results = ad.neural_network_classifier()
 
     print("(accuracy, recall, prediction) on training set:")
     print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[0]))

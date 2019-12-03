@@ -54,13 +54,12 @@ class Yeast:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        knn.print_parameter_candidates()
-        knn.print_best_estimator()
+        # knn.print_parameter_candidates()
+        # knn.print_best_estimator()
 
         # return the accuracy score
-        return knn.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (knn.evaluate(data=self.x_train, targets=self.y_train),
+                knn.evaluate(data=self.x_test, targets=self.y_test))
 
     def support_vector_classifier(self):
         # define arguments given to GridSearchCV
@@ -80,13 +79,12 @@ class Yeast:
             random_search=True)
 
         # print all possible parameter values
-        svc.print_parameter_candidates()
-        svc.print_best_estimator()
+        # svc.print_parameter_candidates()
+        # svc.print_best_estimator()
 
         # return the accuracy score
-        return svc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (svc.evaluate(data=self.x_train, targets=self.y_train),
+                svc.evaluate(data=self.x_test, targets=self.y_test))
 
     def decision_tree_classifier(self):
         # define param_grid argument to give GridSearchCV
@@ -104,13 +102,12 @@ class Yeast:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        dtc.print_parameter_candidates()
-        dtc.print_best_estimator()
+        # dtc.print_parameter_candidates()
+        # dtc.print_best_estimator()
 
         # return the accuracy score
-        return dtc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (dtc.evaluate(data=self.x_train, targets=self.y_train),
+                dtc.evaluate(data=self.x_test, targets=self.y_test))
 
     def random_forest_classifier(self):
         # define arguments given to GridSearchCV
@@ -128,13 +125,12 @@ class Yeast:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        rfc.print_parameter_candidates()
-        rfc.print_best_estimator()
+        # rfc.print_parameter_candidates()
+        # rfc.print_best_estimator()
 
         # return the accuracy score
-        return rfc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (rfc.evaluate(data=self.x_train, targets=self.y_train),
+                rfc.evaluate(data=self.x_test, targets=self.y_test))
 
     def ada_boost_classifier(self):
         # define arguments given to GridSearchCV
@@ -153,13 +149,12 @@ class Yeast:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        abc.print_parameter_candidates()
-        abc.print_best_estimator()
+        # abc.print_parameter_candidates()
+        # abc.print_best_estimator()
 
         # return the accuracy score
-        return abc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (abc.evaluate(data=self.x_train, targets=self.y_train),
+                abc.evaluate(data=self.x_test, targets=self.y_test))
 
     def logistic_regression(self):
         """
@@ -181,13 +176,12 @@ class Yeast:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        lr.print_parameter_candidates()
-        lr.print_best_estimator()
+        # lr.print_parameter_candidates()
+        # lr.print_best_estimator()
 
         # return the accuracy score
-        return lr.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (lr.evaluate(data=self.x_train, targets=self.y_train),
+                lr.evaluate(data=self.x_test, targets=self.y_test))
 
     def gaussian_naive_bayes(self):
         """
@@ -210,13 +204,12 @@ class Yeast:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        gnb.print_parameter_candidates()
-        gnb.print_best_estimator()
+        # gnb.print_parameter_candidates()
+        # gnb.print_best_estimator()
 
         # return the accuracy score
-        return gnb.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (gnb.evaluate(data=self.x_train, targets=self.y_train),
+                gnb.evaluate(data=self.x_test, targets=self.y_test))
 
     def neural_network_classifier(self):
         """
@@ -245,26 +238,25 @@ class Yeast:
             random_search=True)
 
         # print all possible parameter values and best parameters
-        nnc.print_parameter_candidates()
-        nnc.print_best_estimator()
+        # nnc.print_parameter_candidates()
+        # nnc.print_best_estimator()
 
         # return the accuracy score
-        return nnc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (nnc.evaluate(data=self.x_train, targets=self.y_train),
+                nnc.evaluate(data=self.x_test, targets=self.y_test))
 
 
 if __name__ == '__main__':
-    dr = Yeast()
+    yt = Yeast()
     # retrieve the results
-    knn_results = dr.k_nearest_neighbours()
-    svc_results = dr.support_vector_classifier()
-    dtc_results = dr.decision_tree_classifier()
-    rfr_results = dr.random_forest_classifier()
-    abc_results = dr.ada_boost_classifier()
-    lr_results = dr.logistic_regression()
-    gnb_results = dr.gaussian_naive_bayes()
-    nnc_results = dr.neural_network_classifier()
+    knn_results = yt.k_nearest_neighbours()
+    svc_results = yt.support_vector_classifier()
+    dtc_results = yt.decision_tree_classifier()
+    rfr_results = yt.random_forest_classifier()
+    abc_results = yt.ada_boost_classifier()
+    lr_results = yt.logistic_regression()
+    gnb_results = yt.gaussian_naive_bayes()
+    nnc_results = yt.neural_network_classifier()
 
     print("(accuracy, recall, prediction) on training set:")
     print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[0]))

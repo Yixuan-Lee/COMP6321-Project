@@ -52,12 +52,11 @@ class Concrete_Compressive_Strength:
             gamma=gamma,
             grid_search=True)
 
-        svr.print_parameter_candidates()
-        svr.print_best_estimator()
+        # svr.print_parameter_candidates()
+        # svr.print_best_estimator()
 
-        return svr.mean_sqaured_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (svr.evaluate(data=self.x_train, targets=self.y_train),
+                svr.evaluate(data=self.x_test, targets=self.y_test))
 
     def decision_tree_regression(self):
         max_depth = range(1, 20, 2)
@@ -72,12 +71,11 @@ class Concrete_Compressive_Strength:
             min_samples_leaf=min_samples_leaf,
             grid_search=True)
 
-        dtr.print_parameter_candidates()
-        dtr.print_best_estimator()
+        # dtr.print_parameter_candidates()
+        # dtr.print_best_estimator()
 
-        return dtr.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (dtr.evaluate(data=self.x_train, targets=self.y_train),
+                dtr.evaluate(data=self.x_test, targets=self.y_test))
 
     def random_forest_regression(self):
         n_estimators = range(1, 200, 50)
@@ -92,12 +90,11 @@ class Concrete_Compressive_Strength:
             max_depth=max_depth,
             grid_search=True)
 
-        rfr.print_parameter_candidates()
-        rfr.print_best_estimator()
+        # rfr.print_parameter_candidates()
+        # rfr.print_best_estimator()
 
-        return rfr.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (rfr.evaluate(data=self.x_train, targets=self.y_train),
+                rfr.evaluate(data=self.x_test, targets=self.y_test))
 
     def ada_boost_regression(self):
         n_estimators = range(1, 100, 5)
@@ -112,11 +109,12 @@ class Concrete_Compressive_Strength:
             n_estimators=n_estimators,
             learning_rate=learning_rate,
             grid_search=True)
-        abr.print_parameter_candidates()
-        abr.print_best_estimator()
-        return abr.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+
+        # abr.print_parameter_candidates()
+        # abr.print_best_estimator()
+
+        return (abr.evaluate(data=self.x_train, targets=self.y_train),
+                abr.evaluate(data=self.x_test, targets=self.y_test))
 
     def gaussian_process_regression(self):
         alpha = np.logspace(start=-10, stop=-7, base=10, num=4,
@@ -130,23 +128,34 @@ class Concrete_Compressive_Strength:
             alpha=alpha,
             grid_search=True)
 
-        gpr.print_parameter_candidates()
-        gpr.print_best_estimator()
+        # gpr.print_parameter_candidates()
+        # gpr.print_best_estimator()
 
-        return gpr.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (gpr.evaluate(data=self.x_train, targets=self.y_train),
+                gpr.evaluate(data=self.x_test, targets=self.y_test))
 
     def linear_least_squares(self):
-        lr = Linear_least_squares(
+        np.random.seed(0)
+        alpha = norm.rvs(loc=64, scale=2, size=3).astype(np.float32)
+        max_iter = norm.rvs(loc=100, scale=20, size=3).astype(np.int)
+        solver = ('auto', 'svd', 'cholesky', 'lsqr', 'saga')
+
+        lls = Linear_least_squares(
             x_train=self.x_train,
             y_train=self.y_train,
-            cv=3,
-            n_jobs=-1)
+            cv=5,
+            alpha=alpha,
+            max_iter=max_iter,
+            solver=solver,
+            grid_search=True
+        )
 
-        return lr.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        # print all possible parameter values and the best parameters
+        # lls.print_parameter_candidates()
+        # lls.print_best_estimator()
+
+        return (lls.evaluate(data=self.x_train, targets=self.y_train),
+                lls.evaluate(data=self.x_test, targets=self.y_test))
 
     def neural_network_regression(self):
         reciprocal_distribution_hls = scipy.stats.reciprocal(a=100, b=1000)
@@ -167,20 +176,38 @@ class Concrete_Compressive_Strength:
             max_iter=max_iter,
             random_search=True)
 
-        nnr.print_parameter_candidates()
-        nnr.print_best_estimator()
+        # nnr.print_parameter_candidates()
+        # nnr.print_best_estimator()
 
-        return nnr.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (nnr.evaluate(data=self.x_train, targets=self.y_train),
+                nnr.evaluate(data=self.x_test, targets=self.y_test))
 
 
 if __name__ == '__main__':
-    wq = Concrete_Compressive_Strength()
-    # print('SVR: %.5f' % wq.support_vector_regression())
-    # print('DTR: %.5f' % wq.decision_tree_regression())
-    # print('RFR: %.5f' % wq.random_forest_regression())
-    # print('ABR: %.5f' % wq.ada_boost_regression())
-    # print('GPR: %.5f' % wq.gaussian_process_regression())
-    # print(' LR: %.5f' % wq.linear_least_squares())
-    print('NNR: %.5f' % wq.neural_network_regression())
+    ccs = Concrete_Compressive_Strength()
+
+    svr_results = ccs.support_vector_regression()
+    dtr_results = ccs.decision_tree_regression()
+    rfr_results = ccs.random_forest_regression()
+    abr_results = ccs.ada_boost_regression()
+    gpr_results = ccs.gaussian_process_regression()
+    lls_results = ccs.linear_least_squares()
+    nnr_results = ccs.neural_network_regression()
+
+    print("(mean_square_error, r2_score) on training set:")
+    print('SVR: (%.3f, %.3f)' % (svr_results[0]))
+    print('DTR: (%.3f, %.3f)' % (dtr_results[0]))
+    print('RFR: (%.3f, %.3f)' % (rfr_results[0]))
+    print('ABR: (%.3f, %.3f)' % (abr_results[0]))
+    print('GPR: (%.3f, %.3f)' % (gpr_results[0]))
+    print('LLS: (%.3f, %.3f)' % (lls_results[0]))
+    print('NNR: (%.3f, %.3f)' % (nnr_results[0]))
+
+    print("(mean_square_error, r2_score) on test set:")
+    print('SVR: (%.3f, %.3f)' % (svr_results[1]))
+    print('DTR: (%.3f, %.3f)' % (dtr_results[1]))
+    print('RFR: (%.3f, %.3f)' % (rfr_results[1]))
+    print('ABR: (%.3f, %.3f)' % (abr_results[1]))
+    print('GPR: (%.3f, %.3f)' % (gpr_results[1]))
+    print('LLS: (%.3f, %.3f)' % (lls_results[1]))
+    print('NNR: (%.3f, %.3f)' % (nnr_results[1]))

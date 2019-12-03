@@ -66,9 +66,8 @@ class Thoracic_Surgery_Data:
         knn.print_parameter_candidates()
         knn.print_best_estimator()
 
-        return knn.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (knn.evaluate(data=self.x_train, targets=self.y_train),
+                knn.evaluate(data=self.x_test, targets=self.y_test))
 
     def support_vector_classifier(self):
         C = np.logspace(start=-1, stop=3, base=10, num=5, dtype=np.float32)  # [0.1, 1, 10, 100, 1000]
@@ -88,9 +87,8 @@ class Thoracic_Surgery_Data:
         svc.print_parameter_candidates()
         svc.print_best_estimator()
 
-        return svc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (svc.evaluate(data=self.x_train, targets=self.y_train),
+                svc.evaluate(data=self.x_test, targets=self.y_test))
 
     def decision_tree_classifier(self):
         criterion = ['gini', 'entropy']
@@ -108,9 +106,8 @@ class Thoracic_Surgery_Data:
         dtc.print_parameter_candidates()
         dtc.print_best_estimator()
 
-        return dtc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (dtc.evaluate(data=self.x_train, targets=self.y_train),
+                dtc.evaluate(data=self.x_test, targets=self.y_test))
 
     def random_forest_classifier(self):
         criterion = ['gini', 'entropy']
@@ -128,9 +125,8 @@ class Thoracic_Surgery_Data:
         rfc.print_parameter_candidates()
         rfc.print_best_estimator()
 
-        return rfc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (rfc.evaluate(data=self.x_train, targets=self.y_train),
+                rfc.evaluate(data=self.x_test, targets=self.y_test))
 
     def ada_boost_classifier(self):
         n_estimators = range(1, 100, 5)
@@ -149,9 +145,8 @@ class Thoracic_Surgery_Data:
         abc.print_parameter_candidates()
         abc.print_best_estimator()
 
-        return abc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (abc.evaluate(data=self.x_train, targets=self.y_train),
+                abc.evaluate(data=self.x_test, targets=self.y_test))
 
     def logistic_regression(self):
         C = np.logspace(start=-4, stop=4, base=10, num=9, dtype=np.float32)
@@ -167,9 +162,8 @@ class Thoracic_Surgery_Data:
         lr.print_parameter_candidates()
         lr.print_best_estimator()
 
-        return lr.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (lr.evaluate(data=self.x_train, targets=self.y_train),
+                lr.evaluate(data=self.x_test, targets=self.y_test))
 
     def gaussian_naive_bayes(self):
         var_smoothing = np.logspace(start=-9, stop=-6, base=10, num=4,
@@ -186,9 +180,8 @@ class Thoracic_Surgery_Data:
         gnb.print_parameter_candidates()
         gnb.print_best_estimator()
 
-        return gnb.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (gnb.evaluate(data=self.x_train, targets=self.y_train),
+                gnb.evaluate(data=self.x_test, targets=self.y_test))
 
     def neural_network_classifier(self):
         reciprocal_distrobution_hls = scipy.stats.reciprocal(a=100, b=1000)
@@ -210,9 +203,8 @@ class Thoracic_Surgery_Data:
         nnc.print_parameter_candidates()
         nnc.print_best_estimator()
 
-        return nnc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (nnc.evaluate(data=self.x_train, targets=self.y_train),
+                nnc.evaluate(data=self.x_test, targets=self.y_test))
 
 
 if __name__ == '__main__':

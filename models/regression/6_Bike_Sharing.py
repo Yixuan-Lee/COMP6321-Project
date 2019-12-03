@@ -259,17 +259,17 @@ class Bike_Sharing:
                 gpr.evaluate(data=self.x_test, targets=self.y_test))
 
     def linear_regression(self):
-        alpha = np.logspace(start=-1, stop=3, base=10, num=5, dtype=np.float32)
-        max_iter = np.logspace(start=2, stop=4, base=10, num=3, dtype=np.int)
-        solver = ('auto', 'svd', 'cholesky', 'lsqr', 'saga')
-        lr = Linear_least_squares(
-            x_train=self.x_train,
-            y_train=self.y_train,
-            n_jobs = 10,
-            alpha = alpha,
-            max_iter = max_iter,
-            solver= solver,
-            grid_search= True)
+        # alpha = np.logspace(start=-1, stop=3, base=10, num=5, dtype=np.float32)
+        # max_iter = np.logspace(start=2, stop=4, base=10, num=3, dtype=np.int)
+        # solver = ('auto', 'svd', 'cholesky', 'lsqr', 'saga')
+        # lr = Linear_least_squares(
+        #     x_train=self.x_train,
+        #     y_train=self.y_train,
+        #     n_jobs = 10,
+        #     alpha = alpha,
+        #     max_iter = max_iter,
+        #     solver= solver,
+        #     grid_search= True)
 
         # Parameter
         # range: {'alpha': array([1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03], dtype=float32),
@@ -302,18 +302,18 @@ class Bike_Sharing:
 
     def neural_network_regression(self):
         np.random.seed(0)
-        hidden_layer_units = np.logspace(start=5, stop=7, base=2, num=3, dtype=np.int)
-        hidden_layer_sizes = hidden_layer_units
-        max_iter = np.logspace(start=3,stop=4, base=10, num=2, dtype=np.int)
-        nnr = Neural_network_regressor(
-            x_train=self.x_train,
-            y_train=self.y_train,
-            cv=3,
-            n_iter=30,
-            hidden_layer_sizes=hidden_layer_sizes,
-            max_iter=max_iter,
-            n_jobs=10,
-            grid_search=True)
+        # hidden_layer_units = np.logspace(start=5, stop=7, base=2, num=3, dtype=np.int)
+        # hidden_layer_sizes = hidden_layer_units
+        # max_iter = np.logspace(start=3,stop=4, base=10, num=2, dtype=np.int)
+        # nnr = Neural_network_regressor(
+        #     x_train=self.x_train,
+        #     y_train=self.y_train,
+        #     cv=3,
+        #     n_iter=30,
+        #     hidden_layer_sizes=hidden_layer_sizes,
+        #     max_iter=max_iter,
+        #     n_jobs=10,
+        #     grid_search=True)
 
         # Parameter
         # range: {'hidden_layer_sizes': array([32, 64, 128]), 'activation': ('relu',), 'max_iter': array([1000, 10000]),
@@ -367,7 +367,7 @@ if __name__ == '__main__':
     rfr_results = bs.random_forest_regression()
     abr_results = bs.ada_boost_regression()
     gpr_results = bs.gaussian_process_regression()
-    lls_results = bs.linear_least_squares()
+    lls_results = bs.linear_regression()
     nnr_results = bs.neural_network_regression()
 
     print("(mean_square_error, r2_score) on training set:")

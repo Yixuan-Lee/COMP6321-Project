@@ -36,8 +36,8 @@ class Statlog_German_Credit:
         self.targets = self.data[:, -1]
         self.data = self.data[:, :-1]
 
-        sss = sklearn.model_selection.StratifiedShuffleSplit(n_splits=1, test_size=0.1, random_state=0)
-        sss.get_n_splits(self.data, self.targets)
+        # sss = sklearn.model_selection.StratifiedShuffleSplit(n_splits=1, test_size=0.1, random_state=0)
+        # sss.get_n_splits(self.data, self.targets)
 
 
 
@@ -53,8 +53,8 @@ class Statlog_German_Credit:
         self.x_test = scaler.transform(self.x_test)
 
     def print_self(self):
-        print(self.data)
-        print(self.targets)
+        print(self.x_train[:10])
+        print(self.y_train[:10])
 
     def k_nearest_neighbours(self):
         # try n_neighbors from 1 to 100
@@ -62,7 +62,7 @@ class Statlog_German_Credit:
                                    y_train= self.y_train,
                                    cv=3,
                                    n_iter=30,
-                                   n_neighbors=np.arange(1, 100, 1),
+                                   n_neighbors=np.arange(1, 100, 5),
                                    grid_search= True,
                                    n_jobs=10)
         # knn.print_parameter_candidates()
@@ -118,7 +118,7 @@ class Statlog_German_Credit:
                                        y_train= self.y_train,
                                        cv=3,
                                        n_iter=30,
-                                       max_depth= np.linspace(1,50,50,dtype=np.int,endpoint=True),
+                                       max_depth= np.linspace(1,50,10,dtype=np.int,endpoint=True),
                                        min_samples_leaf= np.linspace(1,10,10,dtype=np.int,endpoint=True),
                                        grid_search=True,
                                        n_jobs=10)
@@ -136,8 +136,8 @@ class Statlog_German_Credit:
                                        y_train= self.y_train,
                                        cv=3,
                                        n_iter=30,
-                                       # max_depth=np.linspace(1, 50, 50, dtype=np.int, endpoint=True),
-                                       # n_estimators=np.linspace(1, 50, 50, dtype=np.int, endpoint=True),
+                                       max_depth=np.linspace(1, 50, 10, dtype=np.int, endpoint=True),
+                                       n_estimators=np.linspace(1, 50, 10, dtype=np.int, endpoint=True),
                                        grid_search= True,
                                        n_jobs=10)
         # rfc.print_parameter_candidates()
@@ -173,7 +173,7 @@ class Statlog_German_Credit:
                                    y_train=self.y_train,
                                    cv=3,
                                    n_iter=100,
-                                   n_estimators=[23],
+                                   n_estimators=[23,],
                                    learning_rate=lr,
                                    n_jobs= 10,
                                    random_search = True)
@@ -215,7 +215,7 @@ class Statlog_German_Credit:
                                  n_iter=100,
                                  C = C,
                                  # penalty= ('l1','l2'),
-                                 max_iter= [1000],
+                                 max_iter= [1000,],
                                  random_search= True,
                                  n_jobs=10
                                  )
@@ -263,10 +263,9 @@ class Statlog_German_Credit:
             x_train=self.x_train,
             y_train=self.y_train,
             cv=3,
-            n_iter=100,
-            # activation=activation,
-            # hidden_layer_sizes=hls,
-            # max_iter=mi,
+            n_iter=10,
+            hidden_layer_sizes=hls,
+            max_iter=mi,
             grid_search=True,
             n_jobs=10)
 
@@ -285,6 +284,7 @@ class Statlog_German_Credit:
 if __name__ == '__main__':
     sgcd = Statlog_German_Credit()
 
+    # sgcd.print_self()
     # retrieve the results
     knn_results = sgcd.k_nearest_neighbours()
     svc_results = sgcd.support_vector_classifier()

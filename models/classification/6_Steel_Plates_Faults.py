@@ -50,8 +50,8 @@ class Steel_Plates_Faults:
         self.x_test = scaler.transform(self.x_test)
 
     def print_self(self):
-        print(self.data.shape)
-        print(self.targets)
+        print(self.x_train[:10])
+        print(self.y_train[:10])
 
     def k_nearest_neighbours(self):
         # try n_neighbors from 1 to 100
@@ -61,11 +61,11 @@ class Steel_Plates_Faults:
                                    # n_iter=30,
                                    n_neighbors=np.arange(1, 100, 1),
                                    grid_search=True,
-                                   n_jobs=10)
+                                   n_jobs=-1)
         # knn.print_parameter_candidates()
         # knn.print_best_estimator()
-        return (knn.evaluate(data=self.x_train, targets=self.y_train),
-                knn.evaluate(data=self.x_test, targets=self.y_test))
+        return (knn.evaluate(data=self.x_train, targets=self.y_train,average="micro"),
+                knn.evaluate(data=self.x_test, targets=self.y_test,average="micro"))
 
     def support_vector_classifier(self):
         kernel_distribution = ['linear', 'rbf', 'sigmoid']
@@ -103,8 +103,8 @@ class Steel_Plates_Faults:
                                         n_jobs=10)
         # svm.print_parameter_candidates()
         # svm.print_best_estimator()
-        return (svm.evaluate(data=self.x_train, targets=self.y_train),
-                svm.evaluate(data=self.x_test, targets=self.y_test))
+        return (svm.evaluate(data=self.x_train, targets=self.y_train, average="micro"),
+                svm.evaluate(data=self.x_test, targets=self.y_test, average="micro"))
 
     def decision_tree_classifier(self):
         # try max_depth form 1 to 50
@@ -117,8 +117,8 @@ class Steel_Plates_Faults:
                                        grid_search=True)
         # dtc.print_parameter_candidates()
         # dtc.print_best_estimator()
-        return (dtc.evaluate(data=self.x_train, targets=self.y_train),
-                dtc.evaluate(data=self.x_test, targets=self.y_test))
+        return (dtc.evaluate(data=self.x_train, targets=self.y_train,average="micro"),
+                dtc.evaluate(data=self.x_test, targets=self.y_test,average="micro"))
 
     def random_forest_classifier(self):
         # try max_depth from 1 to 50
@@ -133,8 +133,8 @@ class Steel_Plates_Faults:
                                        n_jobs=20)
         # rfc.print_parameter_candidates()
         # rfc.print_best_estimator()
-        return (rfc.evaluate(data=self.x_train, targets=self.y_train),
-                rfc.evaluate(data=self.x_test, targets=self.y_test))
+        return (rfc.evaluate(data=self.x_train, targets=self.y_train,average="micro"),
+                rfc.evaluate(data=self.x_test, targets=self.y_test,average="micro"))
 
     def ada_boost_classifier(self):
         # lr = np.logspace(-3, 3, num=7)
@@ -166,8 +166,8 @@ class Steel_Plates_Faults:
                                    random_search=True)
         # abc.print_parameter_candidates()
         # abc.print_best_estimator()
-        return (abc.evaluate(data=self.x_train, targets=self.y_train),
-                abc.evaluate(data=self.x_test, targets=self.y_test))
+        return (abc.evaluate(data=self.x_train, targets=self.y_train,average="micro"),
+                abc.evaluate(data=self.x_test, targets=self.y_test,average="micro"))
 
     def logistic_regression(self):
         # C = np.logspace(-3,3,num=7)
@@ -206,8 +206,8 @@ class Steel_Plates_Faults:
                                  )
         # lr.print_parameter_candidates()
         # lr.print_best_estimator()
-        return (lr.evaluate(data=self.x_train, targets=self.y_train),
-                lr.evaluate(data=self.x_test, targets=self.y_test))
+        return (lr.evaluate(data=self.x_train, targets=self.y_train,average="micro"),
+                lr.evaluate(data=self.x_test, targets=self.y_test,average="micro"))
 
     def gaussian_naive_bayes(self):
         gnb = Gaussian_naive_bayes(
@@ -224,8 +224,8 @@ class Steel_Plates_Faults:
 
         # return the accuracy score
 
-        return (gnb.evaluate(data=self.x_train, targets=self.y_train),
-                gnb.evaluate(data=self.x_test, targets=self.y_test))
+        return (gnb.evaluate(data=self.x_train, targets=self.y_train,average="micro"),
+                gnb.evaluate(data=self.x_test, targets=self.y_test,average="micro"))
 
     def neural_network_classifier(self):
         # get the best random validated model
@@ -245,8 +245,8 @@ class Steel_Plates_Faults:
         # return the accuracy score
 
         # return the accuracy score
-        return (nnc.evaluate(data=self.x_train, targets=self.y_train),
-                nnc.evaluate(data=self.x_test, targets=self.y_test))
+        return (nnc.evaluate(data=self.x_train, targets=self.y_train,average="micro"),
+                nnc.evaluate(data=self.x_test, targets=self.y_test,average="micro"))
 
 
 if __name__ == '__main__':

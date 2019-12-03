@@ -25,7 +25,7 @@ class Yeast:
     y_test = []
     def __init__(self):
         filepath = 'datasets/classification_datasets/8_Yeast/'
-        filename = 'Yeast.data'
+        filename = 'yeast.data'
 
         # read the data file
         file = pd.read_table(filepath+filename, sep='\s+')
@@ -58,8 +58,8 @@ class Yeast:
         # knn.print_best_estimator()
 
         # return the accuracy score
-        return (knn.evaluate(data=self.x_train, targets=self.y_train, average='micro'),
-                knn.evaluate(data=self.x_test, targets=self.y_test, average='micro'))
+        return (knn.evaluate(data=self.x_train, targets=self.y_train, average='macro'),
+                knn.evaluate(data=self.x_test, targets=self.y_test, average='macro'))
 
     def support_vector_classifier(self):
         # define arguments given to GridSearchCV
@@ -83,8 +83,8 @@ class Yeast:
         # svc.print_best_estimator()
 
         # return the accuracy score
-        return (svc.evaluate(data=self.x_train, targets=self.y_train, average='micro'),
-                svc.evaluate(data=self.x_test, targets=self.y_test, average='micro'))
+        return (svc.evaluate(data=self.x_train, targets=self.y_train, average='macro'),
+                svc.evaluate(data=self.x_test, targets=self.y_test, average='macro'))
 
     def decision_tree_classifier(self):
         # define param_grid argument to give GridSearchCV
@@ -106,8 +106,8 @@ class Yeast:
         # dtc.print_best_estimator()
 
         # return the accuracy score
-        return (dtc.evaluate(data=self.x_train, targets=self.y_train, average='micro'),
-                dtc.evaluate(data=self.x_test, targets=self.y_test, average='micro'))
+        return (dtc.evaluate(data=self.x_train, targets=self.y_train, average='macro'),
+                dtc.evaluate(data=self.x_test, targets=self.y_test, average='macro'))
 
     def random_forest_classifier(self):
         # define arguments given to GridSearchCV
@@ -129,8 +129,8 @@ class Yeast:
         # rfc.print_best_estimator()
 
         # return the accuracy score
-        return (rfc.evaluate(data=self.x_train, targets=self.y_train, average='micro'),
-                rfc.evaluate(data=self.x_test, targets=self.y_test, average='micro'))
+        return (rfc.evaluate(data=self.x_train, targets=self.y_train, average='macro'),
+                rfc.evaluate(data=self.x_test, targets=self.y_test, average='macro'))
 
     def ada_boost_classifier(self):
         # define arguments given to GridSearchCV
@@ -153,8 +153,8 @@ class Yeast:
         # abc.print_best_estimator()
 
         # return the accuracy score
-        return (abc.evaluate(data=self.x_train, targets=self.y_train, average='micro'),
-                abc.evaluate(data=self.x_test, targets=self.y_test, average='micro'))
+        return (abc.evaluate(data=self.x_train, targets=self.y_train, average='macro'),
+                abc.evaluate(data=self.x_test, targets=self.y_test, average='macro'))
 
     def logistic_regression(self):
         """
@@ -180,8 +180,8 @@ class Yeast:
         # lr.print_best_estimator()
 
         # return the accuracy score
-        return (lr.evaluate(data=self.x_train, targets=self.y_train, average='micro'),
-                lr.evaluate(data=self.x_test, targets=self.y_test, average='micro'))
+        return (lr.evaluate(data=self.x_train, targets=self.y_train, average='macro'),
+                lr.evaluate(data=self.x_test, targets=self.y_test, average='macro'))
 
     def gaussian_naive_bayes(self):
         """
@@ -208,8 +208,8 @@ class Yeast:
         # gnb.print_best_estimator()
 
         # return the accuracy score
-        return (gnb.evaluate(data=self.x_train, targets=self.y_train, average='micro'),
-                gnb.evaluate(data=self.x_test, targets=self.y_test, average='micro'))
+        return (gnb.evaluate(data=self.x_train, targets=self.y_train, average='macro'),
+                gnb.evaluate(data=self.x_test, targets=self.y_test, average='macro'))
 
     def neural_network_classifier(self):
         """
@@ -242,8 +242,8 @@ class Yeast:
         # nnc.print_best_estimator()
 
         # return the accuracy score
-        return (nnc.evaluate(data=self.x_train, targets=self.y_train, average='micro'),
-                nnc.evaluate(data=self.x_test, targets=self.y_test, average='micro'))
+        return (nnc.evaluate(data=self.x_train, targets=self.y_train, average='macro'),
+                nnc.evaluate(data=self.x_test, targets=self.y_test, average='macro'))
 
 
 if __name__ == '__main__':
@@ -260,20 +260,20 @@ if __name__ == '__main__':
 
     print("(accuracy, recall, prediction) on training set:")
     print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[0]))
-    # print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[0]))
-    # print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[0]))
-    # print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[0]))
-    # print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[0]))
-    # print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[0]))
-    # print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[0]))
-    # print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[0]))
+    print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[0]))
+    print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[0]))
+    print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[0]))
+    print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[0]))
+    print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[0]))
+    print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[0]))
+    print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[0]))
 
-    # print("(accuracy, recall, prediction) on testing set:")
-    # print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[1]))
-    # print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[1]))
-    # print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[1]))
-    # print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[1]))
-    # print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[1]))
-    # print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[1]))
-    # print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[1]))
-    # print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[1]))
+    print("(accuracy, recall, prediction) on testing set:")
+    print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[1]))
+    print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[1]))
+    print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[1]))
+    print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[1]))
+    print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[1]))
+    print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[1]))
+    print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[1]))
+    print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[1]))

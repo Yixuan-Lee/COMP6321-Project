@@ -52,12 +52,11 @@ class Parkinson_speech:
             epsilon=epsilon,
             random_search=True)
 
-        svr.print_parameter_candidates()
-        svr.print_best_estimator()
+        #svr.print_parameter_candidates()
+        #svr.print_best_estimator()
 
-        return svr.mean_sqaured_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (svr.evaluate(data=self.x_train, targets=self.y_train),
+                svr.evaluate(data=self.x_test, targets=self.y_test))
 
     def decision_tree_regression(self):
         max_depth = range(1, 10)
@@ -72,12 +71,11 @@ class Parkinson_speech:
             min_samples_leaf=min_samples_leaf,
             random_search=True)
 
-        dtr.print_parameter_candidates()
-        dtr.print_best_estimator()
+        #dtr.print_parameter_candidates()
+        #dtr.print_best_estimator()
 
-        return dtr.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (dtr.evaluate(data=self.x_train, targets=self.y_train),
+                dtr.evaluate(data=self.x_test, targets=self.y_test))
 
     def random_forest_regression(self):
         n_estimators = range(1, 60)
@@ -92,12 +90,11 @@ class Parkinson_speech:
             max_depth=max_depth,
             random_search=True)
 
-        rfr.print_parameter_candidates()
-        rfr.print_best_estimator()
+        #rfr.print_parameter_candidates()
+        #rfr.print_best_estimator()
 
-        return rfr.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (rfr.evaluate(data=self.x_train, targets=self.y_train),
+                rfr.evaluate(data=self.x_test, targets=self.y_test))
 
     def ada_boost_regression(self):
         n_estimators = range(1, 100)
@@ -110,12 +107,11 @@ class Parkinson_speech:
             n_estimators=n_estimators,
             random_search=True)
 
-        abr.print_parameter_candidates()
-        abr.print_best_estimator()
+        #abr.print_parameter_candidates()
+        #abr.print_best_estimator()
 
-        return abr.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (abr.evaluate(data=self.x_train, targets=self.y_train),
+                abr.evaluate(data=self.x_test, targets=self.y_test))
 
     def gaussian_process_regression(self):
         gpr = Gaussian_process_regressor(
@@ -128,13 +124,12 @@ class Parkinson_speech:
             random_search=True)
 
         # print all possible parameter values and the best parameters
-        gpr.print_parameter_candidates()
-        gpr.print_best_estimator()
+        #gpr.print_parameter_candidates()
+        #gpr.print_best_estimator()
 
         # return the mean squared error
-        return gpr.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (gpr.evaluate(data=self.x_train, targets=self.y_train),
+                gpr.evaluate(data=self.x_test, targets=self.y_test))
 
     def linear_regression(self):
         np.random.seed(0)
@@ -148,9 +143,8 @@ class Parkinson_speech:
         lr.print_parameter_candidates()
         lr.print_best_estimator()
 
-        return lr.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (lr.evaluate(data=self.x_train, targets=self.y_train),
+                lr.evaluate(data=self.x_test, targets=self.y_test))
 
     def neural_network_regression(self):
         hidden_layer_sizes = []
@@ -169,22 +163,39 @@ class Parkinson_speech:
             n_jobs=10,
             random_search=True
         )
-        mlp.print_parameter_candidates()
-        mlp.print_best_estimator()
+        #mlp.print_parameter_candidates()
+        #mlp.print_best_estimator()
 
-        return mlp.mean_squared_error(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (mlp.evaluate(data=self.x_train, targets=self.y_train),
+                mlp.evaluate(data=self.x_test, targets=self.y_test))
 
 
 if __name__ == '__main__':
     ps = Parkinson_speech()
-    print("mean squared error on the actual test set:")
-    print('SVR: %.5f' % (ps.support_vector_regression()))
-    print('DTR: %.5f' % (ps.decision_tree_regression()))
-    print('RFR: %.5f' % (ps.random_forest_regression()))
-    print('ABR: %.5f' % (ps.ada_boost_regression()))
-    print('GPR: %.5f' % (ps.gaussian_process_regression()))
-    print(' LR: %.5f' % (ps.linear_regression()))
-    print('NNR: %.5f' % (ps.neural_network_regression()))
+    # retrieve the results
+    svr_results = ps.support_vector_regression()
+    dtr_results = ps.decision_tree_regression()
+    rfr_results = ps.random_forest_regression()
+    abr_results = ps.ada_boost_regression()
+    gpr_results = ps.gaussian_process_regression()
+    lls_results = ps.linear_least_squares()
+    nnr_results = ps.neural_network_regression()
+
+    print("(mean_square_error, r2_score) on training set:")
+    print('SVR: (%.3f, %.3f)' % (svr_results[0]))
+    print('DTR: (%.3f, %.3f)' % (dtr_results[0]))
+    print('RFR: (%.3f, %.3f)' % (rfr_results[0]))
+    print('ABR: (%.3f, %.3f)' % (abr_results[0]))
+    print('GPR: (%.3f, %.3f)' % (gpr_results[0]))
+    print('LLS: (%.3f, %.3f)' % (lls_results[0]))
+    print('NNR: (%.3f, %.3f)' % (nnr_results[0]))
+
+    print("(mean_square_error, r2_score) on test set:")
+    print('SVR: (%.3f, %.3f)' % (svr_results[1]))
+    print('DTR: (%.3f, %.3f)' % (dtr_results[1]))
+    print('RFR: (%.3f, %.3f)' % (rfr_results[1]))
+    print('ABR: (%.3f, %.3f)' % (abr_results[1]))
+    print('GPR: (%.3f, %.3f)' % (gpr_results[1]))
+    print('LLS: (%.3f, %.3f)' % (lls_results[1]))
+    print('NNR: (%.3f, %.3f)' % (nnr_results[1]))
 

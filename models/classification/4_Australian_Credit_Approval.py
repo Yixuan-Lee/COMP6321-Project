@@ -30,7 +30,6 @@ class Australian_credit_approval:
             delimiter=' ')
         self.data = np.asarray(f[:, :14])
         self.targets = f[:, 14:].reshape(-1)
-
         self.x_train, self.x_test, self.y_train, self.y_test = \
             train_test_split(self.data, self.targets, test_size=0.33,
                 random_state=0)
@@ -47,12 +46,11 @@ class Australian_credit_approval:
             weights=weights,
             grid_search=True)
 
-        knn.print_parameter_candidates()
-        knn.print_best_estimator()
+        #knn.print_parameter_candidates()
+        #knn.print_best_estimator()
 
-        return knn.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (knn.evaluate(data=self.x_train, targets=self.y_train),
+                knn.evaluate(data=self.x_test, targets=self.y_test))
 
     def support_vector_classifier(self):
         """
@@ -75,12 +73,11 @@ class Australian_credit_approval:
             coef0=coef0,
             random_search=True)
 
-        svc.print_parameter_candidates()
-        svc.print_best_estimator()
+        #svc.print_parameter_candidates()
+        #svc.print_best_estimator()
 
-        return svc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (svc.evaluate(data=self.x_train, targets=self.y_train),
+                svc.evaluate(data=self.x_test, targets=self.y_test))
 
     def decision_tree_classifier(self):
         max_depth = range(1, 14)
@@ -94,12 +91,11 @@ class Australian_credit_approval:
             min_samples_leaf=min_samples_leaf,
             grid_search=True)
 
-        dtc.print_parameter_candidates()
-        dtc.print_best_estimator()
+        #dtc.print_parameter_candidates()
+        #dtc.print_best_estimator()
 
-        return dtc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (dtc.evaluate(data=self.x_train, targets=self.y_train),
+                dtc.evaluate(data=self.x_test, targets=self.y_test))
 
     def random_forest_classifier(self):
         """
@@ -118,12 +114,11 @@ class Australian_credit_approval:
             max_depth=max_depth,
             grid_search=True)
 
-        rfc.print_parameter_candidates()
-        rfc.print_best_estimator()
+        #rfc.print_parameter_candidates()
+        #rfc.print_best_estimator()
 
-        return rfc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (rfc.evaluate(data=self.x_train, targets=self.y_train),
+                rfc.evaluate(data=self.x_test, targets=self.y_test))
 
     def ada_boost_classifier(self):
         n_estimators = range(1, 20)
@@ -137,12 +132,11 @@ class Australian_credit_approval:
             algorithm=algorithm,
             grid_search=True)
 
-        abc.print_parameter_candidates()
-        abc.print_best_estimator()
+        #abc.print_parameter_candidates()
+        #abc.print_best_estimator()
 
-        return abc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (abc.evaluate(data=self.x_train, targets=self.y_train),
+                abc.evaluate(data=self.x_test, targets=self.y_test))
 
     def logistic_regression(self):
         """
@@ -160,12 +154,11 @@ class Australian_credit_approval:
             C=C,
             random_search=True)
 
-        lr.print_parameter_candidates()
-        lr.print_best_estimator()
+        #lr.print_parameter_candidates()
+        #lr.print_best_estimator()
 
-        return lr.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (lr.evaluate(data=self.x_train, targets=self.y_train),
+                lr.evaluate(data=self.x_test, targets=self.y_test))
 
     def gaussian_naive_bayes(self):
         priors = [(1,), (20,), (50,), (100,)]
@@ -179,13 +172,12 @@ class Australian_credit_approval:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        gnb.print_parameter_candidates()
-        gnb.print_best_estimator()
+        #gnb.print_parameter_candidates()
+        #gnb.print_best_estimator()
 
         # return the accuracy score
-        return gnb.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (gnb.evaluate(data=self.x_train, targets=self.y_train),
+                gnb.evaluate(data=self.x_test, targets=self.y_test))
 
     def neural_network_classifier(self):
         hidden_layer_sizes = []
@@ -204,22 +196,44 @@ class Australian_credit_approval:
             random_search=True,
         )
 
-        mlp.print_best_estimator()
+        #mlp.print_best_estimator()
 
-        return mlp.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (mlp.evaluate(data=self.x_train, targets=self.y_train),
+                mlp.evaluate(data=self.x_test, targets=self.y_test))
 
 
 if __name__ == '__main__':
     aca = Australian_credit_approval()
-    print("accuracy on the actual test set:")
-    print('KNN: %.2f %%' % (aca.k_nearest_neighbours() * 100))
-    print('SVC: %.2f %%' % (aca.support_vector_classifier() * 100))
-    print('DTC: %.2f %%' % (aca.decision_tree_classifier() * 100))
-    print('RFC: %.2f %%' % (aca.random_forest_classifier() * 100))
-    print('ABC: %.2f %%' % (aca.ada_boost_classifier() * 100))
-    print(' LR: %.2f %%' % (aca.logistic_regression() * 100))
-    print('GNB: %.2f %%' % (aca.gaussian_naive_bayes() * 100))
-    print('NNC: %.2f %%' % (aca.neural_network_classifier() * 100))
+
+
+    # retrieve the results
+    knn_results = aca.k_nearest_neighbours()
+    print(knn_results)
+    svc_results = aca.support_vector_classifier()
+    dtc_results = aca.decision_tree_classifier()
+    rfr_results = aca.random_forest_classifier()
+    abc_results = aca.ada_boost_classifier()
+    lr_results = aca.logistic_regression()
+    gnb_results = aca.gaussian_naive_bayes()
+    nnc_results = aca.neural_network_classifier()
+
+    print("(accuracy, recall, prediction) on training set:")
+    print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[0]))
+    print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[0]))
+    print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[0]))
+    print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[0]))
+    print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[0]))
+    print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[0]))
+    print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[0]))
+    print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[0]))
+
+    print("(accuracy, recall, prediction) on testing set:")
+    print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[1]))
+    print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[1]))
+    print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[1]))
+    print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[1]))
+    print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[1]))
+    print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[1]))
+    print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[1]))
+    print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[1]))
 

@@ -1,4 +1,3 @@
-
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import precision_score
 import os
@@ -18,7 +17,11 @@ from gaussian_naive_bayes import Gaussian_naive_bayes
 from neural_network_classifier import Neural_network_classifier
 from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
-
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import recall_score
+from sklearn.svm import SVC
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 
 class Default_of_credit_card_clients:
     data = []
@@ -51,8 +54,6 @@ class Default_of_credit_card_clients:
         self.x_test = scaler.transform(self.x_test)
 
     ##################### Model training #####################
-
-
     def support_vector_classifier(self):
         """
         for svc, i train on the training data using different :
@@ -62,9 +63,9 @@ class Default_of_credit_card_clients:
         :return: test accuracy of the svc best model
         """
         # define parameters
-#         C = np.logspace(start=0, stop=3, base=10, num=4, dtype=np.int)
-#         gamma = np.logspace(start=-4, stop=-1, base=10, num=2, dtype=np.float32)
-#         kernel = ('linear', 'rbf')
+        #         C = np.logspace(start=0, stop=3, base=10, num=4, dtype=np.int)
+        #         gamma = np.logspace(start=-4, stop=-1, base=10, num=2, dtype=np.float32)
+        #         kernel = ('linear', 'rbf')
         # best result over all C:      ?
         # best result over all gamma:  ?
         # best result over all kernel: ?
@@ -75,24 +76,25 @@ class Default_of_credit_card_clients:
         svc = Support_vector_classifier(
             x_train=self.x_train,
             y_train=self.y_train,
-            class_weight=('balanced',),
-            # cv=5,
+            cv=1,
+            #class_weight=({1:8,0:2},),
             # n_jobs=3,
             # C=C,
             # gamma=gamma,
             # kernel=kernel,
-            # grid_search=True
+            grid_search=True
         )
 
         # print all possible parameter values and the best parameters
-        svc.print_parameter_candidates()
-        svc.print_best_estimator()
-        print('svc precision: %.2f %%' % (svc.precision(self.x_test,self.y_test) * 100))
-        print('svc recall: %.2f %%' % (svc.recall(self.x_test,self.y_test) * 100))
+        # svc.print_parameter_candidates()
+        # svc.print_best_estimator()
+
         # return the accuracy score
-        return svc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (svc.evaluate(data=self.x_train, targets=self.y_train),
+                svc.evaluate(data=self.x_test, targets=self.y_test))
+
+
+
 
     def decision_tree_classifier(self):
         """
@@ -118,11 +120,12 @@ class Default_of_credit_card_clients:
         dtc = Decision_tree_classifier(
             x_train=self.x_train,
             y_train=self.y_train,
-            cv=5,
-            criterion=criterion,
-            max_depth=max_depth,
-            class_weight=({1:8,0:2},),
-            grid_search=True)
+            cv=1,
+            criterion=('entropy',),
+            max_depth=(10,),
+            #class_weight=({1:8,0:2},),
+            grid_search=True
+        )
 
         # print all possible parameter values and the best parameters
         dtc.print_parameter_candidates()
@@ -162,7 +165,6 @@ class Default_of_credit_card_clients:
         rfc = Random_forest_classifier(
             x_train=self.x_train,
             y_train=self.y_train,
-            cv=5,
             criterion=criterion,
             n_estimators=n_estimators,
             max_depth=max_depth,
@@ -225,17 +227,97 @@ class Default_of_credit_card_clients:
             x_test=self.x_test,
             y_test=self.y_test)
 
+    def testdt(self):
+        dt_bal=DecisionTreeClassifier(random_state=0,max_depth=3,criterion='entropy',class_weight={1:8,0:2})
+        dt_im = DecisionTreeClassifier(random_state=0, max_depth=3, criterion='entropy')
+        dt_bal.fit(self.x_train,self.y_train)
+        dt_im.fit(self.x_train, self.y_train)
+        y_bal=dt_bal.predict(self.x_test)
+        y_im = dt_im.predict(self.x_test)
+        #balanced data
+        balanced_acc=accuracy_score(y_true=self.y_test, y_pred=y_bal) * 100
+        balanced_p=precision_score(y_true=self.y_test, y_pred=y_bal) * 100
+        balanced_r=recall_score(y_true=self.y_test, y_pred=y_bal)*100
+        #imbalanced data
+        imbalanced_acc = accuracy_score(y_true=self.y_test, y_pred=y_im) * 100
+        imbalanced_p = precision_score(y_true=self.y_test, y_pred=y_im) * 100
+        imbalanced_r = recall_score(y_true=self.y_test, y_pred=y_im) * 100
+
+        print("dtc balanced accuray: %.2f%%"%balanced_acc+"  dtc imbalanced accuray: %.2f%%" % imbalanced_acc)
+        print("dtc balanced precision: %.2f%%"%balanced_p+"  dtc imbalanced precision: %.2f%%" % imbalanced_p)
+        print("dtc balanced recall: %.2f%%"%balanced_r+"  dtc imbalanced recall: %.2f%%" % imbalanced_r)
 
 
+    def svctest(self):
+        svc_bal=SVC(random_state=0,class_weight={1:8,0:2})
+        svc_im = SVC(random_state=0)
+        svc_bal.fit(self.x_train,self.y_train)
+        svc_im.fit(self.x_train, self.y_train)
+        y_bal = svc_bal.predict(self.x_test)
+        y_im = svc_im.predict(self.x_test)
+        # balanced data
+        balanced_acc = accuracy_score(y_true=self.y_test, y_pred=y_bal) * 100
+        balanced_p = precision_score(y_true=self.y_test, y_pred=y_bal) * 100
+        balanced_r = recall_score(y_true=self.y_test, y_pred=y_bal) * 100
+        # imbalanced data
+        imbalanced_acc = accuracy_score(y_true=self.y_test, y_pred=y_im) * 100
+        imbalanced_p = precision_score(y_true=self.y_test, y_pred=y_im) * 100
+        imbalanced_r = recall_score(y_true=self.y_test, y_pred=y_im) * 100
 
+        print("svc balanced accuray: %.2f%%" % balanced_acc + "  svc imbalanced accuray: %.2f%%" % imbalanced_acc)
+        print("svc balanced precision: %.2f%%" % balanced_p + "  svc imbalanced precision: %.2f%%" % imbalanced_p)
+        print("svc balanced recall: %.2f%%" % balanced_r + "  svc imbalanced recall: %.2f%%" % imbalanced_r)
 
+    def lgtest(self):
+        lr_bal=LogisticRegression(random_state=0,class_weight={1:8,0:2})
+        lr_bal.fit(self.x_train, self.y_train)
+        y_bal = lr_bal.predict(self.x_test)
+        lr_im = LogisticRegression(random_state=0)
+        lr_im.fit(self.x_train, self.y_train)
+        y_im = lr_im.predict(self.x_test)
+        # balanced data
+        balanced_acc = accuracy_score(y_true=self.y_test, y_pred=y_bal) * 100
+        balanced_p = precision_score(y_true=self.y_test, y_pred=y_bal) * 100
+        balanced_r = recall_score(y_true=self.y_test, y_pred=y_bal) * 100
+        # imbalanced data
+        imbalanced_acc = accuracy_score(y_true=self.y_test, y_pred=y_im) * 100
+        imbalanced_p = precision_score(y_true=self.y_test, y_pred=y_im) * 100
+        imbalanced_r = recall_score(y_true=self.y_test, y_pred=y_im) * 100
+
+        print("logistic balanced accuray: %.2f%%" % balanced_acc + "  logistic imbalanced accuray: %.2f%%" % imbalanced_acc)
+        print("logistic balanced precision: %.2f%%" % balanced_p + "  logistic imbalanced precision: %.2f%%" % imbalanced_p)
+        print("logistic balanced recall: %.2f%%" % balanced_r + "  logistic imbalanced recall: %.2f%%" % imbalanced_r)
+
+    def rftest(self):
+        rf_bal = RandomForestClassifier(random_state=0,class_weight={1:8,0:2})
+        rf_bal.fit(self.x_train, self.y_train)
+        y_bal = rf_bal.predict(self.x_test)
+        rf_im = RandomForestClassifier(random_state=0)
+        rf_im.fit(self.x_train, self.y_train)
+        y_im = rf_im.predict(self.x_test)
+        # balanced data
+        balanced_acc = accuracy_score(y_true=self.y_test, y_pred=y_bal) * 100
+        balanced_p = precision_score(y_true=self.y_test, y_pred=y_bal) * 100
+        balanced_r = recall_score(y_true=self.y_test, y_pred=y_bal) * 100
+        # imbalanced data
+        imbalanced_acc = accuracy_score(y_true=self.y_test, y_pred=y_im) * 100
+        imbalanced_p = precision_score(y_true=self.y_test, y_pred=y_im) * 100
+        imbalanced_r = recall_score(y_true=self.y_test, y_pred=y_im) * 100
+
+        print("random forest accuray: %.2f%%" % balanced_acc + "  random forest imbalanced accuray: %.2f%%" % imbalanced_acc)
+        print("random forest balanced precision: %.2f%%" % balanced_p + "  random forest imbalanced precision: %.2f%%" % imbalanced_p)
+        print("random forest balanced recall: %.2f%%" % balanced_r + "  random forest imbalanced recall: %.2f%%" % imbalanced_r)
 
 
 if __name__ == '__main__':
     doccc = Default_of_credit_card_clients()
     #print("accuracy on the actual test set:")
-    print('SVC: %.2f %%' % (doccc.support_vector_classifier() * 100))
+    #print('SVC: %.2f %%' % (doccc.support_vector_classifier() * 100))
     #print('DTC: %.2f %%' % (doccc.decision_tree_classifier() * 100))
     #print('RFC: %.2f %%' % (doccc.random_forest_classifier() * 100))
     #print(' LR: %.2f %%' % (doccc.logistic_regression() * 100))
+    #doccc.testdt()
+    #doccc.svctest()
+    #doccc.lgtest()
+    doccc.rftest()
 

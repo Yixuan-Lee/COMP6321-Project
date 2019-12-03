@@ -14,6 +14,7 @@ from neural_network_classifier import Neural_network_classifier
 from sklearn.model_selection import train_test_split
 
 
+
 class Breast_cancer_wisconsin:
     data = []
     targets = []
@@ -36,12 +37,15 @@ class Breast_cancer_wisconsin:
         self.data = np.asarray(arr[:, 2:], dtype=np.float)
         self.targets = arr[:, 1:2].reshape(-1)
 
+        self.targets[self.targets == 'M'] = 0
+        self.targets[self.targets == 'B'] = 1
+        self.targets = self.targets.astype(np.int)
         self.x_train, self.x_test, self.y_train, self.y_test = \
             train_test_split(self.data, self.targets, test_size=0.33,
                 random_state=0)
 
     def k_nearest_neighbours(self):
-        weights = ['uniform', 'distance']
+        weights = ('uniform', 'distance')
         n_neighbors = range(3, 15)
 
         knn = K_nearest_neighbours(
@@ -52,12 +56,10 @@ class Breast_cancer_wisconsin:
             weights=weights,
             grid_search=True)
 
-        knn.print_parameter_candidates()
-        knn.print_best_estimator()
-
-        return knn.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        #knn.print_parameter_candidates()
+        #knn.print_best_estimator()
+        return (knn.evaluate(data=self.x_train, targets=self.y_train,average='micro'),
+                knn.evaluate(data=self.x_test, targets=self.y_test,average='micro'))
 
     def support_vector_classifier(self):
         """
@@ -81,12 +83,11 @@ class Breast_cancer_wisconsin:
             coef0=coef0,
             random_search=True)
 
-        svc.print_parameter_candidates()
-        svc.print_best_estimator()
+        #svc.print_parameter_candidates()
+        #svc.print_best_estimator()
 
-        return svc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (svc.evaluate(data=self.x_train, targets=self.y_train),
+                svc.evaluate(data=self.x_test, targets=self.y_test))
 
     def decision_tree_classifier(self):
         max_depth = range(1, 14)
@@ -100,12 +101,11 @@ class Breast_cancer_wisconsin:
             min_samples_leaf=min_samples_leaf,
             grid_search=True)
 
-        dtc.print_parameter_candidates()
-        dtc.print_best_estimator()
+        #dtc.print_parameter_candidates()
+        #dtc.print_best_estimator()
 
-        return dtc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (dtc.evaluate(data=self.x_train, targets=self.y_train),
+                dtc.evaluate(data=self.x_test, targets=self.y_test))
 
     def random_forest_classifier(self):
         n_estimators = range(1, 12)
@@ -117,12 +117,11 @@ class Breast_cancer_wisconsin:
             n_estimators=n_estimators,
             grid_search=True)
 
-        rfc.print_parameter_candidates()
-        rfc.print_best_estimator()
+        #rfc.print_parameter_candidates()
+        #rfc.print_best_estimator()
 
-        return rfc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (rfc.evaluate(data=self.x_train, targets=self.y_train),
+                rfc.evaluate(data=self.x_test, targets=self.y_test))
 
     def ada_boost_classifier(self):
         n_estimators = range(1, 20)
@@ -136,12 +135,11 @@ class Breast_cancer_wisconsin:
             algorithm=algorithm,
             grid_search=True)
 
-        abc.print_parameter_candidates()
-        abc.print_best_estimator()
+        #abc.print_parameter_candidates()
+        #abc.print_best_estimator()
 
-        return abc.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (abc.evaluate(data=self.x_train, targets=self.y_train),
+                abc.evaluate(data=self.x_test, targets=self.y_test))
 
     def logistic_regression(self):
         """
@@ -159,12 +157,11 @@ class Breast_cancer_wisconsin:
             C=C,
             random_search=True)
 
-        lr.print_parameter_candidates()
-        lr.print_best_estimator()
+        #lr.print_parameter_candidates()
+        #lr.print_best_estimator()
 
-        return lr.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (lr.evaluate(data=self.x_train, targets=self.y_train),
+                lr.evaluate(data=self.x_test, targets=self.y_test))
 
     def gaussian_naive_bayes(self):
         priors=[(1,),(20,),(50,),(100,)]
@@ -178,13 +175,12 @@ class Breast_cancer_wisconsin:
             grid_search=True)
 
         # print all possible parameter values and the best parameters
-        gnb.print_parameter_candidates()
-        gnb.print_best_estimator()
+        #gnb.print_parameter_candidates()
+        #gnb.print_best_estimator()
 
         # return the accuracy score
-        return gnb.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (gnb.evaluate(data=self.x_train, targets=self.y_train),
+                gnb.evaluate(data=self.x_test, targets=self.y_test))
 
     def neural_network_classifier(self):
         hidden_layer_sizes = []
@@ -201,23 +197,48 @@ class Breast_cancer_wisconsin:
             random_search=True,
         )
 
-        mlp.print_best_estimator()
+        #mlp.print_best_estimator()
 
-        return mlp.accuracy_score(
-            x_test=self.x_test,
-            y_test=self.y_test)
+        return (mlp.evaluate(data=self.x_train, targets=self.y_train),
+                mlp.evaluate(data=self.x_test, targets=self.y_test))
 
 
 if __name__ == '__main__':
     bcw = Breast_cancer_wisconsin()
-    print("accuracy on the actual test set:")
-    print('KNN: %.2f %%' % (bcw.k_nearest_neighbours() * 100))
-    print('SVC: %.2f %%' % (bcw.support_vector_classifier() * 100))
-    print('DTC: %.2f %%' % (bcw.decision_tree_classifier() * 100))
-    print('RFC: %.2f %%' % (bcw.random_forest_classifier() * 100))
-    print('ABC: %.2f %%' % (bcw.ada_boost_classifier() * 100))
-    print(' LR: %.2f %%' % (bcw.logistic_regression() * 100))
-    print('GNB: %.2f %%' % (bcw.gaussian_naive_bayes() * 100))
-    print('NNC: %.2f %%' % (bcw.neural_network_classifier() * 100))
+
+
+    # retrieve the results
+    knn_results = bcw.k_nearest_neighbours()
+    svc_results = bcw.support_vector_classifier()
+    dtc_results = bcw.decision_tree_classifier()
+    rfr_results = bcw.random_forest_classifier()
+    abc_results = bcw.ada_boost_classifier()
+    lr_results = bcw.logistic_regression()
+    gnb_results = bcw.gaussian_naive_bayes()
+    nnc_results = bcw.neural_network_classifier()
+
+    print("(accuracy, recall, prediction) on training set:")
+    print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[0]))
+    print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[0]))
+    print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[0]))
+    print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[0]))
+    print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[0]))
+    print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[0]))
+    print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[0]))
+    print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[0]))
+
+    print("(accuracy, recall, prediction) on testing set:")
+    print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[1]))
+    print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[1]))
+    print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[1]))
+    print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[1]))
+    print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[1]))
+    print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[1]))
+    print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[1]))
+    print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[1]))
+
+
+
+
 
 

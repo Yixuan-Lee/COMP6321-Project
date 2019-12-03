@@ -15,6 +15,8 @@ from gaussian_naive_bayes import Gaussian_naive_bayes
 from neural_network_classifier import Neural_network_classifier
 from sklearn.model_selection import train_test_split
 
+from models import settings
+
 
 class Yeast:
     data = []
@@ -24,11 +26,10 @@ class Yeast:
     y_train = []
     y_test = []
     def __init__(self):
-        filepath = 'datasets/classification_datasets/8_Yeast/'
-        filename = 'yeast.data'
+        filename = 'datasets/classification_datasets/8_Yeast/yeast.data'
 
         # read the data file
-        file = pd.read_table(filepath+filename, sep='\s+')
+        file = pd.read_table(os.path.join(settings.ROOT_DIR, filename), sep='\s+')
         self.data = np.asarray(file)
         self.data = np.delete(self.data,0,axis=1)
         self.targets = self.data[:, -1]

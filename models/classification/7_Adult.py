@@ -84,8 +84,8 @@ class Adult:
         # knn.print_parameter_candidates()
         # knn.print_best_estimator()
 
-        return (knn.evaluate(data=self.x_train, targets=self.y_train),
-                knn.evaluate(data=self.x_test, targets=self.y_test))
+        return (knn.evaluate(data=self.x_train, targets=self.y_train, average='micro'),
+                knn.evaluate(data=self.x_test, targets=self.y_test, average='micro'))
 
 
     def support_vector_classifier(self):
@@ -106,8 +106,8 @@ class Adult:
         # svc.print_parameter_candidates()
         # svc.print_best_estimator()
 
-        return (svc.evaluate(data=self.x_train, targets=self.y_train),
-                svc.evaluate(data=self.x_test, targets=self.y_test))
+        return (svc.evaluate(data=self.x_train, targets=self.y_train, average='micro'),
+                svc.evaluate(data=self.x_test, targets=self.y_test, average='micro'))
             
     def decision_tree_classifier(self):
         criterion = ['gini', 'entropy']
@@ -125,8 +125,8 @@ class Adult:
         # dtc.print_parameter_candidates()
         # dtc.print_best_estimator()
 
-        return (dtc.evaluate(data=self.x_train, targets=self.y_train),
-                dtc.evaluate(data=self.x_test, targets=self.y_test))
+        return (dtc.evaluate(data=self.x_train, targets=self.y_train, average='micro'),
+                dtc.evaluate(data=self.x_test, targets=self.y_test, average='micro'))
 
     def random_forest_classifier(self):
         criterion = ['gini', 'entropy']
@@ -144,8 +144,8 @@ class Adult:
         # rfc.print_parameter_candidates()
         # rfc.print_best_estimator()
 
-        return (rfc.evaluate(data=self.x_train, targets=self.y_train),
-                rfc.evaluate(data=self.x_test, targets=self.y_test))
+        return (rfc.evaluate(data=self.x_train, targets=self.y_train, average='micro'),
+                rfc.evaluate(data=self.x_test, targets=self.y_test, average='micro'))
 
     def ada_boost_classifier(self):
         n_estimators = range(1, 100, 5)
@@ -164,14 +164,15 @@ class Adult:
         # abc.print_parameter_candidates()
         # abc.print_best_estimator()
 
-        return (abc.evaluate(data=self.x_train, targets=self.y_train),
-                abc.evaluate(data=self.x_test, targets=self.y_test))
+        return (abc.evaluate(data=self.x_train, targets=self.y_train, average='micro'),
+                abc.evaluate(data=self.x_test, targets=self.y_test, average='micro'))
 
     def logistic_regression(self):
         C = np.logspace(start=-4, stop=4, base=10, num=9, dtype=np.float32)
 
         lr = Logistic_regression(
             x_train=self.x_train,
+            
             y_train=self.y_train,
             cv=3,
             n_jobs=-1,
@@ -182,8 +183,8 @@ class Adult:
         # lr.print_best_estimator()
 
         # return the accuracy score
-        return (lr.evaluate(data=self.x_train, targets=self.y_train),
-                lr.evaluate(data=self.x_test, targets=self.y_test))
+        return (lr.evaluate(data=self.x_train, targets=self.y_train, average='micro'),
+                lr.evaluate(data=self.x_test, targets=self.y_test, average='micro'))
 
     def gaussian_naive_bayes(self):
         var_smoothing = np.logspace(start=-9, stop=-6, base=10, num=4,
@@ -201,8 +202,8 @@ class Adult:
         # gnb.print_best_estimator()
 
         # return the accuracy score
-        return (gnb.evaluate(data=self.x_train, targets=self.y_train),
-                gnb.evaluate(data=self.x_test, targets=self.y_test))
+        return (gnb.evaluate(data=self.x_train, targets=self.y_train, average='micro'),
+                gnb.evaluate(data=self.x_test, targets=self.y_test, average='micro'))
 
     def neural_network_classifier(self):
         reciprocal_distrobution_hls = scipy.stats.reciprocal(a=100, b=1000)
@@ -223,38 +224,38 @@ class Adult:
         # nnc.print_parameter_candidates()
         # nnc.print_best_estimator()
 
-        return (nnc.evaluate(data=self.x_train, targets=self.y_train),
-                nnc.evaluate(data=self.x_test, targets=self.y_test))
+        return (nnc.evaluate(data=self.x_train, targets=self.y_train, average='micro'),
+                nnc.evaluate(data=self.x_test, targets=self.y_test, average='micro'))
 
 
 if __name__ == '__main__':
     ad = Adult()
     # retrieve the results
     knn_results = ad.k_nearest_neighbours()
-    svc_results = ad.support_vector_classifier()
-    dtc_results = ad.decision_tree_classifier()
-    rfr_results = ad.random_forest_classifier()
-    abc_results = ad.ada_boost_classifier()
-    lr_results = ad.logistic_regression()
-    gnb_results = ad.gaussian_naive_bayes()
-    nnc_results = ad.neural_network_classifier()
+    # svc_results = ad.support_vector_classifier()
+    # dtc_results = ad.decision_tree_classifier()
+    # rfr_results = ad.random_forest_classifier()
+    # abc_results = ad.ada_boost_classifier()
+    # lr_results = ad.logistic_regression()
+    # gnb_results = ad.gaussian_naive_bayes()
+    # nnc_results = ad.neural_network_classifier()
 
     print("(accuracy, recall, prediction) on training set:")
-    print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[0]))
-    print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[0]))
-    print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[0]))
-    print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[0]))
-    print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[0]))
-    print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[0]))
-    print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[0]))
-    print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[0]))
+    # print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[0]))
+    # print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[0]))
+    # print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[0]))
+    # print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[0]))
+    # print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[0]))
+    # print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[0]))
+    # print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[0]))
+    # print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[0]))
 
-    print("(accuracy, recall, prediction) on testing set:")
-    print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[1]))
-    print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[1]))
-    print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[1]))
-    print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[1]))
-    print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[1]))
-    print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[1]))
-    print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[1]))
-    print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[1]))
+    # print("(accuracy, recall, prediction) on testing set:")
+    # print('KNN: (%.3f, %.3f, %.3f)' % (knn_results[1]))
+    # print('SVC: (%.3f, %.3f, %.3f)' % (svc_results[1]))
+    # print('DTC: (%.3f, %.3f, %.3f)' % (dtc_results[1]))
+    # print('RFC: (%.3f, %.3f, %.3f)' % (rfr_results[1]))
+    # print('ABC: (%.3f, %.3f, %.3f)' % (abc_results[1]))
+    # print(' LR: (%.3f, %.3f, %.3f)' % (lr_results[1]))
+    # print('GNB: (%.3f, %.3f, %.3f)' % (gnb_results[1]))
+    # print('NNC: (%.3f, %.3f, %.3f)' % (nnc_results[1]))

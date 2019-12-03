@@ -13,8 +13,6 @@ from torchvision import datasets, transforms
 from PIL import Image
 from torch.utils.data import Dataset
 
-import keras
-
 def load_CIFAR10(root='././datasets/'):
     transform = transforms.Compose(
         [transforms.ToTensor(),
@@ -45,10 +43,10 @@ def get_activation(img='activation_base.jpg'):
     # using gradient and weights to calculate transformation on each channel
     pass
 
-for i in range(10):
-    # y = get_activation(img)
-    # y.backward()
-    pass
+# for i in range(10):
+#     # y = get_activation(img)
+#     # y.backward()
+#     pass
 
 
 # class ActivationMaximization(Loss):
@@ -99,9 +97,33 @@ for i in range(10):
 #     for i in range(0,3):
 #         img[:, :,i] = np.zeros([32, 32])+ 127
 #     cv.imwrite('activation_base.jpg', img)
+# 'activation_base.jpg'
+
+# def f(x):
+#     return -(x - 3)**2
+
+x = torch.tensor(0.0, requires_grad=True)
+print("%.3f" % x)
+for i in range(10):
+    y = x
+# Evaluate our function transforming x into some quantity y that we want to maximize y = f(x)
+    # Backpropagate a gradient of y with respect to x; this fills the x.grad variable
+    y.backward()
+        # Move x a small step in a direction that would increase y
+    x.data += 0.2*x.grad.data
+    # Reset the gradient for the next iteration, since backward() always adds to the current grad value.
+    x.grad.data.zero_()
+    print("%.3f" % x)
 
 if __name__ == "__main__":
     # get_img()
     module = load_module()
-    # print(module)
-    get_activation()
+    # get_activation()
+    # with open('test.txt', 'w') as f:     # 打开test.txt   如果文件不存在，创建该文件。
+    #     print(module, file=f)
+    # parm={}
+    # for name,parameters in m():
+    #     print(name,':',parameters.size())
+    #     parm[name]=parameters.detach().numpy()
+    for name,parameters in module.named_parameters():
+        print(name,':',parameters.size())

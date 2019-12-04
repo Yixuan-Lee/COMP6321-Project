@@ -67,7 +67,7 @@ class Breast_cancer_wisconsin:
         (but can't use in cross validation)
         use grid seach to find the range for parameter
         # define parameters
-        C = [1,10,100,100]
+        C = [1,10,100,1000]
         gamma = [0.1,0.01,1,100,1000]
         svc = Support_vector_classifier(
             x_train=self.x_train,
@@ -78,7 +78,7 @@ class Breast_cancer_wisconsin:
             gamma=gamma,
             coef0=coef0,
             grid_search=True)
-        # best result over all kernel: 'linear'
+        best c :100 gamma : 1
         """
         np.random.seed(0)
         kernel = ('linear', 'rbf', 'sigmoid')
@@ -121,8 +121,18 @@ class Breast_cancer_wisconsin:
                 dtc.evaluate(data=self.x_test, targets=self.y_test))
 
     def random_forest_classifier(self):
+        '''
+        use grid search to find the range for n estimators
+        n_estimators = [1,20,50,100]
+        rfc = Random_forest_classifier(
+            x_train=self.x_train,
+            y_train=self.y_train,
+            cv=3,
+            n_estimators=n_estimators,
+            grid_search=True)
+            best n estimator = 1
+        '''
         n_estimators = range(1, 12)
-
         rfc = Random_forest_classifier(
             x_train=self.x_train,
             y_train=self.y_train,
@@ -158,7 +168,14 @@ class Breast_cancer_wisconsin:
         """
         Logistic regression choose liblinear caz the datasets is small,
         handle no penalty
-        :return:
+        solver =[‘newton-cg’, ‘lbfgs’, ‘liblinear’, ‘sag’, ‘saga’]
+        lr = Logistic_regression(
+            x_train=self.x_train,
+            y_train=self.y_train,
+            cv=3,
+            solver = solver
+            grid_Search=True)
+        solver = 'liblinear'
         """
         np.random.seed(0)
         C = scipy.stats.reciprocal(1, 1000)
@@ -196,6 +213,23 @@ class Breast_cancer_wisconsin:
                 gnb.evaluate(data=self.x_test, targets=self.y_test))
 
     def neural_network_classifier(self):
+        '''
+        nerual network choose from between two hidden layer and one hidden layer,here one hidden layer has the best performance
+        hidden_layer_sizes = []
+        for i in range(3, 40):
+            for j in range(3, 40):
+                hidden_layer_sizes.append((i, j))
+        hidden_layer_sizes = np.asarray(hidden_layer_sizes)
+        mlp = Neural_network_classifier(
+            x_train=self.x_train,
+            y_train=self.y_train,
+            activation=('tanh',),
+            hidden_layer_sizes=hidden_layer_sizes,
+            cv=3,
+            n_iter=100,
+            grid_search=True,
+        )
+        '''
         hidden_layer_sizes = []
         for i in range(3, 40):
             hidden_layer_sizes.append((i,))

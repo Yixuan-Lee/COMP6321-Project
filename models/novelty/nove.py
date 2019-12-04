@@ -311,13 +311,10 @@ class Default_of_credit_card_clients:
 
 if __name__ == '__main__':
     doccc = Default_of_credit_card_clients()
-    #print("accuracy on the actual test set:")
-    #print('SVC: %.2f %%' % (doccc.support_vector_classifier() * 100))
-    #print('DTC: %.2f %%' % (doccc.decision_tree_classifier() * 100))
-    #print('RFC: %.2f %%' % (doccc.random_forest_classifier() * 100))
-    #print(' LR: %.2f %%' % (doccc.logistic_regression() * 100))
-    #doccc.testdt()
-    #doccc.svctest()
-    #doccc.lgtest()
+    print("accuracy on the actual test set:")
+
+    doccc.testdt()
+    doccc.svctest()
+    doccc.lgtest()
     doccc.rftest()
 

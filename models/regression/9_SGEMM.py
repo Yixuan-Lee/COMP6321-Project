@@ -73,6 +73,9 @@ class SGEMM :
                 dtr.evaluate(data=self.X_test, targets=self.y_test))
 
     def random_forest_regression(self):
+        '''
+        random forest take too long too train,here 50 is th best n estimator from the search
+        '''
         rfr = Random_forest_regressor(
             x_train=self.X_train,
             y_train=self.y_train,

@@ -92,7 +92,8 @@ class K_nearest_neighbours(Cross_validation):
             return precision_score(
                 y_true=y_test,
                 y_pred=self.__knn.predict(x_test), average=average)
-        except:
+        except Exception as e:
+            print(e)
             print("K_nearest_neighbours: x_test or y_test may be wrong")
 
     def evaluate(self, data=None, targets=None, average='binary'):

@@ -66,12 +66,11 @@ class SGEMM :
             n_iter=50,
             random_search=True)
 
-        dtr.print_parameter_candidates()
-        dtr.print_best_estimator()
+        #dtr.print_parameter_candidates()
+        #dtr.print_best_estimator()
 
-        return dtr.r2_score(
-            x_test=self.X_test,
-            y_test=self.y_test)
+        return (dtr.evaluate(data=self.X_train, targets=self.y_train),
+                dtr.evaluate(data=self.X_test, targets=self.y_test))
 
     def random_forest_regression(self):
         rfr = Random_forest_regressor(
@@ -80,48 +79,86 @@ class SGEMM :
             n_estimators=50,
             max_depth=8)
 
-        return rfr.r2_score(
-            x_test=self.X_test,
-            y_test=self.y_test)
+        return (rfr.evaluate(data=self.X_train, targets=self.y_train),
+                rfr.evaluate(data=self.X_test, targets=self.y_test))
 
     def ada_boost_regression(self):
-        res=[]
+        res = []
+        train_mse = []
+        train_r2 = []
+        test_mse = []
+        test_r2 = []
         for i in range(0, 4) :
             abr = Ada_boost_regressor(
                 x_train=self.X_train,
                 y_train=self.y_train_list[i],
-                n_estimators=50,
-                random_search=True)
+                n_estimators=(50,),
+                grid_search=True)
 
-            abr.print_parameter_candidates()
-            abr.print_best_estimator()
-            res.append(abr.r2_score(
+            #abr.print_parameter_candidates()
+            #abr.print_best_estimator()
+            # training
+            train_r2.append('%.3f' % abr.r2_score(
+                x_test=self.X_train,
+                y_test=self.y_train_list[i]))
+            train_mse.append('%.3f' % abr.mean_squared_error(
+                x_test=self.X_train,
+                y_test=self.y_train_list[i]))
+            # test
+            test_r2.append('%.3f' % abr.r2_score(
                 x_test=self.X_test,
                 y_test=self.y_test_list[i]))
+            test_mse.append('%.3f' % abr.mean_squared_error(
+                x_test=self.X_test,
+                y_test=self.y_test_list[i]))
+        res.append((train_mse, train_r2))
+        res.append((test_mse, test_r2))
         return res
 
     def gaussian_process_regression(self):
-        gpr = Gaussian_process_regressor(
-            x_train=self.X_train,
-            y_train=self.y_train,
-            cv=3,
-            n_iter=50,
-            alpha=scipy.stats.reciprocal(1e-11, 1e-8),
-            n_jobs=10,
-            random_search=True)
-
+        np.random.seed(0)
+        res = []
+        train_mse = []
+        train_r2 = []
+        test_mse = []
+        test_r2 = []
+        for i in range(0, 4):
+            gpr = Gaussian_process_regressor(
+                x_train=self.X_train,
+                y_train=self.y_train,
+                cv=3,
+                n_iter=50,
+                alpha=scipy.stats.reciprocal(1e-11, 1e-8),
+                n_jobs=10,
+                random_search=True)
+            train_r2.append('%.3f' % gpr.r2_score(
+                x_test=self.X_train,
+                y_test=self.y_train_list[i]))
+            train_mse.append('%.3f' % gpr.mean_squared_error(
+                x_test=self.X_train,
+                y_test=self.y_train_list[i]))
+            # test
+            test_r2.append('%.3f' % gpr.r2_score(
+                x_test=self.X_test,
+                y_test=self.y_test_list[i]))
+            test_mse.append('%.3f' % gpr.mean_squared_error(
+                x_test=self.X_test,
+                y_test=self.y_test_list[i]))
+        res.append((train_mse, train_r2))
+        res.append((test_mse, test_r2))
         # print all possible parameter values and the best parameters
-        gpr.print_parameter_candidates()
-        gpr.print_best_estimator()
+        #gpr.print_parameter_candidates()
+        #gpr.print_best_estimator()
 
-        # return the mean squared error
-        return gpr.r2_score(
-            x_test=self.X_test,
-            y_test=self.y_test)
+        return res
 
     def linear_regression(self):
         np.random.seed(0)
-        res = []
+        res=[]
+        train_mse = []
+        train_r2 = []
+        test_mse = []
+        test_r2 = []
         for i in range(0, 4):
             lr = Linear_least_squares(
                 x_train=self.X_train,
@@ -131,11 +168,24 @@ class SGEMM :
                 n_iter=99,
                 random_search=True)
 
-            lr.print_parameter_candidates()
-            lr.print_best_estimator()
-            res.append(lr.r2_score(
+            #lr.print_parameter_candidates()
+            #lr.print_best_estimator()
+            #training
+            train_r2.append('%.3f'% lr.r2_score(
+                x_test=self.X_train,
+                y_test=self.y_train_list[i]))
+            train_mse.append('%.3f'% lr.mean_squared_error(
+                x_test=self.X_train,
+                y_test=self.y_train_list[i]))
+            #test
+            test_r2.append('%.3f'% lr.r2_score(
                 x_test=self.X_test,
-                y_test=self.y_test_[i]))
+                y_test=self.y_test_list[i]))
+            test_mse.append('%.3f'% lr.mean_squared_error(
+                x_test=self.X_test,
+                y_test=self.y_test_list[i]))
+        res.append((train_mse,train_r2))
+        res.append((test_mse, test_r2))
         return res
 
     def neural_network_regression(self):
@@ -150,21 +200,36 @@ class SGEMM :
             n_jobs=10,
             random_search=True
         )
-        mlp.print_parameter_candidates()
-        mlp.print_best_estimator()
+        #mlp.print_parameter_candidates()
+        #mlp.print_best_estimator()
 
-        return mlp.r2_score(
-            x_test=self.X_test,
-            y_test=self.y_test)
+        return (mlp.evaluate(data=self.X_train, targets=self.y_train),
+                mlp.evaluate(data=self.X_test, targets=self.y_test))
 
 
 
 if __name__ == '__main__':
     sgemm = SGEMM()
-    print("mean squared error on the actual test set:")
-    print('DTR: %.5f' % (sgemm.decision_tree_regression()))
-    print('RFR: %.5f' % (sgemm.random_forest_regression()))
-    print('ABR: %.5f' % (sgemm.ada_boost_regression()))
-    print('GPR: %.5f' % (sgemm.gaussian_process_regression()))
-    print(' LR: %.5f' % (sgemm.linear_regression()))
-    print('NNR: %.5f' % (sgemm.neural_network_regression()))
+    # retrieve the results
+    dtr_results = sgemm.decision_tree_regression()
+    rfr_results = sgemm.random_forest_regression()
+    abr_results = sgemm.ada_boost_regression()
+    gpr_results = sgemm.gaussian_process_regression()
+    lls_results = sgemm.linear_regression()
+    nnr_results = sgemm.neural_network_regression()
+
+    print("(mean_square_error, r2_score) on training set:")
+    print('DTR: (%.3f, %.3f)' % (dtr_results[0]))
+    print('RFR: (%.3f, %.3f)' % (rfr_results[0]))
+    print('ABR:'+str(abr_results[0]))
+    print('GPR:' +str(gpr_results[0]))
+    print('LLS:'+str(lls_results[0]))
+    print('NNR: (%.3f, %.3f)' % (nnr_results[0]))
+
+    print("(mean_square_error, r2_score) on test set:")
+    print('DTR: (%.3f, %.3f)' % (dtr_results[1]))
+    print('RFR: (%.3f, %.3f)' % (rfr_results[1]))
+    print('ABR:'+str(abr_results[1]))
+    print('GPR: ' +str(gpr_results[1]))
+    print('LLS:' + str(lls_results[1]))
+    print('NNR: (%.3f, %.3f)' % (nnr_results[1]))

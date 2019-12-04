@@ -178,7 +178,7 @@ if __name__ == '__main__':
     rfr_results = ps.random_forest_regression()
     abr_results = ps.ada_boost_regression()
     gpr_results = ps.gaussian_process_regression()
-    lls_results = ps.linear_least_squares()
+    lls_results = ps.linear_regression()
     nnr_results = ps.neural_network_regression()
 
     print("(mean_square_error, r2_score) on training set:")

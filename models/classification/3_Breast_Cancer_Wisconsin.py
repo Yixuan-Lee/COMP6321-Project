@@ -65,7 +65,20 @@ class Breast_cancer_wisconsin:
         """
         SVM conclusion : ploy is not a good kernel,linear is the best
         (but can't use in cross validation)
-        :return: best model's accuracy score
+        use grid seach to find the range for parameter
+        # define parameters
+        C = [1,10,100,100]
+        gamma = [0.1,0.01,1,100,1000]
+        svc = Support_vector_classifier(
+            x_train=self.x_train,
+            y_train=self.y_train,
+            cv=3,
+            C=C,
+            kernel=kernel,
+            gamma=gamma,
+            coef0=coef0,
+            grid_search=True)
+        # best result over all kernel: 'linear'
         """
         np.random.seed(0)
         kernel = ('linear', 'rbf', 'sigmoid')

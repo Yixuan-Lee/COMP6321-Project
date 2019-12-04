@@ -176,7 +176,7 @@ if __name__ == '__main__':
     rfr_results = qsar.random_forest_regression()
     abr_results = qsar.ada_boost_regression()
     gpr_results = qsar.gaussian_process_regression()
-    lls_results = qsar.linear_least_squares()
+    lls_results = qsar.linear_regression()
     nnr_results = qsar.neural_network_regression()
 
     print("(mean_square_error, r2_score) on training set:")

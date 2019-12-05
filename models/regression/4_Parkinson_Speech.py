@@ -33,6 +33,10 @@ class Parkinson_speech:
         self.y_test = test_data[:, -1]
 
     def support_vector_regression(self):
+        '''
+        the first grid search find out that kernel(poly and sigimod ) dosen't work
+        also find the best for C :1 ,gamma 1
+        '''
         kernel = ('sigmoid', 'rbf')
         np.random.seed(0)
         C = scipy.stats.reciprocal(1, 100)
@@ -147,6 +151,9 @@ class Parkinson_speech:
                 lr.evaluate(data=self.x_test, targets=self.y_test))
 
     def neural_network_regression(self):
+        '''
+        nerual network start try from 2 hiddenlayer and 1 hiddenlayer
+        '''
         hidden_layer_sizes = []
         for i in range(3, 40):
             hidden_layer_sizes.append((i,))

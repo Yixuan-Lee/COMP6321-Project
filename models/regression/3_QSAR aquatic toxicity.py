@@ -35,6 +35,11 @@ class QSAR_aquatic_toxicity:
                 random_state=0)
 
     def support_vector_regression(self):
+        '''
+        using grid search trying to find the best C and gamma
+        define C :[0.1,1,10,100,1000] gamma = [0.0001,0.001,0.01,1,10,100]
+        best result : C  10 gamma 1 
+        '''
         np.random.seed(0)
         kernel = ('sigmoid', 'rbf')
         C = scipy.stats.reciprocal(1, 100)

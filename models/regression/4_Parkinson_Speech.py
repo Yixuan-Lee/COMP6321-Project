@@ -26,9 +26,7 @@ class Parkinson_speech:
         data = np.loadtxt(os.path.join(settings.ROOT_DIR, filepath,
             filename), delimiter=',')
         train=data[:,1:27]
-        print(train)
         targets=data[:,27:-1].reshape(-1)
-        print(targets)
         self.x_train, self.x_test, self.y_train, self.y_test = \
             train_test_split(train, targets, test_size=0.33,
                              random_state=0)
@@ -182,29 +180,29 @@ if __name__ == '__main__':
     ps = Parkinson_speech()
     # retrieve the results
 
-    #svr_results = ps.support_vector_regression()
+    svr_results = ps.support_vector_regression()
     dtr_results = ps.decision_tree_regression()
-    #rfr_results = ps.random_forest_regression()
-    #abr_results = ps.ada_boost_regression()
-    #gpr_results = ps.gaussian_process_regression()
-    #lls_results = ps.linear_regression()
-    #nnr_results = ps.neural_network_regression()
+    rfr_results = ps.random_forest_regression()
+    abr_results = ps.ada_boost_regression()
+    gpr_results = ps.gaussian_process_regression()
+    lls_results = ps.linear_regression()
+    nnr_results = ps.neural_network_regression()
 
     print("(mean_square_error, r2_score) on training set:")
-    #print('SVR: (%.3f, %.3f)' % (svr_results[0]))
+    print('SVR: (%.3f, %.3f)' % (svr_results[0]))
     print('DTR: (%.3f, %.3f)' % (dtr_results[0]))
-    #print('RFR: (%.3f, %.3f)' % (rfr_results[0]))
-    #print('ABR: (%.3f, %.3f)' % (abr_results[0]))
-    #print('GPR: (%.3f, %.3f)' % (gpr_results[0]))
-    #print('LLS: (%.3f, %.3f)' % (lls_results[0]))
-    #print('NNR: (%.3f, %.3f)' % (nnr_results[0]))
+    print('RFR: (%.3f, %.3f)' % (rfr_results[0]))
+    print('ABR: (%.3f, %.3f)' % (abr_results[0]))
+    print('GPR: (%.3f, %.3f)' % (gpr_results[0]))
+    print('LLS: (%.3f, %.3f)' % (lls_results[0]))
+    print('NNR: (%.3f, %.3f)' % (nnr_results[0]))
 
     print("(mean_square_error, r2_score) on test set:")
-    #print('SVR: (%.3f, %.3f)' % (svr_results[1]))
+    print('SVR: (%.3f, %.3f)' % (svr_results[1]))
     print('DTR: (%.3f, %.3f)' % (dtr_results[1]))
-    #print('RFR: (%.3f, %.3f)' % (rfr_results[1]))
-    #print('ABR: (%.3f, %.3f)' % (abr_results[1]))
-    #print('GPR: (%.3f, %.3f)' % (gpr_results[1]))
-    #print('LLS: (%.3f, %.3f)' % (lls_results[1]))
-    #print('NNR: (%.3f, %.3f)' % (nnr_results[1]))
+    print('RFR: (%.3f, %.3f)' % (rfr_results[1]))
+    print('ABR: (%.3f, %.3f)' % (abr_results[1]))
+    print('GPR: (%.3f, %.3f)' % (gpr_results[1]))
+    print('LLS: (%.3f, %.3f)' % (lls_results[1]))
+    print('NNR: (%.3f, %.3f)' % (nnr_results[1]))
 

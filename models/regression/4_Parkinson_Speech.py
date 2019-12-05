@@ -2,6 +2,8 @@ import os
 import scipy
 import numpy as np
 import scipy.stats              # For reciprocal distribution
+from sklearn.model_selection import train_test_split
+
 from models import settings     # For retrieving root path
 from support_vector_regressor import Support_vector_regressor
 from decision_tree_regressor import Decision_tree_regressor
@@ -20,17 +22,16 @@ class Parkinson_speech:
 
     def __init__(self):
         filepath = 'datasets/regression_datasets/4_Parkinson_Speech'
-        filename_train = 'train_data.txt'
-        filename_test = 'test_data.txt'
-
-        train_data = np.loadtxt(os.path.join(settings.ROOT_DIR, filepath,
-            filename_train), delimiter=',')
-        test_data = np.loadtxt(os.path.join(settings.ROOT_DIR, filepath,
-            filename_test), delimiter=',')
-        self.x_train = train_data[:, 1:27]
-        self.y_train = train_data[:, -1]
-        self.x_test = test_data[:, 1:-1]
-        self.y_test = test_data[:, -1]
+        filename= 'train_data.txt'
+        data = np.loadtxt(os.path.join(settings.ROOT_DIR, filepath,
+            filename), delimiter=',')
+        train=data[:,1:27]
+        print(train)
+        targets=data[:,27:-1].reshape(-1)
+        print(targets)
+        self.x_train, self.x_test, self.y_train, self.y_test = \
+            train_test_split(train, targets, test_size=0.33,
+                             random_state=0)
 
     def support_vector_regression(self):
         '''
@@ -63,7 +64,7 @@ class Parkinson_speech:
                 svr.evaluate(data=self.x_test, targets=self.y_test))
 
     def decision_tree_regression(self):
-        max_depth = range(1, 10)
+        max_depth = range(10, 20)
         min_samples_leaf = range(1, 9)
 
         dtr = Decision_tree_regressor(
@@ -144,8 +145,8 @@ class Parkinson_speech:
             cv=3,
             n_iter=99,
             random_search=True)
-        lr.print_parameter_candidates()
-        lr.print_best_estimator()
+        #lr.print_parameter_candidates()
+        #lr.print_best_estimator()
 
         return (lr.evaluate(data=self.x_train, targets=self.y_train),
                 lr.evaluate(data=self.x_test, targets=self.y_test))
@@ -180,29 +181,30 @@ class Parkinson_speech:
 if __name__ == '__main__':
     ps = Parkinson_speech()
     # retrieve the results
-    svr_results = ps.support_vector_regression()
+
+    #svr_results = ps.support_vector_regression()
     dtr_results = ps.decision_tree_regression()
-    rfr_results = ps.random_forest_regression()
-    abr_results = ps.ada_boost_regression()
-    gpr_results = ps.gaussian_process_regression()
-    lls_results = ps.linear_regression()
-    nnr_results = ps.neural_network_regression()
+    #rfr_results = ps.random_forest_regression()
+    #abr_results = ps.ada_boost_regression()
+    #gpr_results = ps.gaussian_process_regression()
+    #lls_results = ps.linear_regression()
+    #nnr_results = ps.neural_network_regression()
 
     print("(mean_square_error, r2_score) on training set:")
-    print('SVR: (%.3f, %.3f)' % (svr_results[0]))
+    #print('SVR: (%.3f, %.3f)' % (svr_results[0]))
     print('DTR: (%.3f, %.3f)' % (dtr_results[0]))
-    print('RFR: (%.3f, %.3f)' % (rfr_results[0]))
-    print('ABR: (%.3f, %.3f)' % (abr_results[0]))
-    print('GPR: (%.3f, %.3f)' % (gpr_results[0]))
-    print('LLS: (%.3f, %.3f)' % (lls_results[0]))
-    print('NNR: (%.3f, %.3f)' % (nnr_results[0]))
+    #print('RFR: (%.3f, %.3f)' % (rfr_results[0]))
+    #print('ABR: (%.3f, %.3f)' % (abr_results[0]))
+    #print('GPR: (%.3f, %.3f)' % (gpr_results[0]))
+    #print('LLS: (%.3f, %.3f)' % (lls_results[0]))
+    #print('NNR: (%.3f, %.3f)' % (nnr_results[0]))
 
     print("(mean_square_error, r2_score) on test set:")
-    print('SVR: (%.3f, %.3f)' % (svr_results[1]))
+    #print('SVR: (%.3f, %.3f)' % (svr_results[1]))
     print('DTR: (%.3f, %.3f)' % (dtr_results[1]))
-    print('RFR: (%.3f, %.3f)' % (rfr_results[1]))
-    print('ABR: (%.3f, %.3f)' % (abr_results[1]))
-    print('GPR: (%.3f, %.3f)' % (gpr_results[1]))
-    print('LLS: (%.3f, %.3f)' % (lls_results[1]))
-    print('NNR: (%.3f, %.3f)' % (nnr_results[1]))
+    #print('RFR: (%.3f, %.3f)' % (rfr_results[1]))
+    #print('ABR: (%.3f, %.3f)' % (abr_results[1]))
+    #print('GPR: (%.3f, %.3f)' % (gpr_results[1]))
+    #print('LLS: (%.3f, %.3f)' % (lls_results[1]))
+    #print('NNR: (%.3f, %.3f)' % (nnr_results[1]))
 
